@@ -5,6 +5,8 @@
       <map>
         <entry key="..\:/GitKraken/Hangman/app/src/main/res/layout/activity_login.xml" value="0.33" />
         <entry key="..\:/GitKraken/Hangman/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/GitKraken/Hangman/app/src/main/res/layout/activity_particles.xml" value="0.2824074074074074" />
+        <entry key="..\:/GitKraken/Hangman/app/src/main/res/layout/item_particle.xml" value="0.2824074074074074" />
       </map>
     </option>
   </component>
