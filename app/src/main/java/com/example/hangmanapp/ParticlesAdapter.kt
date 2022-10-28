@@ -28,7 +28,10 @@ class ParticlesAdapter(private val particles: List<ParticlesActivity.ParticleDat
         val particle = particles[position]
 
         holder.name.text = particle.name
-        holder.image.setColorFilter(particle.color)
+
+        val color = ParticlesActivity.familyToColor[particle.family]
+
+        holder.image.setColorFilter(color!!)
     }
 
     override fun getItemCount(): Int {

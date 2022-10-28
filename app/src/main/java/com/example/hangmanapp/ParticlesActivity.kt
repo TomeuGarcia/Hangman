@@ -7,8 +7,15 @@ import com.example.hangmanapp.databinding.ActivityParticlesBinding
 
 class ParticlesActivity : AppCompatActivity() {
 
-    private lateinit var binding : ActivityParticlesBinding
+    companion object {
+        val families = listOf("Family_1", "Family_2", "Family_3", "Family_4")
+        val familyToColor = mapOf<String, Int>(families[0] to Color.MAGENTA,
+            families[1] to Color.GREEN, families[2] to Color.YELLOW,
+            families[3] to Color.RED)
 
+    }
+
+    private lateinit var binding : ActivityParticlesBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,49 +23,34 @@ class ParticlesActivity : AppCompatActivity() {
         binding = ActivityParticlesBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+
         val particles = listOf<ParticleData>(
-            ParticleData("Quark Up", Color.BLUE),
-            ParticleData("Quark Charm", Color.BLUE),
-            ParticleData("Quark Top", Color.BLUE),
-            ParticleData("Quark Down", Color.BLUE),
-            ParticleData("Quark Strange", Color.BLUE),
-            ParticleData("Quark Bottom", Color.BLUE),
-            ParticleData("Electron", Color.GREEN),
-            ParticleData("Muon", Color.GREEN),
-            ParticleData("Tau", Color.GREEN),
-            ParticleData("Electron neutrino", Color.GREEN),
-            ParticleData("Tau neutrino", Color.GREEN),
-            ParticleData("Gluon", Color.MAGENTA),
-            ParticleData("Photon", Color.MAGENTA),
-            ParticleData("Z boson", Color.MAGENTA),
-            ParticleData("W boson", Color.MAGENTA),
-            ParticleData("Higgs", Color.RED)
+            ParticleData("Quark Up", families[0]),
+            ParticleData("Quark Charm", families[0]),
+            ParticleData("Quark Top", families[0]),
+            ParticleData("Quark Down", families[0]),
+            ParticleData("Quark Strange", families[0]),
+            ParticleData("Quark Bottom", families[0]),
+            ParticleData("Electron", families[1]),
+            ParticleData("Muon", families[1]),
+            ParticleData("Tau", families[1]),
+            ParticleData("Electron neutrino", families[1]),
+            ParticleData("Tau neutrino", families[1]),
+            ParticleData("Gluon", families[2]),
+            ParticleData("Photon", families[2]),
+            ParticleData("Z boson", families[2]),
+            ParticleData("W boson", families[2]),
+            ParticleData("Higgs", families[3])
         )
-        val particles2 = listOf(
-            "Quark Up",
-            "Quark Charm",
-            "Quark Top",
-            "Quark Down",
-            "Quark Strange",
-            "Quark Bottom",
-            "Electron",
-            "Muon",
-            "Tau",
-            "Electron neutrino",
-            "Muon neutrino",
-            "Tau neutrino",
-            "Gluon",
-            "Photon",
-            "Z boson",
-            "W boson",
-            "Higgs"
-        )
+
         binding.particlesRecycleView.adapter = ParticlesAdapter(particles);
     }
 
 
-    inner class ParticleData(val name : String, val color : Int)
+    inner class ParticleData(val name : String, val family : String)
     {
+
     }
 
 }
