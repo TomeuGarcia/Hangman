@@ -7,9 +7,16 @@ import com.example.hangmanapp.databinding.ActivityParticlesBinding
 
 class ParticlesActivity : AppCompatActivity() {
 
+    enum class ParticleFamilies{
+        FAMILY_1, FAMILY_2, FAMILY_3, FAMILY_4
+    }
+
     companion object {
-        val families = listOf("Family_1", "Family_2", "Family_3", "Family_4")
-        val familyToColor = mapOf<String, Int>(families[0] to Color.MAGENTA,
+        val families = listOf(ParticleFamilies.FAMILY_1,
+                                ParticleFamilies.FAMILY_2,
+                                ParticleFamilies.FAMILY_3,
+                                ParticleFamilies.FAMILY_4)
+        val familyToColor = mapOf<ParticleFamilies, Int>(families[0] to Color.MAGENTA,
             families[1] to Color.GREEN, families[2] to Color.YELLOW,
             families[3] to Color.RED)
 
@@ -48,7 +55,7 @@ class ParticlesActivity : AppCompatActivity() {
     }
 
 
-    inner class ParticleData(val name : String, val family : String)
+    inner class ParticleData(val name : String, val family : ParticleFamilies)
     {
 
     }
