@@ -7,8 +7,10 @@
         <entry key="..\:/GitKraken/Hangman/app/src/main/res/drawable/shape_background_quotes_button.xml" value="0.16" />
         <entry key="..\:/GitKraken/Hangman/app/src/main/res/layout/activity_login.xml" value="0.33" />
         <entry key="..\:/GitKraken/Hangman/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/GitKraken/Hangman/app/src/main/res/layout/activity_nasa.xml" value="0.2677083333333333" />
         <entry key="..\:/GitKraken/Hangman/app/src/main/res/layout/activity_particles.xml" value="0.2824074074074074" />
         <entry key="..\:/GitKraken/Hangman/app/src/main/res/layout/activity_quotes.xml" value="0.2635897435897436" />
+        <entry key="..\:/GitKraken/Hangman/app/src/main/res/layout/item_nasa_image.xml" value="0.2833333333333333" />
         <entry key="..\:/GitKraken/Hangman/app/src/main/res/layout/item_particle.xml" value="0.2824074074074074" />
       </map>
     </option>
