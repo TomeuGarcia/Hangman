@@ -6,13 +6,12 @@ import android.os.Bundle
 import android.util.Patterns
 import android.view.View
 import android.widget.Toast
-import com.example.hangmanapp.databinding.ActivityLoginBinding
+import com.example.hangmanapp.databinding.ActivityLoginPochoBinding
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.*
 
-class LoginActivity : AppCompatActivity() {
+class LoginPochoActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityLoginBinding
+    private lateinit var binding: ActivityLoginPochoBinding
 
     private lateinit var firebaseAuth: FirebaseAuth
 
@@ -20,13 +19,13 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityLoginBinding.inflate(layoutInflater)
+        binding = ActivityLoginPochoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         firebaseAuth = FirebaseAuth.getInstance()
 
 
-        binding.progressBar.visibility = View.INVISIBLE
+        //binding.progressBar.visibility = View.INVISIBLE
 
         binding.userInput.setOnFocusChangeListener { view, hasFocus ->
             if (!hasFocus)
@@ -49,7 +48,7 @@ class LoginActivity : AppCompatActivity() {
 
             firebaseAuth.signInWithEmailAndPassword(username, password)
                 .addOnSuccessListener {
-                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                    val intent = Intent(this@LoginPochoActivity, MainActivity::class.java)
                     startActivity(intent)
                     finish()
                 }.addOnFailureListener{
