@@ -9,7 +9,6 @@ import android.widget.Toast
 import com.example.hangmanapp.MainActivity
 import com.example.hangmanapp.R
 import com.example.hangmanapp.databinding.ActivityLoginBinding
-import com.example.hangmanapp.databinding.ActivityLoginPochoBinding
 import com.google.firebase.auth.FirebaseAuth
 
 class LoginActivity : AppCompatActivity()
@@ -45,14 +44,18 @@ class LoginActivity : AppCompatActivity()
             }
         }
 
+        println("OIIII")
+
         binding.loginButton.setOnClickListener {
 
             val username = binding.emailInputEditText.text.toString()
             val password = binding.passwordInputEditText.text.toString()
+            println(username)
+            println(password)
 
             firebaseAuth.signInWithEmailAndPassword(username, password)
                 .addOnSuccessListener {
-                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                    val intent = Intent(this@LoginActivity, SplashScreenActivity::class.java)
                     startActivity(intent)
                     finish()
                 }.addOnFailureListener {

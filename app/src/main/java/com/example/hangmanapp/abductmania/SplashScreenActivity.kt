@@ -22,7 +22,7 @@ class SplashScreenActivity : AppCompatActivity()
         binding = ActivitySplashScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        startLoginActivity(3000)
+        startLoginActivity(2000)
     }
 
 
