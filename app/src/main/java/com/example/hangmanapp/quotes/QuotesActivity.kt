@@ -1,7 +1,10 @@
 package com.example.hangmanapp.quotes
 
+import android.animation.ObjectAnimator
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.core.animation.doOnEnd
 import com.example.hangmanapp.databinding.ActivityQuotesBinding
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
@@ -21,6 +24,7 @@ class QuotesActivity : AppCompatActivity() {
 
         binding.nextQuoteButton.setOnClickListener{
             NextQuote()
+            NextRandomColor()
         }
     }
 
@@ -48,5 +52,22 @@ class QuotesActivity : AppCompatActivity() {
 
 
     }
+
+    private var lastColor = 0
+
+    fun NextRandomColor()
+    {
+        val newColor: Int = Color.argb(150,(0..256).random(),(0..256).random(),(0..256).random())
+
+        ObjectAnimator.ofArgb(binding.quotesLayout, "backgroundColor", lastColor, newColor).apply {
+            duration = 2000
+            start()
+        }.doOnEnd {
+            NextRandomColor()
+        }
+
+        lastColor = newColor
+    }
+
 
 }

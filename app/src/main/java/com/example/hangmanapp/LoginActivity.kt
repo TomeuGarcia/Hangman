@@ -7,14 +7,14 @@ import android.util.Patterns
 import android.view.View
 import android.widget.Toast
 import com.example.hangmanapp.databinding.ActivityLoginBinding
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.OAuthProvider
 import kotlinx.coroutines.*
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
-
-    private val CORRECT_USERNAME = "tomeu.garcia@enti.cat"
-    private val CORRECT_PASSWORD = "1234"
+    private lateinit var firebaseAuth: FirebaseAuth
 
 
 
@@ -23,6 +23,9 @@ class LoginActivity : AppCompatActivity() {
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        firebaseAuth = FirebaseAuth.getInstance()
+        //firebaseAuth.startActivityForSignInWithProvider(this, OAuthProvider.newBuilder())
 
         binding.progressBar.visibility = View.INVISIBLE
 
@@ -44,24 +47,14 @@ class LoginActivity : AppCompatActivity() {
             val username = binding.userInput.text.toString()
             val password = binding.passwordInput.text.toString()
 
-            val correctUsername = username == CORRECT_USERNAME
-            val correctPassword = password == CORRECT_PASSWORD
-
-            if (correctUsername && correctPassword)
+            firebaseAuth.signInWithEmailAndPassword(username,password)
+                .addOnSuccessListener()
             {
-                // Can login
-                binding.progressBar.visibility = View.VISIBLE
+                val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                startActivity(intent)
 
-                CoroutineScope(Dispatchers.Default).launch {
-                    delay(3000)
-
-                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                }
-
-            }
-            else
+                finish()
+            }.addOnFailureListener()
             {
                 Toast.makeText(this, getString(R.string.errorUsernameOrPassword), Toast.LENGTH_LONG).show()
             }
