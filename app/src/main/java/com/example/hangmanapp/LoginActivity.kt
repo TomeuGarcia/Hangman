@@ -7,15 +7,14 @@ import android.util.Patterns
 import android.view.View
 import android.widget.Toast
 import com.example.hangmanapp.databinding.ActivityLoginBinding
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.*
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
 
-    private val CORRECT_USERNAME = "tomeu.garcia@enti.cat"
-    private val CORRECT_PASSWORD = "1234"
-
+    private lateinit var firebaseAuth: FirebaseAuth
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,6 +22,9 @@ class LoginActivity : AppCompatActivity() {
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        firebaseAuth = FirebaseAuth.getInstance()
+
 
         binding.progressBar.visibility = View.INVISIBLE
 
@@ -41,38 +43,20 @@ class LoginActivity : AppCompatActivity() {
         }
 
         binding.loginButton.setOnClickListener {
+
             val username = binding.userInput.text.toString()
             val password = binding.passwordInput.text.toString()
 
-            val correctUsername = username == CORRECT_USERNAME
-            val correctPassword = password == CORRECT_PASSWORD
-
-            if (correctUsername && correctPassword)
-            {
-                // Can login
-                binding.progressBar.visibility = View.VISIBLE
-
-                CoroutineScope(Dispatchers.Default).launch {
-                    delay(3000)
-
+            firebaseAuth.signInWithEmailAndPassword(username, password)
+                .addOnSuccessListener {
                     val intent = Intent(this@LoginActivity, MainActivity::class.java)
                     startActivity(intent)
                     finish()
+                }.addOnFailureListener{
+                    Toast.makeText(this, getString(R.string.errorUsernameOrPassword), Toast.LENGTH_LONG).show()
                 }
-
-            }
-            else
-            {
-                Toast.makeText(this, getString(R.string.errorUsernameOrPassword), Toast.LENGTH_LONG).show()
-            }
         }
 
     }
-
-    private fun startAnimation()
-    {
-
-    }
-
 
 }

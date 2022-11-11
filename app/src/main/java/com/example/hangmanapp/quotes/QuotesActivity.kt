@@ -1,7 +1,10 @@
 package com.example.hangmanapp.quotes
 
+import android.animation.ObjectAnimator
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.core.animation.doOnEnd
 import com.example.hangmanapp.databinding.ActivityQuotesBinding
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
@@ -10,6 +13,7 @@ class QuotesActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityQuotesBinding
 
+    private var lastColor = 0;
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,15 +21,16 @@ class QuotesActivity : AppCompatActivity() {
         binding = ActivityQuotesBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        NextQuote() // Get next quote on activity start
+        nextQuote() // Get next quote on activity start
 
         binding.nextQuoteButton.setOnClickListener{
-            NextQuote()
+            nextQuote()
+            nextRandomColor()
         }
     }
 
 
-    fun NextQuote() {
+    fun nextQuote() {
         val outside = Retrofit.Builder()
             .baseUrl("http://quotes.stormconsultancy.co.uk")
             .addConverterFactory(GsonConverterFactory.create())
@@ -46,7 +51,21 @@ class QuotesActivity : AppCompatActivity() {
             }
         })
 
-
     }
+
+
+    fun nextRandomColor()
+    {
+        val newColor: Int = Color.argb(150, (0..256).random(), (0..256).random(), (0..256).random())
+
+        ObjectAnimator.ofArgb(binding.quotesLayout, "backgroundColor", lastColor, newColor)
+            .apply {
+                duration = 2000
+                start()
+            }
+
+        lastColor = newColor;
+    }
+
 
 }
