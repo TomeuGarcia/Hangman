@@ -1,4 +1,4 @@
-package com.example.hangmanapp
+package com.example.hangmanapp.abductmania
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -6,12 +6,13 @@ import android.os.Bundle
 import android.util.Patterns
 import android.view.View
 import android.widget.Toast
+import com.example.hangmanapp.MainActivity
+import com.example.hangmanapp.R
 import com.example.hangmanapp.databinding.ActivityLoginBinding
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.*
 
-class LoginActivity : AppCompatActivity() {
-
+class LoginActivity : AppCompatActivity()
+{
     private lateinit var binding: ActivityLoginBinding
 
     private lateinit var firebaseAuth: FirebaseAuth
@@ -26,37 +27,41 @@ class LoginActivity : AppCompatActivity() {
         firebaseAuth = FirebaseAuth.getInstance()
 
 
-        binding.progressBar.visibility = View.INVISIBLE
+        binding.loadingBar.visibility = View.INVISIBLE
 
-        binding.userInput.setOnFocusChangeListener { view, hasFocus ->
+        binding.loadingBar.setOnFocusChangeListener { view, hasFocus ->
             if (!hasFocus)
             {
-                val username = binding.userInput.text.toString()
+                val username = binding.emailInputEditText.text.toString()
                 if (!Patterns.EMAIL_ADDRESS.matcher(username).matches())
                 {
-                    binding.userInput.error = "Invalid username"
+                    binding.emailInputEditText.error = "Invalid username"
                 }
-                else{
-                    binding.userInput.error = null
+                else
+                {
+                    binding.emailInputEditText.error = null
                 }
             }
         }
 
+        println("OIIII")
+
         binding.loginButton.setOnClickListener {
 
-            val username = binding.userInput.text.toString()
-            val password = binding.passwordInput.text.toString()
+            val username = binding.emailInputEditText.text.toString()
+            val password = binding.passwordInputEditText.text.toString()
+            println(username)
+            println(password)
 
             firebaseAuth.signInWithEmailAndPassword(username, password)
                 .addOnSuccessListener {
-                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                    val intent = Intent(this@LoginActivity, SplashScreenActivity::class.java)
                     startActivity(intent)
                     finish()
-                }.addOnFailureListener{
+                }.addOnFailureListener {
                     Toast.makeText(this, getString(R.string.errorUsernameOrPassword), Toast.LENGTH_LONG).show()
                 }
         }
 
     }
-
 }
