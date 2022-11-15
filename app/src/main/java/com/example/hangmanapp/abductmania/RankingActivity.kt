@@ -21,13 +21,10 @@ class RankingActivity : AppCompatActivity() {
 
         binding.rankingRecyclerView.adapter = adapter
 
-        if (binding.leaderboardBack.isPressed)
-        {
-            CoroutineScope(Dispatchers.Default).launch {
-                val intent = Intent(this@RankingActivity, LoginActivity::class.java)
-                startActivity(intent)
-                finish()
-            }
+        binding.leaderboardBack.setOnClickListener{
+            val intent = Intent(this@RankingActivity, MainMenuActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 }
