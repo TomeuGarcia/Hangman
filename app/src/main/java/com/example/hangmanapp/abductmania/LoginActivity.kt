@@ -47,7 +47,6 @@ class LoginActivity : AppCompatActivity()
         println("OIIII")
 
         binding.loginButton.setOnClickListener {
-
             val username = binding.emailInputEditText.text.toString()
             val password = binding.passwordInputEditText.text.toString()
             println(username)
