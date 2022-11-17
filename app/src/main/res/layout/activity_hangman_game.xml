@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".abductmania.HangmanGameActivity">
+
+    <ImageView
+        android:id="@+id/building1Image"
+        android:layout_width="61dp"
+        android:layout_height="130dp"
+        android:scaleX="1"
+        android:scaleY="1"
+        app:layout_constraintBottom_toBottomOf="@+id/buildingGroundImage"
+        app:layout_constraintEnd_toEndOf="@+id/buildingGroundImage"
+        app:layout_constraintHorizontal_bias="0.045"
+        app:layout_constraintStart_toStartOf="@+id/buildingGroundImage"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.626"
+        app:srcCompat="@drawable/abductmania_building_1" />
+
+    <ImageView
+        android:id="@+id/building2Image"
+        android:layout_width="62dp"
+        android:layout_height="143dp"
+        android:scaleX="1"
+        android:scaleY="1"
+        app:layout_constraintBottom_toBottomOf="@+id/buildingGroundImage"
+        app:layout_constraintEnd_toEndOf="@+id/buildingGroundImage"
+        app:layout_constraintHorizontal_bias="0.34"
+        app:layout_constraintStart_toStartOf="@+id/buildingGroundImage"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.57"
+        app:srcCompat="@drawable/abductmania_building_2" />
+
+    <ImageView
+        android:id="@+id/building3Image"
+        android:layout_width="56dp"
+        android:layout_height="86dp"
+        android:scaleX="1"
+        android:scaleY="1"
+        app:layout_constraintBottom_toBottomOf="@+id/buildingGroundImage"
+        app:layout_constraintEnd_toEndOf="@+id/buildingGroundImage"
+        app:layout_constraintHorizontal_bias="0.611"
+        app:layout_constraintStart_toStartOf="@+id/buildingGroundImage"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.663"
+        app:srcCompat="@drawable/abductmania_building_3" />
+
+    <ImageView
+        android:id="@+id/building4Image"
+        android:layout_width="63dp"
+        android:layout_height="112dp"
+        android:scaleX="1"
+        android:scaleY="1"
+        app:layout_constraintBottom_toBottomOf="@+id/buildingGroundImage"
+        app:layout_constraintEnd_toEndOf="@+id/buildingGroundImage"
+        app:layout_constraintHorizontal_bias="0.93"
+        app:layout_constraintStart_toStartOf="@+id/buildingGroundImage"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.623"
+        app:srcCompat="@drawable/abductmania_building_4" />
+
+    <ImageView
+        android:id="@+id/buildingGroundImage"
+        android:layout_width="257dp"
+        android:layout_height="197dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.52"
+        app:srcCompat="@drawable/abductmania_building_ground" />
+
+    <ImageView
+        android:id="@+id/ufoLeftImage"
+        android:layout_width="84dp"
+        android:layout_height="51dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.161"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.061"
+        app:srcCompat="@drawable/abductmania_ufo_left" />
+
+    <ImageView
+        android:id="@+id/ufoCenterImage"
+        android:layout_width="125dp"
+        android:layout_height="63dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.086"
+        app:srcCompat="@drawable/abductmania_ufo_center" />
+
+    <ImageView
+        android:id="@+id/ufoRightImage"
+        android:layout_width="71dp"
+        android:layout_height="34dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.767"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.06"
+        app:srcCompat="@drawable/abductmania_ufo_right" />
+
+    <ImageView
+        android:id="@+id/ufoWavesImage"
+        android:layout_width="144dp"
+        android:layout_height="79dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.538"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/ufoCenterImage"
+        app:layout_constraintVertical_bias="0.092"
+        app:srcCompat="@drawable/abductmania_ufo_waves" />
+
+    <ImageButton
+        android:id="@+id/aButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.75"
+        app:srcCompat="@drawable/abductmania_a" />
+
+    <ImageButton
+        android:id="@+id/bButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.26"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.75"
+        app:srcCompat="@drawable/abductmania_b" />
+
+    <ImageButton
+        android:id="@+id/cButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.42"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.75"
+        app:srcCompat="@drawable/abductmania_c" />
+
+    <ImageButton
+        android:id="@+id/dButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.58"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.75"
+        app:srcCompat="@drawable/abductmania_d" />
+
+    <ImageButton
+        android:id="@+id/eButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.74"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.75"
+        app:srcCompat="@drawable/abductmania_e" />
+
+    <ImageButton
+        android:id="@+id/fButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.75"
+        app:srcCompat="@drawable/abductmania_f" />
+
+    <ImageButton
+        android:id="@+id/gButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.102"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.824"
+        app:srcCompat="@drawable/abductmania_g" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
