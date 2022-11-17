@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".abductmania.MainMenuActivity">
+
+    <ImageView
+        android:id="@+id/mainMenuBackground"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/abductmania_background" />
+
+    <ImageView
+        android:id="@+id/mainMenuPlay"
+        android:layout_width="204dp"
+        android:layout_height="335dp"
+        app:layout_constraintBottom_toBottomOf="@+id/mainMenuBackground"
+        app:layout_constraintEnd_toEndOf="@+id/mainMenuBackground"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="@+id/mainMenuBackground"
+        app:layout_constraintTop_toBottomOf="@+id/mainMenuTitle"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/abductmania_mainmenu_play" />
+
+    <ImageView
+        android:id="@+id/mainMenuTitle"
+        android:layout_width="235dp"
+        android:layout_height="180dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/abductmania_title" />
+
+    <ImageView
+        android:id="@+id/mainMenuLeaderboard"
+        android:layout_width="81dp"
+        android:layout_height="89dp"
+        android:layout_marginBottom="60dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/mainMenuExit"
+        app:layout_constraintStart_toEndOf="@+id/mainMenuSettings"
+        app:srcCompat="@drawable/abductmania_mainmenu_leaderboard" />
+
+    <ImageView
+        android:id="@+id/mainMenuExit"
+        android:layout_width="81dp"
+        android:layout_height="89dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.854"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.814"
+        app:srcCompat="@drawable/abductmania_mainmenu_exit" />
+
+    <ImageView
+        android:id="@+id/mainMenuSettings"
+        android:layout_width="81dp"
+        android:layout_height="89dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/mainMenuExit"
+        app:layout_constraintHorizontal_bias="0.228"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.814"
+        app:srcCompat="@drawable/abductmania_mainmenu_settings" />
+</androidx.constraintlayout.widget.ConstraintLayout>
