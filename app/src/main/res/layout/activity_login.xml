@@ -36,6 +36,7 @@
         android:layout_marginEnd="16dp"
         android:paddingLeft="128px"
         android:paddingRight="128px"
+        android:textColorHint="#C1F46E"
         app:boxStrokeColor="#9CF322"
         app:hintTextColor="#9CF322"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -44,7 +45,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.41000003"
         app:passwordToggleTint="#9CF322"
-        app:startIconDrawable="@drawable/ic_baseline_person_24">
+        app:startIconDrawable="@drawable/ic_baseline_person_24"
+        app:startIconTint="#9CF322">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/emailInputEditText"
@@ -52,7 +54,7 @@
             android:layout_height="wrap_content"
             android:hint="Email"
             android:paddingLeft="32px"
-            android:paddingRight="32px" />
+            android:paddingRight="32px"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -65,6 +67,7 @@
         android:hint="Password"
         android:paddingLeft="128px"
         android:paddingRight="128px"
+        android:textColorHint="#C1F46E"
         app:boxStrokeColor="#9CF322"
         app:endIconMode="password_toggle"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -73,7 +76,9 @@
         app:layout_constraintTop_toBottomOf="@+id/emailInputLayout"
         app:layout_constraintVertical_bias="0.050000012"
         app:passwordToggleTint="#9CF322"
-        app:startIconDrawable="@drawable/ic_baseline_lock_24">
+        app:startIconDrawable="@drawable/ic_baseline_lock_24"
+        app:startIconTint="#9CF322"
+        app:endIconTint="#9CF322">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/passwordInputEditText"
@@ -94,24 +99,34 @@
 
     <Button
         android:id="@+id/loginButton"
+        style="?attr/materialButtonOutlinedStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="LogIn"
+        android:textColor="#C1F46E"
+        app:iconTint="#C1F46E"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/passwordInputLayout"
         app:layout_constraintStart_toStartOf="@+id/passwordInputLayout"
         app:layout_constraintTop_toBottomOf="@+id/passwordInputLayout"
-        app:layout_constraintVertical_bias="0.04000002" />
+        app:layout_constraintVertical_bias="0.04000002"
+        app:rippleColor="#C1F46E"
+        app:strokeColor="#C1F46E" />
 
     <Button
         android:id="@+id/registerButton"
+        style="?attr/materialButtonOutlinedStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Register"
+        android:textColor="#C1F46E"
+        app:iconTint="#C1F46E"
         app:layout_constraintBottom_toTopOf="@+id/loadingBar"
         app:layout_constraintEnd_toEndOf="@+id/loginButton"
         app:layout_constraintStart_toStartOf="@+id/loginButton"
         app:layout_constraintTop_toBottomOf="@+id/loginButton"
-        app:layout_constraintVertical_bias="0.25" />
+        app:layout_constraintVertical_bias="0.25"
+        app:rippleColor="#C1F46E"
+        app:strokeColor="#C1F46E" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
