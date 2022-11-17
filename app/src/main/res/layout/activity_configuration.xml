@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".abductmania.ConfigurationActivity">
+
+    <ImageView
+        android:id="@+id/backgroundImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/config_background" />
+
+    <ImageView
+        android:id="@+id/backButtonImage"
+        android:layout_width="44dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.06"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/back_arrow" />
+
+    <TextView
+        android:id="@+id/settingsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-smallcaps"
+        android:text="Settings"
+        android:textColor="#C1F46E"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/backgroundImageView"
+        app:layout_constraintVertical_bias="0.42000002" />
+
+    <ImageView
+        android:id="@+id/languageButtonImage"
+        android:layout_width="294dp"
+        android:layout_height="45dp"
+        app:layout_constraintBottom_toBottomOf="@+id/backgroundImageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/backgroundImageView"
+        app:layout_constraintTop_toBottomOf="@+id/settingsTextView"
+        app:layout_constraintVertical_bias="0.19999999"
+        app:srcCompat="@drawable/button_not_selected" />
+
+    <TextView
+        android:id="@+id/languageTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Language: English"
+        android:textColor="#C1F46E"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/languageButtonImage"
+        app:layout_constraintEnd_toEndOf="@+id/languageButtonImage"
+        app:layout_constraintStart_toStartOf="@+id/languageButtonImage"
+        app:layout_constraintTop_toTopOf="@+id/languageButtonImage" />
+
+    <ImageView
+        android:id="@+id/soundButtonImage"
+        android:layout_width="294dp"
+        android:layout_height="45dp"
+        app:layout_constraintBottom_toBottomOf="@+id/backgroundImageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/backgroundImageView"
+        app:layout_constraintTop_toBottomOf="@+id/languageButtonImage"
+        app:layout_constraintVertical_bias="0.19999999"
+        app:srcCompat="@drawable/button_not_selected" />
+
+    <TextView
+        android:id="@+id/musicTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Music: ON"
+        android:textColor="#C1F46E"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/soundButtonImage"
+        app:layout_constraintEnd_toEndOf="@+id/soundButtonImage"
+        app:layout_constraintStart_toStartOf="@+id/soundButtonImage"
+        app:layout_constraintTop_toTopOf="@+id/soundButtonImage" />
+
+    <ImageView
+        android:id="@+id/musicButtonImage"
+        android:layout_width="294dp"
+        android:layout_height="45dp"
+        app:layout_constraintBottom_toBottomOf="@+id/backgroundImageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="@+id/backgroundImageView"
+        app:layout_constraintTop_toBottomOf="@+id/soundButtonImage"
+        app:layout_constraintVertical_bias="0.3"
+        app:srcCompat="@drawable/button_not_selected" />
+
+    <TextView
+        android:id="@+id/soundTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sound: ON"
+        android:textColor="#C1F46E"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/musicButtonImage"
+        app:layout_constraintEnd_toEndOf="@+id/musicButtonImage"
+        app:layout_constraintStart_toStartOf="@+id/musicButtonImage"
+        app:layout_constraintTop_toTopOf="@+id/musicButtonImage" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
