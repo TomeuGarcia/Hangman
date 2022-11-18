@@ -7,4 +7,8 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="green_soft">#C1F46E</color>
+    <color name="green_strong">#9CF322</color>
+    <color name="purple_dark">#1F1C3B</color>
+    <color name="mtrl_textinput_default_box_stroke_color">#9CF322</color>
 </resources>
