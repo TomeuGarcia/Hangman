@@ -16,7 +16,14 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".HangmanGameActivity"
+            android:name=".abductmania.MainMenuActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".abductmania.SplashScreenActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -30,7 +37,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".abductmania.MainMenuActivity"
+            android:name=".abductmania.HangmanGameActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,7 +50,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".abductmania.SplashScreenActivity"
+            android:name=".fragments.BottomNavigationActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"

@@ -120,6 +120,8 @@
         app:layout_constraintVertical_bias="0.092"
         app:srcCompat="@drawable/abductmania_ufo_waves" />
 
+
+
     <ImageButton
         android:id="@+id/aButton"
         android:layout_width="wrap_content"
@@ -131,7 +133,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.75"
-        app:srcCompat="@drawable/abductmania_a" />
+        app:srcCompat="@drawable/abductmania_a"
+        tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
     <ImageButton
         android:id="@+id/bButton"
@@ -144,7 +147,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.75"
-        app:srcCompat="@drawable/abductmania_b" />
+        app:srcCompat="@drawable/abductmania_b"
+        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
     <ImageButton
         android:id="@+id/cButton"
@@ -157,7 +161,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.75"
-        app:srcCompat="@drawable/abductmania_c" />
+        app:srcCompat="@drawable/abductmania_c"
+        tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
     <ImageButton
         android:id="@+id/dButton"
@@ -170,7 +175,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.75"
-        app:srcCompat="@drawable/abductmania_d" />
+        app:srcCompat="@drawable/abductmania_d"
+        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
     <ImageButton
         android:id="@+id/eButton"
@@ -183,7 +189,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.75"
-        app:srcCompat="@drawable/abductmania_e" />
+        app:srcCompat="@drawable/abductmania_e"
+        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
     <ImageButton
         android:id="@+id/fButton"
@@ -196,7 +203,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.75"
-        app:srcCompat="@drawable/abductmania_f" />
+        app:srcCompat="@drawable/abductmania_f"
+        tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
     <ImageButton
         android:id="@+id/gButton"
@@ -209,6 +217,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.824"
-        app:srcCompat="@drawable/abductmania_g" />
+        app:srcCompat="@drawable/abductmania_g"
+        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
