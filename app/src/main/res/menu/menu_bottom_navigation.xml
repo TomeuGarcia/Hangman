@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/colorsButton"
+        android:icon="@drawable/ic_baseline_palette_24"
+        android:title="Colors" />
+    <item
+        android:id="@+id/numbersButton"
+        android:icon="@drawable/ic_baseline_blur_on_24"
+        android:title="Numbers" />
+    <item
+        android:id="@+id/quotesButton"
+        android:title="Quotes" />
+</menu>

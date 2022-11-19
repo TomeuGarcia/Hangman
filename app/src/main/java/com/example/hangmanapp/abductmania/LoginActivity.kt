@@ -1,6 +1,7 @@
 package com.example.hangmanapp.abductmania
 
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Patterns
@@ -14,9 +15,7 @@ import com.google.firebase.auth.FirebaseAuth
 class LoginActivity : AppCompatActivity()
 {
     private lateinit var binding: ActivityLoginBinding
-
     private lateinit var firebaseAuth: FirebaseAuth
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +24,6 @@ class LoginActivity : AppCompatActivity()
         setContentView(binding.root)
 
         firebaseAuth = FirebaseAuth.getInstance()
-
 
         binding.loadingBar.visibility = View.INVISIBLE
 
@@ -44,14 +42,13 @@ class LoginActivity : AppCompatActivity()
             }
         }
 
-        println("OIIII")
-
         binding.loginButton.setOnClickListener {
-
             val username = binding.emailInputEditText.text.toString()
             val password = binding.passwordInputEditText.text.toString()
             println(username)
             println(password)
+
+            binding.loginButton.setTextColor(getColor(R.color.purple_dark)) // Show darker color when held
 
             firebaseAuth.signInWithEmailAndPassword(username, password)
                 .addOnSuccessListener {
@@ -61,7 +58,12 @@ class LoginActivity : AppCompatActivity()
                 }.addOnFailureListener {
                     Toast.makeText(this, getString(R.string.errorUsernameOrPassword), Toast.LENGTH_LONG).show()
                 }
+
+            binding.loginButton.setTextColor(getColor(R.color.green_soft)) // Return color to normal
         }
 
+        binding.registerButton.setOnClickListener {
+            Toast.makeText(this, "TODO", Toast.LENGTH_SHORT).show()
+        }
     }
 }
