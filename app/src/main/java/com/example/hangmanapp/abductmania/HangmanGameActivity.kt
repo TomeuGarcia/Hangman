@@ -15,8 +15,8 @@ class HangmanGameActivity : AppCompatActivity()
     private lateinit var guessWord : String
     private lateinit var gameToken : String
 
-    private lateinit var solution : String
-    private var lastHint : Char = ' '
+    private var solution : String = ""
+    private var hint : Char = ' '
 
 
 
@@ -44,12 +44,14 @@ class HangmanGameActivity : AppCompatActivity()
 
         binding.dButton.setOnClickListener {
             getSolution()
-            Toast.makeText(this, solution, Toast.LENGTH_LONG).show()
         }
 
         binding.eButton.setOnClickListener {
             getHint()
-            Toast.makeText(this, lastHint.toString(), Toast.LENGTH_LONG).show()
+        }
+
+        binding.fButton.setOnClickListener {
+            guessLetter('a')
         }
 
     }
@@ -93,6 +95,7 @@ class HangmanGameActivity : AppCompatActivity()
             override fun onResponse(call: Call<HangmanGameSolution>,response: Response<HangmanGameSolution>)
             {
                 solution = response.body()?.solution ?: ""
+                Toast.makeText(this@HangmanGameActivity, solution, Toast.LENGTH_LONG).show()
             }
 
             override fun onFailure(call: Call<HangmanGameSolution>, t: Throwable)
@@ -115,7 +118,8 @@ class HangmanGameActivity : AppCompatActivity()
         call.getHint(gameToken).enqueue(object : Callback<HangmanGameHint>{
             override fun onResponse(call: Call<HangmanGameHint>,response: Response<HangmanGameHint>)
             {
-                lastHint = response.body()?.letter?.get(0) ?: ' '
+                hint = response.body()?.hint?.get(0) ?: ' '
+                Toast.makeText(this@HangmanGameActivity, hint.toString(), Toast.LENGTH_LONG).show()
             }
 
             override fun onFailure(call: Call<HangmanGameHint>, t: Throwable)
@@ -125,6 +129,47 @@ class HangmanGameActivity : AppCompatActivity()
             }
         })
     }
+
+    private fun guessLetter(letter : Char)
+    {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(hangmanApiUrl)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val call = retrofit.create(ApiHangman::class.java)
+
+        call.guessLetter(letter.toString(), gameToken).enqueue(object : Callback<HangmanLetterGuessResponse>{
+            override fun onResponse(call: Call<HangmanLetterGuessResponse>,response: Response<HangmanLetterGuessResponse>)
+            {
+                val isCorrect : Boolean = response.body()?.correct ?: false
+
+                Toast.makeText(this@HangmanGameActivity, letter.toString(), Toast.LENGTH_LONG)
+
+                if (isCorrect) { onGuessedLetterCorrectly(letter) }
+                else { onGuessedLetterIncorrectly(letter) }
+            }
+
+            override fun onFailure(call: Call<HangmanLetterGuessResponse>, t: Throwable)
+            {
+                Toast.makeText(this@HangmanGameActivity,
+                    "Something went wrong -> guessLetter()", Toast.LENGTH_LONG)
+            }
+        })
+    }
+
+
+    private fun onGuessedLetterCorrectly(letter : Char)
+    {
+        Toast.makeText(this,("CORRECT: "+letter), Toast.LENGTH_LONG)
+    }
+
+    private fun onGuessedLetterIncorrectly(letter : Char)
+    {
+        Toast.makeText(this,("Pepega Clap: "+letter), Toast.LENGTH_LONG)
+    }
+
+
 
 
 }
