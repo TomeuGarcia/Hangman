@@ -26,35 +26,35 @@ class ConfigurationActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        binding.languageButtonImage.setOnClickListener() {
+        binding.languageButton.setOnClickListener() {
             // Change Current Language
             currentLang++
             if (currentLang > languages.size) { currentLang = 0 }
 
-            binding.languageTextView.text = "Language: " + languages[currentLang]
+            binding.languageButton.text = "Language: " + languages[currentLang]
         }
 
-        binding.musicButtonImage.setOnClickListener() {
+        binding.musicButton.setOnClickListener() {
             // Turn On/Off Music
             music = !music
 
             if (music) {
-                binding.musicTextView.text = "Music: ON"
+                binding.musicButton.text = "Music: ON"
             }
             else {
-                binding.musicTextView.text = "Music: OFF"
+                binding.musicButton.text = "Music: OFF"
             }
         }
 
-        binding.soundButtonImage.setOnClickListener() {
+        binding.soundButton.setOnClickListener() {
             // Turn On/Off Sound
             sound = !sound
 
             if (sound) {
-                binding.soundTextView.text = "Sound: ON"
+                binding.soundButton.text = "Sound: ON"
             }
             else {
-                binding.soundTextView.text = "Sound: OFF"
+                binding.soundButton.text = "Sound: OFF"
             }
         }
     }

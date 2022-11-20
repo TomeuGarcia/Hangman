@@ -63,7 +63,8 @@ class LoginActivity : AppCompatActivity()
         }
 
         binding.registerButton.setOnClickListener {
-            Toast.makeText(this, "TODO", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
         }
     }
 }
