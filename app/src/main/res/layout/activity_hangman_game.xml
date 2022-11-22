@@ -24,26 +24,27 @@
         android:layout_height="130dp"
         android:scaleX="1"
         android:scaleY="1"
-        app:layout_constraintBottom_toBottomOf="@+id/buildingGroundImage"
-        app:layout_constraintEnd_toEndOf="@+id/buildingGroundImage"
-        app:layout_constraintHorizontal_bias="0.045"
+        app:layout_constraintBottom_toBottomOf="@+id/guesswordText"
+        app:layout_constraintEnd_toStartOf="@+id/building4Image"
+        app:layout_constraintHorizontal_bias="0.286"
         app:layout_constraintStart_toStartOf="@+id/buildingGroundImage"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.65"
+        app:layout_constraintTop_toBottomOf="@+id/ufoCenterImage"
+        app:layout_constraintVertical_bias="0.781"
         app:srcCompat="@drawable/abductmania_building_1" />
 
     <ImageView
         android:id="@+id/building2Image"
         android:layout_width="62dp"
         android:layout_height="143dp"
+        android:layout_marginTop="75dp"
         android:scaleX="1"
         android:scaleY="1"
-        app:layout_constraintBottom_toBottomOf="@+id/buildingGroundImage"
-        app:layout_constraintEnd_toEndOf="@+id/buildingGroundImage"
-        app:layout_constraintHorizontal_bias="0.34"
-        app:layout_constraintStart_toStartOf="@+id/buildingGroundImage"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.61"
+        app:layout_constraintBottom_toTopOf="@+id/guesswordText"
+        app:layout_constraintEnd_toStartOf="@+id/building4Image"
+        app:layout_constraintHorizontal_bias="0.054"
+        app:layout_constraintStart_toEndOf="@+id/building1Image"
+        app:layout_constraintTop_toBottomOf="@+id/ufoCenterImage"
+        app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/abductmania_building_2" />
 
     <ImageView
@@ -52,32 +53,34 @@
         android:layout_height="86dp"
         android:scaleX="1"
         android:scaleY="1"
-        app:layout_constraintBottom_toBottomOf="@+id/buildingGroundImage"
-        app:layout_constraintEnd_toEndOf="@+id/buildingGroundImage"
-        app:layout_constraintHorizontal_bias="0.611"
-        app:layout_constraintStart_toStartOf="@+id/buildingGroundImage"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.68"
+        app:layout_constraintBottom_toBottomOf="@+id/building2Image"
+        app:layout_constraintEnd_toStartOf="@+id/building4Image"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/building2Image"
+        app:layout_constraintTop_toTopOf="@+id/building2Image"
+        app:layout_constraintVertical_bias="0.982"
         app:srcCompat="@drawable/abductmania_building_3" />
 
     <ImageView
         android:id="@+id/building4Image"
         android:layout_width="63dp"
         android:layout_height="112dp"
+        android:layout_marginEnd="52dp"
         android:scaleX="1"
         android:scaleY="1"
-        app:layout_constraintBottom_toBottomOf="@+id/buildingGroundImage"
+        app:layout_constraintBottom_toBottomOf="@+id/building2Image"
         app:layout_constraintEnd_toEndOf="@+id/buildingGroundImage"
-        app:layout_constraintHorizontal_bias="0.93"
-        app:layout_constraintStart_toStartOf="@+id/buildingGroundImage"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.65999997"
+        app:layout_constraintHorizontal_bias="0.82"
+        app:layout_constraintStart_toEndOf="@+id/ufoWavesImage"
+        app:layout_constraintTop_toBottomOf="@+id/ufoCenterImage"
+        app:layout_constraintVertical_bias="0.99"
         app:srcCompat="@drawable/abductmania_building_4" />
 
     <ImageView
         android:id="@+id/buildingGroundImage"
-        android:layout_width="257dp"
-        android:layout_height="197dp"
+        android:layout_width="362dp"
+        android:layout_height="158dp"
+        android:scaleY=".7"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -478,7 +481,7 @@
         android:id="@+id/fakeImageBeforeV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="64dp"
+        android:layout_marginBottom="16dp"
         android:alpha="0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/aButton"
@@ -511,6 +514,266 @@
         app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintStart_toStartOf="@+id/buildingGroundImage"
         app:layout_constraintTop_toTopOf="@+id/buildingGroundImage"
-        app:layout_constraintVertical_bias="0.3" />
+        app:layout_constraintVertical_bias="0.37" />
+
+    <ImageView
+        android:id="@+id/aOverlapImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/aButton"
+        app:layout_constraintEnd_toEndOf="@+id/aButton"
+        app:layout_constraintStart_toStartOf="@+id/aButton"
+        app:layout_constraintTop_toTopOf="@+id/aButton"
+        app:srcCompat="@drawable/abductamania_wrong" />
+
+    <ImageView
+        android:id="@+id/bOverlapImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/bButton"
+        app:layout_constraintEnd_toEndOf="@+id/bButton"
+        app:layout_constraintStart_toStartOf="@+id/bButton"
+        app:layout_constraintTop_toTopOf="@+id/bButton"
+        app:srcCompat="@drawable/abductamania_wrong" />
+
+    <ImageView
+        android:id="@+id/cOverlapImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/cButton"
+        app:layout_constraintEnd_toEndOf="@+id/cButton"
+        app:layout_constraintStart_toStartOf="@+id/cButton"
+        app:layout_constraintTop_toTopOf="@+id/cButton"
+        app:srcCompat="@drawable/abductamania_wrong" />
+
+    <ImageView
+        android:id="@+id/dOverlapImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/dButton"
+        app:layout_constraintEnd_toEndOf="@+id/dButton"
+        app:layout_constraintStart_toStartOf="@+id/dButton"
+        app:layout_constraintTop_toTopOf="@+id/dButton"
+        app:srcCompat="@drawable/abductamania_wrong" />
+
+    <ImageView
+        android:id="@+id/eOverlapImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/eButton"
+        app:layout_constraintEnd_toEndOf="@+id/eButton"
+        app:layout_constraintStart_toStartOf="@+id/eButton"
+        app:layout_constraintTop_toTopOf="@+id/eButton"
+        app:srcCompat="@drawable/abductamania_wrong" />
+
+    <ImageView
+        android:id="@+id/fOverlapImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/fButton"
+        app:layout_constraintEnd_toEndOf="@+id/fButton"
+        app:layout_constraintStart_toStartOf="@+id/fButton"
+        app:layout_constraintTop_toTopOf="@+id/fButton"
+        app:srcCompat="@drawable/abductamania_wrong" />
+
+    <ImageView
+        android:id="@+id/gOverlapImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/gButton"
+        app:layout_constraintEnd_toEndOf="@+id/gButton"
+        app:layout_constraintStart_toStartOf="@+id/gButton"
+        app:layout_constraintTop_toTopOf="@+id/gButton"
+        app:srcCompat="@drawable/abductamania_wrong" />
+
+    <ImageView
+        android:id="@+id/hOverlapImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/hButton"
+        app:layout_constraintEnd_toEndOf="@+id/hButton"
+        app:layout_constraintStart_toStartOf="@+id/hButton"
+        app:layout_constraintTop_toTopOf="@+id/hButton"
+        app:srcCompat="@drawable/abductamania_wrong" />
+
+    <ImageView
+        android:id="@+id/iOverlapImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/iButton"
+        app:layout_constraintEnd_toEndOf="@+id/iButton"
+        app:layout_constraintStart_toStartOf="@+id/iButton"
+        app:layout_constraintTop_toTopOf="@+id/iButton"
+        app:srcCompat="@drawable/abductamania_wrong" />
+
+    <ImageView
+        android:id="@+id/jOverlapImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/jButton"
+        app:layout_constraintEnd_toEndOf="@+id/jButton"
+        app:layout_constraintStart_toStartOf="@+id/jButton"
+        app:layout_constraintTop_toTopOf="@+id/jButton"
+        app:srcCompat="@drawable/abductamania_wrong" />
+
+    <ImageView
+        android:id="@+id/kOverlapImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/kButton"
+        app:layout_constraintEnd_toEndOf="@+id/kButton"
+        app:layout_constraintStart_toStartOf="@+id/kButton"
+        app:layout_constraintTop_toTopOf="@+id/kButton"
+        app:srcCompat="@drawable/abductamania_wrong" />
+
+    <ImageView
+        android:id="@+id/lOverlapImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/lButton"
+        app:layout_constraintEnd_toEndOf="@+id/lButton"
+        app:layout_constraintStart_toStartOf="@+id/lButton"
+        app:layout_constraintTop_toTopOf="@+id/lButton"
+        app:srcCompat="@drawable/abductamania_wrong" />
+
+    <ImageView
+        android:id="@+id/mOverlapImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/mButton"
+        app:layout_constraintEnd_toEndOf="@+id/mButton"
+        app:layout_constraintStart_toStartOf="@+id/mButton"
+        app:layout_constraintTop_toTopOf="@+id/mButton"
+        app:srcCompat="@drawable/abductamania_wrong" />
+
+    <ImageView
+        android:id="@+id/nOverlapImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/nButton"
+        app:layout_constraintEnd_toEndOf="@+id/nButton"
+        app:layout_constraintStart_toStartOf="@+id/nButton"
+        app:layout_constraintTop_toTopOf="@+id/nButton"
+        app:srcCompat="@drawable/abductamania_wrong" />
+
+    <ImageView
+        android:id="@+id/oOverlapImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/oButton"
+        app:layout_constraintEnd_toEndOf="@+id/oButton"
+        app:layout_constraintStart_toStartOf="@+id/oButton"
+        app:layout_constraintTop_toTopOf="@+id/oButton"
+        app:srcCompat="@drawable/abductamania_wrong" />
+
+    <ImageView
+        android:id="@+id/pOverlapImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/pButton"
+        app:layout_constraintEnd_toEndOf="@+id/pButton"
+        app:layout_constraintStart_toStartOf="@+id/pButton"
+        app:layout_constraintTop_toTopOf="@+id/pButton"
+        app:srcCompat="@drawable/abductamania_wrong" />
+
+    <ImageView
+        android:id="@+id/qOverlapImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/qButton"
+        app:layout_constraintEnd_toEndOf="@+id/qButton"
+        app:layout_constraintStart_toStartOf="@+id/qButton"
+        app:layout_constraintTop_toTopOf="@+id/qButton"
+        app:srcCompat="@drawable/abductamania_wrong" />
+
+    <ImageView
+        android:id="@+id/rOverlapImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/rButton"
+        app:layout_constraintEnd_toEndOf="@+id/rButton"
+        app:layout_constraintStart_toStartOf="@+id/rButton"
+        app:layout_constraintTop_toTopOf="@+id/rButton"
+        app:srcCompat="@drawable/abductamania_wrong" />
+
+    <ImageView
+        android:id="@+id/sOverlapImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/sButton"
+        app:layout_constraintEnd_toEndOf="@+id/sButton"
+        app:layout_constraintStart_toStartOf="@+id/sButton"
+        app:layout_constraintTop_toTopOf="@+id/sButton"
+        app:srcCompat="@drawable/abductamania_wrong" />
+
+    <ImageView
+        android:id="@+id/tOverlapImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/tButton"
+        app:layout_constraintEnd_toEndOf="@+id/tButton"
+        app:layout_constraintStart_toStartOf="@+id/tButton"
+        app:layout_constraintTop_toTopOf="@+id/tButton"
+        app:srcCompat="@drawable/abductamania_wrong" />
+
+    <ImageView
+        android:id="@+id/uOverlapImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/uButton"
+        app:layout_constraintEnd_toEndOf="@+id/uButton"
+        app:layout_constraintStart_toStartOf="@+id/uButton"
+        app:layout_constraintTop_toTopOf="@+id/uButton"
+        app:srcCompat="@drawable/abductamania_wrong" />
+
+    <ImageView
+        android:id="@+id/vOverlapImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/vButton"
+        app:layout_constraintEnd_toEndOf="@+id/vButton"
+        app:layout_constraintStart_toStartOf="@+id/vButton"
+        app:layout_constraintTop_toTopOf="@+id/vButton"
+        app:srcCompat="@drawable/abductamania_wrong" />
+
+    <ImageView
+        android:id="@+id/wOverlapImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/wButton"
+        app:layout_constraintEnd_toEndOf="@+id/wButton"
+        app:layout_constraintStart_toStartOf="@+id/wButton"
+        app:layout_constraintTop_toTopOf="@+id/wButton"
+        app:srcCompat="@drawable/abductamania_wrong" />
+
+    <ImageView
+        android:id="@+id/xOverlapImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/xButton"
+        app:layout_constraintEnd_toEndOf="@+id/xButton"
+        app:layout_constraintStart_toStartOf="@+id/xButton"
+        app:layout_constraintTop_toTopOf="@+id/xButton"
+        app:srcCompat="@drawable/abductamania_wrong" />
+
+    <ImageView
+        android:id="@+id/yOverlapImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/yButton"
+        app:layout_constraintEnd_toEndOf="@+id/yButton"
+        app:layout_constraintStart_toStartOf="@+id/yButton"
+        app:layout_constraintTop_toTopOf="@+id/yButton"
+        app:srcCompat="@drawable/abductamania_wrong" />
+
+    <ImageView
+        android:id="@+id/zOverlapImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/zButton"
+        app:layout_constraintEnd_toEndOf="@+id/zButton"
+        app:layout_constraintStart_toStartOf="@+id/zButton"
+        app:layout_constraintTop_toTopOf="@+id/zButton"
+        app:srcCompat="@drawable/abductamania_wrong" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

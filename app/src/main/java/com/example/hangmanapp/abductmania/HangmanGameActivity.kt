@@ -2,22 +2,29 @@ package com.example.hangmanapp.abductmania
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.Toast
+import com.example.hangmanapp.R
 import com.example.hangmanapp.databinding.ActivityHangmanGameBinding
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
+import kotlin.collections.ArrayList
 
 class HangmanGameActivity : AppCompatActivity()
 {
     private lateinit var binding: ActivityHangmanGameBinding
 
-    private lateinit var hangmanApiUrl : String
-    private lateinit var guessWord : String
-    private lateinit var gameToken : String
+    private val hangmanApiUrl : String = "https://hangman-api.herokuapp.com/"
+
+    private var guessWord : String = ""
+    private var gameToken : String = ""
 
     private var solution : String = ""
     private var hint : Char = ' '
 
+    private lateinit var lettersMap : LettersMap
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,34 +32,47 @@ class HangmanGameActivity : AppCompatActivity()
 
         binding = ActivityHangmanGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        supportActionBar?.hide()
 
-        hangmanApiUrl = "https://hangman-api.herokuapp.com/"
+        lettersMap = LettersMap(binding)
+
         createNewHangmanGame()
 
 
+
         binding.aButton.setOnClickListener {
-            Toast.makeText(this, guessWord, Toast.LENGTH_LONG).show()
-        }
-
-        binding.bButton.setOnClickListener {
-            Toast.makeText(this, gameToken, Toast.LENGTH_LONG).show()
-        }
-
-        binding.cButton.setOnClickListener {
-            createNewHangmanGame()
-        }
-
-        binding.dButton.setOnClickListener {
-            getSolution()
+            guessLetter('a')
         }
 
         binding.eButton.setOnClickListener {
+            guessLetter('e')
+        }
+
+        binding.iButton.setOnClickListener {
+            guessLetter('i')
+        }
+
+        binding.oButton.setOnClickListener {
+            guessLetter('o')
+        }
+
+        binding.uButton.setOnClickListener {
+            guessLetter('u')
+        }
+
+        binding.xButton.setOnClickListener {
+            createNewHangmanGame()
+        }
+
+        binding.yButton.setOnClickListener {
+            getSolution()
+        }
+
+        binding.zButton.setOnClickListener {
             getHint()
         }
 
-        binding.fButton.setOnClickListener {
-            guessLetter('a')
-        }
+
 
     }
 
@@ -72,6 +92,8 @@ class HangmanGameActivity : AppCompatActivity()
             {
                 guessWord = response.body()?.hangman ?: ""
                 gameToken = response.body()?.token ?: ""
+
+                binding.guesswordText.text = guessWord
             }
 
             override fun onFailure(call: Call<HangmanGame>, t: Throwable)
@@ -95,7 +117,11 @@ class HangmanGameActivity : AppCompatActivity()
             override fun onResponse(call: Call<HangmanGameSolution>,response: Response<HangmanGameSolution>)
             {
                 solution = response.body()?.solution ?: ""
+                gameToken = response.body()?.token ?: ""
                 Toast.makeText(this@HangmanGameActivity, solution, Toast.LENGTH_LONG).show()
+
+                guessWord = solution
+                binding.guesswordText.text = guessWord
             }
 
             override fun onFailure(call: Call<HangmanGameSolution>, t: Throwable)
@@ -119,6 +145,8 @@ class HangmanGameActivity : AppCompatActivity()
             override fun onResponse(call: Call<HangmanGameHint>,response: Response<HangmanGameHint>)
             {
                 hint = response.body()?.hint?.get(0) ?: ' '
+                gameToken = response.body()?.token ?: ""
+
                 Toast.makeText(this@HangmanGameActivity, hint.toString(), Toast.LENGTH_LONG).show()
             }
 
@@ -143,8 +171,9 @@ class HangmanGameActivity : AppCompatActivity()
             override fun onResponse(call: Call<HangmanLetterGuessResponse>,response: Response<HangmanLetterGuessResponse>)
             {
                 val isCorrect : Boolean = response.body()?.correct ?: false
-
-                Toast.makeText(this@HangmanGameActivity, letter.toString(), Toast.LENGTH_LONG)
+                guessWord = response.body()?.hangman ?: "";
+                gameToken = response.body()?.token ?: ""
+                binding.guesswordText.text = guessWord
 
                 if (isCorrect) { onGuessedLetterCorrectly(letter) }
                 else { onGuessedLetterIncorrectly(letter) }
@@ -153,7 +182,7 @@ class HangmanGameActivity : AppCompatActivity()
             override fun onFailure(call: Call<HangmanLetterGuessResponse>, t: Throwable)
             {
                 Toast.makeText(this@HangmanGameActivity,
-                    "Something went wrong -> guessLetter()", Toast.LENGTH_LONG)
+                    "Something went wrong -> guessLetter()", Toast.LENGTH_LONG).show()
             }
         })
     }
@@ -161,12 +190,14 @@ class HangmanGameActivity : AppCompatActivity()
 
     private fun onGuessedLetterCorrectly(letter : Char)
     {
-        Toast.makeText(this,("CORRECT: "+letter), Toast.LENGTH_LONG)
+        lettersMap[letter]?.button?.isEnabled = false
+        lettersMap[letter]?.overlapImage?.setImageResource(R.drawable.abductmania_correct)
     }
 
     private fun onGuessedLetterIncorrectly(letter : Char)
     {
-        Toast.makeText(this,("Pepega Clap: "+letter), Toast.LENGTH_LONG)
+        lettersMap[letter]?.button?.isEnabled = false
+        lettersMap[letter]?.overlapImage?.setImageResource(R.drawable.abductamania_wrong)
     }
 
 
