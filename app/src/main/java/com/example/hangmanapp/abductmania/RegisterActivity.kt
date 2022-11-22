@@ -51,6 +51,9 @@ class RegisterActivity : AppCompatActivity() {
                         Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show()
                     }
                 }
+                .addOnFailureListener {
+                    Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show()
+                }
         }
 
         binding.backLoginButton.setOnClickListener() {
