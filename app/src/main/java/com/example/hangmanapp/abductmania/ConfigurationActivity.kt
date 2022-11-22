@@ -13,6 +13,9 @@ class ConfigurationActivity : AppCompatActivity() {
     var music = true
     var sound = true
 
+    val sharedPreferences = getSharedPreferences("Config", 0)
+    var editor =  sharedPreferences.edit()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -32,6 +35,8 @@ class ConfigurationActivity : AppCompatActivity() {
             if (currentLang > languages.size) { currentLang = 0 }
 
             binding.languageButton.text = "Language: " + languages[currentLang]
+
+            editor.putInt("language", currentLang)
         }
 
         binding.musicButton.setOnClickListener() {
@@ -40,9 +45,11 @@ class ConfigurationActivity : AppCompatActivity() {
 
             if (music) {
                 binding.musicButton.text = "Music: ON"
+                editor.putBoolean("music", true)
             }
             else {
                 binding.musicButton.text = "Music: OFF"
+                editor.putBoolean("music", false)
             }
         }
 
@@ -52,9 +59,11 @@ class ConfigurationActivity : AppCompatActivity() {
 
             if (sound) {
                 binding.soundButton.text = "Sound: ON"
+                editor.putBoolean("sound", true)
             }
             else {
                 binding.soundButton.text = "Sound: OFF"
+                editor.putBoolean("sound", false)
             }
         }
     }
