@@ -85,6 +85,7 @@
         app:startIconTint="@color/green_strong">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/userInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="32px"
@@ -118,6 +119,7 @@
         app:startIconTint="@color/green_strong">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/passwordInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
