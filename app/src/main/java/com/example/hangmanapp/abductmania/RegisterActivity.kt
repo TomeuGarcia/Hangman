@@ -20,7 +20,7 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
     private lateinit var firebaseAuth: FirebaseAuth
 
-    private var canRegister = false
+    private var canRegister = true//false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +32,7 @@ class RegisterActivity : AppCompatActivity() {
 
         binding.progressBar.visibility = View.INVISIBLE
 
-        binding.emailInputEditText.addTextChangedListener (object : TextWatcher {
+        /*binding.emailInputEditText.addTextChangedListener (object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
                 TODO("Not yet implemented")
             }
@@ -71,7 +71,7 @@ class RegisterActivity : AppCompatActivity() {
                 TODO("Not yet implemented")
             }
 
-        })
+        })*/
 
         binding.doRegisterButton.setOnClickListener() {
             // Register new user
