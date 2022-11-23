@@ -20,6 +20,8 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
     private lateinit var firebaseAuth: FirebaseAuth
 
+    private var canRegister = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -31,18 +33,22 @@ class RegisterActivity : AppCompatActivity() {
         binding.progressBar.visibility = View.INVISIBLE
 
         binding.emailInputEditText.addTextChangedListener (object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+                TODO("Not yet implemented")
+            }
 
-            override fun afterTextChanged(s: Editable) {}
-
-            override fun beforeTextChanged(s: CharSequence, start: Int,
-                                           count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence, start: Int,
-                                       before: Int, count: Int) {
-                if (android.util.Patterns.EMAIL_ADDRESS.matcher(s).matches())
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int){
+                if (android.util.Patterns.EMAIL_ADDRESS.matcher(s).matches()) {
                     binding.emailInputLayout.error = null
-                else
+                    canRegister = true
+                } else {
                     binding.emailInputLayout.error = "Invalid email"
+                    canRegister = false
+                }
+            }
+
+            override fun afterTextChanged(s: Editable) {
+                TODO("Not yet implemented")
             }
         })
 
@@ -52,10 +58,13 @@ class RegisterActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, count: Int) {
-                if (count > 6)
+                if (count > 6) {
                     binding.passwordInputLayout.error = null
-                else
+                    canRegister = true
+                } else {
                     binding.passwordInputLayout.error = "Password to short"
+                    canRegister = false
+                }
             }
 
             override fun afterTextChanged(p0: Editable?) {
@@ -70,28 +79,33 @@ class RegisterActivity : AppCompatActivity() {
             val username = binding.userInputEditText.text.toString()
             val password = binding.passwordInputEditText.text.toString()
 
-            firebaseAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this) {
-                    binding.progressBar.visibility = View.VISIBLE
+            if (canRegister) {
+                binding.progressBar.visibility = View.VISIBLE
 
-                    if (it.isSuccessful) {
-                        // Good registration
+                firebaseAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this) {
                         binding.progressBar.visibility = View.INVISIBLE
-                        val firebaseUser = firebaseAuth.currentUser
 
-                        Toast.makeText(this, firebaseUser.toString(), Toast.LENGTH_SHORT).show()
+                        if (it.isSuccessful) {
+                            // Good registration
+                            val firebaseUser = firebaseAuth.currentUser
 
-                        val intent = Intent(this, MainMenuActivity::class.java)
-                        startActivity(intent)
-                    } else {
-                        // Error
-                        binding.progressBar.visibility = View.INVISIBLE
-                        Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, firebaseUser.toString(), Toast.LENGTH_SHORT).show()
+
+                            val intent = Intent(this, MainMenuActivity::class.java)
+                            startActivity(intent)
+                        } else {
+                            // Error
+                            Toast.makeText(this, getString(R.string.somethingWentWrong), Toast.LENGTH_SHORT).show()
+                        }
                     }
-                }
-                .addOnFailureListener {
-                    Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show()
-                }
+                    .addOnFailureListener {
+                        binding.progressBar.visibility = View.INVISIBLE
+                        Toast.makeText(this, getString(R.string.somethingWentWrong), Toast.LENGTH_SHORT).show()
+                    }
+            } else {
+                Toast.makeText(this, "Invalid Input", Toast.LENGTH_SHORT).show()
+            }
         }
 
         binding.backLoginButton.setOnClickListener() {
