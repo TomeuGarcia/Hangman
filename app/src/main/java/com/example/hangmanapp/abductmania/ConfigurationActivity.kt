@@ -3,6 +3,7 @@ package com.example.hangmanapp.abductmania
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.hangmanapp.R
 import com.example.hangmanapp.databinding.ActivityConfigurationBinding
 
 class ConfigurationActivity : AppCompatActivity() {
@@ -13,8 +14,8 @@ class ConfigurationActivity : AppCompatActivity() {
     var music = true
     var sound = true
 
-    val sharedPreferences = getSharedPreferences("Config", 0)
-    var editor =  sharedPreferences.edit()
+    val sharedPreferences = getSharedPreferences("Config", MODE_PRIVATE)
+    var editor = sharedPreferences.edit()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +37,7 @@ class ConfigurationActivity : AppCompatActivity() {
 
             binding.languageButton.text = "Language: " + languages[currentLang]
 
-            editor.putInt("language", currentLang)
+            editor.putInt("language", currentLang).apply()
         }
 
         binding.musicButton.setOnClickListener() {
@@ -45,11 +46,11 @@ class ConfigurationActivity : AppCompatActivity() {
 
             if (music) {
                 binding.musicButton.text = "Music: ON"
-                editor.putBoolean("music", true)
+                editor.putBoolean("music", true).apply()
             }
             else {
                 binding.musicButton.text = "Music: OFF"
-                editor.putBoolean("music", false)
+                editor.putBoolean("music", false).apply()
             }
         }
 
@@ -59,11 +60,11 @@ class ConfigurationActivity : AppCompatActivity() {
 
             if (sound) {
                 binding.soundButton.text = "Sound: ON"
-                editor.putBoolean("sound", true)
+                editor.putBoolean("sound", true).apply()
             }
             else {
                 binding.soundButton.text = "Sound: OFF"
-                editor.putBoolean("sound", false)
+                editor.putBoolean("sound", false).apply()
             }
         }
     }
