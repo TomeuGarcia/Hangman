@@ -50,7 +50,8 @@
         app:layout_constraintVertical_bias="0.41000003"
         app:passwordToggleTint="@color/green_strong"
         app:startIconDrawable="@drawable/ic_baseline_email_24"
-        app:startIconTint="@color/green_strong">
+        app:startIconTint="@color/green_strong"
+        app:errorEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/emailInputEditText"
@@ -82,7 +83,8 @@
         app:layout_constraintTop_toBottomOf="@+id/emailInputLayout"
         app:passwordToggleTint="@color/green_strong"
         app:startIconDrawable="@drawable/ic_baseline_person_24"
-        app:startIconTint="@color/green_strong">
+        app:startIconTint="@color/green_strong"
+        app:errorEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/userInputEditText"
@@ -116,7 +118,8 @@
         app:layout_constraintTop_toBottomOf="@+id/uernameInputLayout"
         app:passwordToggleTint="@color/green_strong"
         app:startIconDrawable="@drawable/ic_baseline_lock_24"
-        app:startIconTint="@color/green_strong">
+        app:startIconTint="@color/green_strong"
+        app:errorEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/passwordInputEditText"

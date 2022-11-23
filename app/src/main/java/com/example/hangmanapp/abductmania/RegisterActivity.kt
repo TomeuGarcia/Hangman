@@ -3,9 +3,13 @@ package com.example.hangmanapp.abductmania
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.NonNull
+import androidx.core.widget.addTextChangedListener
+import com.example.hangmanapp.R
 import com.example.hangmanapp.databinding.ActivityRegisterBinding
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
@@ -25,6 +29,40 @@ class RegisterActivity : AppCompatActivity() {
         firebaseAuth = FirebaseAuth.getInstance()
 
         binding.progressBar.visibility = View.INVISIBLE
+
+        binding.emailInputEditText.addTextChangedListener (object : TextWatcher {
+
+            override fun afterTextChanged(s: Editable) {}
+
+            override fun beforeTextChanged(s: CharSequence, start: Int,
+                                           count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence, start: Int,
+                                       before: Int, count: Int) {
+                if (android.util.Patterns.EMAIL_ADDRESS.matcher(s).matches())
+                    binding.emailInputLayout.error = null
+                else
+                    binding.emailInputLayout.error = "Invalid email"
+            }
+        })
+
+        binding.passwordInputEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, count: Int) {
+                if (count > 6)
+                    binding.passwordInputLayout.error = null
+                else
+                    binding.passwordInputLayout.error = "Password to short"
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                TODO("Not yet implemented")
+            }
+
+        })
 
         binding.doRegisterButton.setOnClickListener() {
             // Register new user
