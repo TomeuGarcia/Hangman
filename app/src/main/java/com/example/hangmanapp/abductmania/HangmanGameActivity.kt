@@ -2,15 +2,11 @@ package com.example.hangmanapp.abductmania
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ImageButton
-import android.widget.ImageView
 import android.widget.Toast
 import com.example.hangmanapp.R
 import com.example.hangmanapp.databinding.ActivityHangmanGameBinding
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.*
-import kotlin.collections.ArrayList
 
 class HangmanGameActivity : AppCompatActivity()
 {
@@ -24,41 +20,23 @@ class HangmanGameActivity : AppCompatActivity()
     private var solution : String = ""
     private var hint : Char = ' '
 
-    private lateinit var lettersMap : LettersMap
+    private lateinit var gameKeyboardMap : GameKeyboardMap
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
 
         binding = ActivityHangmanGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
 
-        lettersMap = LettersMap(binding)
+        gameKeyboardMap = GameKeyboardMap(binding)
+        gameKeyboardMap.initButtonsClickCallback(this::guessLetter)
+        gameKeyboardMap.hideOverlapImages()
+
 
         createNewHangmanGame()
-
-
-
-        binding.aButton.setOnClickListener {
-            guessLetter('a')
-        }
-
-        binding.eButton.setOnClickListener {
-            guessLetter('e')
-        }
-
-        binding.iButton.setOnClickListener {
-            guessLetter('i')
-        }
-
-        binding.oButton.setOnClickListener {
-            guessLetter('o')
-        }
-
-        binding.uButton.setOnClickListener {
-            guessLetter('u')
-        }
 
         binding.xButton.setOnClickListener {
             createNewHangmanGame()
@@ -71,8 +49,6 @@ class HangmanGameActivity : AppCompatActivity()
         binding.zButton.setOnClickListener {
             getHint()
         }
-
-
 
     }
 
@@ -190,14 +166,12 @@ class HangmanGameActivity : AppCompatActivity()
 
     private fun onGuessedLetterCorrectly(letter : Char)
     {
-        lettersMap[letter]?.button?.isEnabled = false
-        lettersMap[letter]?.overlapImage?.setImageResource(R.drawable.abductmania_correct)
+        gameKeyboardMap.setLetterCorrect(letter)
     }
 
     private fun onGuessedLetterIncorrectly(letter : Char)
     {
-        lettersMap[letter]?.button?.isEnabled = false
-        lettersMap[letter]?.overlapImage?.setImageResource(R.drawable.abductamania_wrong)
+        gameKeyboardMap.setLetterWrong(letter)
     }
 
 
