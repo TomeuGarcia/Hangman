@@ -25,6 +25,14 @@ class LoginActivity : AppCompatActivity()
 
         firebaseAuth = FirebaseAuth.getInstance()
 
+        if (firebaseAuth.currentUser != null)
+        {
+            val intent = Intent(this, MainMenuActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+
         binding.loadingBar.visibility = View.INVISIBLE
 
         binding.loadingBar.setOnFocusChangeListener { view, hasFocus ->
@@ -65,6 +73,17 @@ class LoginActivity : AppCompatActivity()
         binding.registerButton.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
+        }
+
+        binding.guestButton.setOnClickListener {
+            firebaseAuth.signInAnonymously()
+                .addOnSuccessListener {
+                    val user = firebaseAuth.currentUser
+                }
+                .addOnFailureListener {
+                    Toast.makeText(baseContext, "Authentication failed.",
+                        Toast.LENGTH_SHORT).show()
+                }
         }
     }
 }
