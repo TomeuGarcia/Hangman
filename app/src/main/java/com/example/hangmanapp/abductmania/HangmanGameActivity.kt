@@ -3,7 +3,6 @@ package com.example.hangmanapp.abductmania
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import com.example.hangmanapp.databinding.ActivityHangmanGameBinding
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
@@ -208,9 +207,7 @@ class HangmanGameActivity : AppCompatActivity()
         Toast.makeText(this, "GUESSED ALL LETTERS", Toast.LENGTH_LONG).show()
 
         // TODO Open WIN fragment
-        val youWinFragment = HangmanYouWinFragment()
-        //youWinFragment.Init(hangmanWord, score)
-        changeFragment(youWinFragment)
+        setEndGameFragment(HangmanYouWinFragment())
     }
 
     private fun doGameOver()
@@ -224,11 +221,12 @@ class HangmanGameActivity : AppCompatActivity()
         Toast.makeText(this, "GAME OVER", Toast.LENGTH_LONG).show()
 
         // TODO Open LOSE fragment
+        setEndGameFragment(HangmanYouWinFragment())
     }
 
-    private fun changeFragment(fragment: Fragment)
+    private fun setEndGameFragment(fragment: HangmanEndGameFragment)
     {
-        supportFragmentManager.beginTransaction().apply{
+        supportFragmentManager.beginTransaction().apply {
             supportFragmentManager.fragments.forEach {
                 hide(it)
             }
@@ -241,8 +239,12 @@ class HangmanGameActivity : AppCompatActivity()
             {
                 replace(binding.fragmentFrameLayout.id, fragment)
             }
+
             commit()
+
+            fragment.init(hangmanWord, score)
         }
+
     }
 
 

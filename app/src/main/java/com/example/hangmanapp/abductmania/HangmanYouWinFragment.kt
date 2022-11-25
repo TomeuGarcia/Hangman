@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.hangmanapp.databinding.FragmentHangmanYouWinBinding
 
-class HangmanYouWinFragment : Fragment()
+open class HangmanYouWinFragment : HangmanEndGameFragment()
 {
     private lateinit var binding: FragmentHangmanYouWinBinding
 
@@ -35,7 +35,7 @@ class HangmanYouWinFragment : Fragment()
         return binding.root
     }
 
-    public fun Init(hangmanWord : String, score : Int)
+    public override fun init(hangmanWord : String, score : Int)
     {
         binding.hangmanWordText.text = hangmanWord
         binding.scoreText.text = score.toString()

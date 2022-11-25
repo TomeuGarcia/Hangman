@@ -136,6 +136,20 @@
         app:srcCompat="@drawable/abductmania_ufo_waves" />
 
 
+    <TextView
+        android:id="@+id/guesswordText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" "
+        android:textColor="#5CD61A"
+        android:textSize="34sp"
+        app:layout_constraintBottom_toBottomOf="@+id/buildingGroundImage"
+        app:layout_constraintEnd_toEndOf="@+id/buildingGroundImage"
+        app:layout_constraintHorizontal_bias="0.49"
+        app:layout_constraintStart_toStartOf="@+id/buildingGroundImage"
+        app:layout_constraintTop_toTopOf="@+id/buildingGroundImage"
+        app:layout_constraintVertical_bias="0.37" />
+
     <ImageButton
         android:id="@+id/aButton"
         android:layout_width="wrap_content"
@@ -501,20 +515,6 @@
         app:layout_constraintStart_toEndOf="@+id/zButton"
         app:layout_constraintTop_toTopOf="@+id/fakeImageBeforeV"
         app:srcCompat="@drawable/abductmania_a" />
-
-    <TextView
-        android:id="@+id/guesswordText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="GU_SS_O_D"
-        android:textColor="#5CD61A"
-        android:textSize="34sp"
-        app:layout_constraintBottom_toBottomOf="@+id/buildingGroundImage"
-        app:layout_constraintEnd_toEndOf="@+id/buildingGroundImage"
-        app:layout_constraintHorizontal_bias="0.49"
-        app:layout_constraintStart_toStartOf="@+id/buildingGroundImage"
-        app:layout_constraintTop_toTopOf="@+id/buildingGroundImage"
-        app:layout_constraintVertical_bias="0.37" />
 
     <ImageView
         android:id="@+id/aOverlapImage"
