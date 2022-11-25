@@ -10,10 +10,10 @@ import com.example.hangmanapp.databinding.ActivityConfigurationBinding
 class ConfigurationActivity : AppCompatActivity() {
     private lateinit var binding: ActivityConfigurationBinding
 
-    val languages = arrayOf<String>("English", "Spanish", "Catalan")
-    var currentLang = 0
-    var music = true
-    var sound = true
+    private val languages = arrayOf<String>("English", "Spanish", "Catalan")
+    private var currentLang = 0
+    private var music = true
+    private var sound = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
