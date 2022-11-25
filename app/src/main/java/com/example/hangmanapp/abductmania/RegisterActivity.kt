@@ -37,11 +37,13 @@ class RegisterActivity : AppCompatActivity() {
         usernameFocusListener()
         passwordFocusListener()
 
-        binding.doRegisterButton.setOnClickListener() {
+        binding.doRegisterButton.setOnClickListener {
             // Register new user
             val email = binding.emailInputEditText.text.toString()
             val username = binding.userInputEditText.text.toString()
             val password = binding.passwordInputEditText.text.toString()
+
+            submitForm()
 
             if (canRegister) {
                 binding.progressBar.visibility = View.VISIBLE
@@ -72,10 +74,18 @@ class RegisterActivity : AppCompatActivity() {
             }
         }
 
-        binding.backLoginButton.setOnClickListener() {
+        binding.backLoginButton.setOnClickListener {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    private fun submitForm() {
+        val validEmail = binding.emailInputLayout.helperText == null
+        val validUser = binding.usernameInputLayout.helperText == null
+        val validPassword = binding.passwordInputLayout.helperText == null
+
+        canRegister = validEmail && validUser && validPassword
     }
 
     // EMAIL
