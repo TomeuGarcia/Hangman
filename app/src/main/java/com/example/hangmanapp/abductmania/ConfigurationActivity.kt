@@ -1,5 +1,6 @@
 package com.example.hangmanapp.abductmania
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -14,14 +15,14 @@ class ConfigurationActivity : AppCompatActivity() {
     var music = true
     var sound = true
 
-    val sharedPreferences = getSharedPreferences("Config", MODE_PRIVATE)
-    var editor = sharedPreferences.edit()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityConfigurationBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val sharedPreferences = getSharedPreferences(getString(R.string.preferences_config), MODE_PRIVATE)
+        var editor = sharedPreferences.edit()
 
         binding.backButtonImage.setOnClickListener() {
             // Go To Main Menu
@@ -37,7 +38,7 @@ class ConfigurationActivity : AppCompatActivity() {
 
             binding.languageButton.text = "Language: " + languages[currentLang]
 
-            editor.putInt("language", currentLang).apply()
+            editor.putInt(getString(R.string.prefLanguage), currentLang).apply()
         }
 
         binding.musicButton.setOnClickListener() {
@@ -46,11 +47,11 @@ class ConfigurationActivity : AppCompatActivity() {
 
             if (music) {
                 binding.musicButton.text = "Music: ON"
-                editor.putBoolean("music", true).apply()
+                editor.putBoolean(getString(R.string.prefMusic), true).apply()
             }
             else {
                 binding.musicButton.text = "Music: OFF"
-                editor.putBoolean("music", false).apply()
+                editor.putBoolean(getString(R.string.prefMusic), false).apply()
             }
         }
 
@@ -60,11 +61,11 @@ class ConfigurationActivity : AppCompatActivity() {
 
             if (sound) {
                 binding.soundButton.text = "Sound: ON"
-                editor.putBoolean("sound", true).apply()
+                editor.putBoolean(getString(R.string.prefSound), true).apply()
             }
             else {
                 binding.soundButton.text = "Sound: OFF"
-                editor.putBoolean("sound", false).apply()
+                editor.putBoolean(getString(R.string.prefSound), false).apply()
             }
         }
     }
