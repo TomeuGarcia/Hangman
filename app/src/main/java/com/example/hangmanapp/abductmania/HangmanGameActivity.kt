@@ -3,6 +3,7 @@ package com.example.hangmanapp.abductmania
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.example.hangmanapp.databinding.ActivityHangmanGameBinding
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
@@ -14,7 +15,7 @@ class HangmanGameActivity : AppCompatActivity()
 
     private val hangmanApiUrl : String = "https://hangman-api.herokuapp.com/"
 
-    private var guessWord : String = ""
+    private var hangmanWord : String = ""
     private var gameToken : String = ""
 
     private var solution : String = ""
@@ -29,6 +30,8 @@ class HangmanGameActivity : AppCompatActivity()
 
     private var wrongGuessesCount : Int = 0
     private val MAX_WRONG_GUESSES : Int = 7
+
+    private val MISSING_LETTER : Char = '_'
 
 
     override fun onCreate(savedInstanceState: Bundle?)
@@ -76,10 +79,10 @@ class HangmanGameActivity : AppCompatActivity()
 
             override fun onResponse(call: Call<HangmanGame>, response: Response<HangmanGame>)
             {
-                guessWord = response.body()?.hangman ?: ""
+                hangmanWord = response.body()?.hangman ?: ""
                 gameToken = response.body()?.token ?: ""
 
-                binding.guesswordText.text = guessWord
+                binding.guesswordText.text = hangmanWord
             }
 
             override fun onFailure(call: Call<HangmanGame>, t: Throwable)
@@ -106,8 +109,10 @@ class HangmanGameActivity : AppCompatActivity()
                 gameToken = response.body()?.token ?: ""
                 Toast.makeText(this@HangmanGameActivity, solution, Toast.LENGTH_LONG).show()
 
-                guessWord = solution
-                binding.guesswordText.text = guessWord
+                hangmanWord = solution
+                binding.guesswordText.text = hangmanWord
+
+                onGameOverSolutionObtained()
             }
 
             override fun onFailure(call: Call<HangmanGameSolution>, t: Throwable)
@@ -157,9 +162,9 @@ class HangmanGameActivity : AppCompatActivity()
             override fun onResponse(call: Call<HangmanLetterGuessResponse>,response: Response<HangmanLetterGuessResponse>)
             {
                 val isCorrect : Boolean = response.body()?.correct ?: false
-                guessWord = response.body()?.hangman ?: "";
+                hangmanWord = response.body()?.hangman ?: "";
                 gameToken = response.body()?.token ?: ""
-                binding.guesswordText.text = guessWord
+                binding.guesswordText.text = hangmanWord
 
                 if (isCorrect) { onGuessedLetterCorrectly(letter) }
                 else { onGuessedLetterIncorrectly(letter) }
@@ -193,7 +198,7 @@ class HangmanGameActivity : AppCompatActivity()
     private fun hasGuessedAllLetters() : Boolean
     {
         return !binding.guesswordText.text.any {
-            it == '_'
+            it == MISSING_LETTER
         }
     }
 
@@ -201,17 +206,44 @@ class HangmanGameActivity : AppCompatActivity()
     {
         score += ALL_LETTERS_GUESSED_POINTS
         Toast.makeText(this, "GUESSED ALL LETTERS", Toast.LENGTH_LONG).show()
+
+        // TODO Open WIN fragment
+        val youWinFragment = HangmanYouWinFragment()
+        //youWinFragment.Init(hangmanWord, score)
+        changeFragment(youWinFragment)
     }
 
     private fun doGameOver()
     {
+        getSolution() // this is async.... wait until solution received to do real GameOver
+    }
+
+    private fun onGameOverSolutionObtained()
+    {
         score = max(0, score) // Make score not negative
         Toast.makeText(this, "GAME OVER", Toast.LENGTH_LONG).show()
 
-        getSolution() // this is async.... wait until solution received to do gameover
+        // TODO Open LOSE fragment
     }
 
+    private fun changeFragment(fragment: Fragment)
+    {
+        supportFragmentManager.beginTransaction().apply{
+            supportFragmentManager.fragments.forEach {
+                hide(it)
+            }
 
+            if (fragment.isAdded)
+            {
+                show(fragment)
+            }
+            else
+            {
+                replace(binding.fragmentFrameLayout.id, fragment)
+            }
+            commit()
+        }
+    }
 
 
 }
