@@ -52,7 +52,7 @@ class LoginActivity : AppCompatActivity()
 
             firebaseAuth.signInWithEmailAndPassword(username, password)
                 .addOnSuccessListener {
-                    val intent = Intent(this@LoginActivity, SplashScreenActivity::class.java)
+                    val intent = Intent(this@LoginActivity, MainMenuActivity::class.java)
                     startActivity(intent)
                     finish()
                 }.addOnFailureListener {
