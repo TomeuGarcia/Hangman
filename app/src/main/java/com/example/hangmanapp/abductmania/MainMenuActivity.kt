@@ -20,12 +20,12 @@ class MainMenuActivity : AppCompatActivity() {
 
 
         binding.mainMenuPlay.setOnClickListener{
-            val intent = Intent(this, LoginActivity::class.java)
+            val intent = Intent(this, HangmanGameActivity::class.java)
             startActivity(intent)
         }
 
         binding.mainMenuSettings.setOnClickListener{
-            val intent = Intent(this, SplashScreenActivity::class.java)
+            val intent = Intent(this, ConfigurationActivity::class.java)
             startActivity(intent)
         }
         binding.mainMenuLeaderboard.setOnClickListener{

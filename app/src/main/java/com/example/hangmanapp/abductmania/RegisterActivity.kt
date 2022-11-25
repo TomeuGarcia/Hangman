@@ -34,13 +34,20 @@ class RegisterActivity : AppCompatActivity() {
 
             firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) {
+                    binding.progressBar.visibility = View.VISIBLE
+
                     if (it.isSuccessful) {
                         // Good registration
+                        binding.progressBar.visibility = View.INVISIBLE
                         val firebaseUser = firebaseAuth.currentUser
 
                         Toast.makeText(this, firebaseUser.toString(), Toast.LENGTH_SHORT).show()
+
+                        val intent = Intent(this, MainMenuActivity::class.java)
+                        startActivity(intent)
                     } else {
                         // Error
+                        binding.progressBar.visibility = View.INVISIBLE
                         Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show()
                     }
                 }
