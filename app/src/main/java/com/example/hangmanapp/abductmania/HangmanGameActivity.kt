@@ -3,10 +3,10 @@ package com.example.hangmanapp.abductmania
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import com.example.hangmanapp.R
 import com.example.hangmanapp.databinding.ActivityHangmanGameBinding
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
+import kotlin.math.max
 
 class HangmanGameActivity : AppCompatActivity()
 {
@@ -21,6 +21,14 @@ class HangmanGameActivity : AppCompatActivity()
     private var hint : Char = ' '
 
     private lateinit var gameKeyboardMap : GameKeyboardMap
+
+    private val CORRECT_LETTER_POINTS : Int = 50
+    private val WRONG_LETTER_POINTS : Int = 30
+    private val ALL_LETTERS_GUESSED_POINTS : Int = 200
+    private var score : Int = 0
+
+    private var wrongGuessesCount : Int = 0
+    private val MAX_WRONG_GUESSES : Int = 7
 
 
     override fun onCreate(savedInstanceState: Bundle?)
@@ -38,6 +46,7 @@ class HangmanGameActivity : AppCompatActivity()
 
         createNewHangmanGame()
 
+        /*
         binding.xButton.setOnClickListener {
             createNewHangmanGame()
         }
@@ -49,6 +58,7 @@ class HangmanGameActivity : AppCompatActivity()
         binding.zButton.setOnClickListener {
             getHint()
         }
+        */
 
     }
 
@@ -167,11 +177,38 @@ class HangmanGameActivity : AppCompatActivity()
     private fun onGuessedLetterCorrectly(letter : Char)
     {
         gameKeyboardMap.setLetterCorrect(letter)
+        score += CORRECT_LETTER_POINTS
+
+        if (hasGuessedAllLetters()) doVictory()
     }
 
     private fun onGuessedLetterIncorrectly(letter : Char)
     {
         gameKeyboardMap.setLetterWrong(letter)
+        score -= WRONG_LETTER_POINTS
+
+        if (++wrongGuessesCount == MAX_WRONG_GUESSES) doGameOver()
+    }
+
+    private fun hasGuessedAllLetters() : Boolean
+    {
+        return !binding.guesswordText.text.any {
+            it == '_'
+        }
+    }
+
+    private fun doVictory()
+    {
+        score += ALL_LETTERS_GUESSED_POINTS
+        Toast.makeText(this, "GUESSED ALL LETTERS", Toast.LENGTH_LONG).show()
+    }
+
+    private fun doGameOver()
+    {
+        score = max(0, score) // Make score not negative
+        Toast.makeText(this, "GAME OVER", Toast.LENGTH_LONG).show()
+
+        getSolution() // this is async.... wait until solution received to do gameover
     }
 
 
