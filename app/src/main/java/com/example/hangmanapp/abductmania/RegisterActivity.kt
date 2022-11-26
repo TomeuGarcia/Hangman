@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Patterns
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.NonNull
@@ -27,57 +28,22 @@ class RegisterActivity : AppCompatActivity() {
 
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        supportActionBar?.hide()
 
         firebaseAuth = FirebaseAuth.getInstance()
-
         binding.progressBar.visibility = View.INVISIBLE
 
-        /*binding.emailInputEditText.addTextChangedListener (object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-                TODO("Not yet implemented")
-            }
+        emailFocusListener()
+        usernameFocusListener()
+        passwordFocusListener()
 
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int){
-                if (android.util.Patterns.EMAIL_ADDRESS.matcher(s).matches()) {
-                    binding.emailInputLayout.error = null
-                    canRegister = true
-                } else {
-                    binding.emailInputLayout.error = "Invalid email"
-                    canRegister = false
-                }
-            }
-
-            override fun afterTextChanged(s: Editable) {
-                TODO("Not yet implemented")
-            }
-        })
-
-        binding.passwordInputEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, count: Int) {
-                if (count > 6) {
-                    binding.passwordInputLayout.error = null
-                    canRegister = true
-                } else {
-                    binding.passwordInputLayout.error = "Password to short"
-                    canRegister = false
-                }
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-                TODO("Not yet implemented")
-            }
-
-        })*/
-
-        binding.doRegisterButton.setOnClickListener() {
+        binding.doRegisterButton.setOnClickListener {
             // Register new user
             val email = binding.emailInputEditText.text.toString()
             val username = binding.userInputEditText.text.toString()
             val password = binding.passwordInputEditText.text.toString()
+
+            submitForm()
 
             if (canRegister) {
                 binding.progressBar.visibility = View.VISIBLE
@@ -108,9 +74,80 @@ class RegisterActivity : AppCompatActivity() {
             }
         }
 
-        binding.backLoginButton.setOnClickListener() {
+        binding.backLoginButton.setOnClickListener {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    private fun submitForm() {
+        val validEmail = binding.emailInputLayout.helperText == null
+        val validUser = binding.usernameInputLayout.helperText == null
+        val validPassword = binding.passwordInputLayout.helperText == null
+
+        canRegister = validEmail && validUser && validPassword
+    }
+
+    // EMAIL
+    private fun emailFocusListener() {
+        binding.emailInputEditText.setOnFocusChangeListener { view, focused ->
+            if (!focused) {
+                binding.emailInputLayout.helperText = validEmail()
+            }
+        }
+    }
+
+    private fun validEmail(): String? {
+        val emailText = binding.emailInputEditText.text.toString()
+        if (!Patterns.EMAIL_ADDRESS.matcher(emailText).matches()) {
+            return "Invalid Email Address"
+        }
+
+        return null
+    }
+
+    // USERNAME
+    private fun usernameFocusListener() {
+        binding.userInputEditText.setOnFocusChangeListener { view, focused ->
+            if (!focused) {
+                binding.usernameInputLayout.helperText = validUsername()
+            }
+        }
+    }
+
+    private fun validUsername(): String? {
+        val userText = binding.userInputEditText.text.toString()
+        if (userText.length < 2) {
+            return "Minimum 2 Characters Username"
+        }
+
+        return null
+    }
+
+    // PASSWORD
+    private fun passwordFocusListener() {
+        binding.passwordInputEditText.setOnFocusChangeListener { view, focused ->
+            if (!focused) {
+                binding.passwordInputLayout.helperText = validPassword()
+            }
+        }
+    }
+
+    private fun validPassword(): String? {
+        val passwordText = binding.passwordInputEditText.text.toString()
+        if (passwordText.length < 8) {
+            return "Minimum 8 Characters Password"
+        }
+        if (!passwordText.matches(".*[A-Z].*".toRegex())) {
+            return "Must Contain 1 Upper-case Character"
+        }
+        if (!passwordText.matches(".*[a-z].*".toRegex())) {
+            return "Must Contain 1 Lower-case Character"
+        }
+        if (!passwordText.matches(".*[|@#€¬!·$%&/()=?¿¡^*¨´`+{}_:;<>].*".toRegex())) {
+            return "Must Contain 1 Special Character"
+        }
+
+        return null
     }
 }
