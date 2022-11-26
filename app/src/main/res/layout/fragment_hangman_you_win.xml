@@ -98,7 +98,7 @@
         android:text="veryweirdword"
         android:textAlignment="center"
         android:textColor="#8BC34A"
-        android:textSize="24sp"
+        android:textSize="34sp"
         app:layout_constraintBottom_toBottomOf="@+id/ywTextBoxImage"
         app:layout_constraintEnd_toEndOf="@+id/ywTextBoxImage"
         app:layout_constraintStart_toStartOf="@+id/ywTextBoxImage"

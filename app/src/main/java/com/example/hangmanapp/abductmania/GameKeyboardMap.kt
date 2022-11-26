@@ -4,7 +4,11 @@ import android.view.View
 import com.example.hangmanapp.R
 import com.example.hangmanapp.databinding.ActivityHangmanGameBinding
 
-class GameKeyboardMap(binding: ActivityHangmanGameBinding) : HashMap<Char, LetterButtonImage>() {
+class GameKeyboardMap(binding: ActivityHangmanGameBinding)
+    : HashMap<Char, LetterButtonImage>()
+{
+
+    private var remainingLetters : MutableSet<Char> = mutableSetOf<Char>()
 
     init {
         this['a'] = LetterButtonImage(binding.aButton, binding.aOverlapImage)
@@ -33,6 +37,11 @@ class GameKeyboardMap(binding: ActivityHangmanGameBinding) : HashMap<Char, Lette
         this['x'] = LetterButtonImage(binding.xButton, binding.xOverlapImage)
         this['y'] = LetterButtonImage(binding.yButton, binding.yOverlapImage)
         this['z'] = LetterButtonImage(binding.zButton, binding.zOverlapImage)
+
+        this.forEach {
+            remainingLetters.add(it.key)
+        }
+
     }
 
     public fun initButtonsClickCallback(callback : (Char) -> Unit)
@@ -53,28 +62,36 @@ class GameKeyboardMap(binding: ActivityHangmanGameBinding) : HashMap<Char, Lette
 
     public fun setLetterCorrect(letter : Char)
     {
-        val letterButtonImage = this[letter]
-
-        letterButtonImage?.button?.isEnabled = false
-
-        letterButtonImage?.overlapImage?.visibility = View.VISIBLE
-        letterButtonImage?.overlapImage?.setImageResource(R.drawable.abductmania_correct)
+        setLetterDone(letter, R.drawable.abductmania_correct)
     }
 
     public fun setLetterWrong(letter : Char)
     {
-        val letterButtonImage = this[letter]
+        setLetterDone(letter, R.drawable.abductamania_wrong)
+    }
 
+    private fun setLetterDone(letter : Char, imageResource : Int)
+    {
+        val letterButtonImage = this[letter]
         letterButtonImage?.button?.isEnabled = false
 
         letterButtonImage?.overlapImage?.visibility = View.VISIBLE
-        letterButtonImage?.overlapImage?.setImageResource(R.drawable.abductamania_wrong)
+        letterButtonImage?.overlapImage?.setImageResource(imageResource)
+
+        remainingLetters.remove(letter)
     }
 
-    public fun disableAllButtons()
+    public fun disableRemainingLetterButtons()
     {
-        this.forEach{
-            it.value.button.isEnabled = false
+        remainingLetters.forEach {
+            this[it]?.button?.isEnabled = false
+        }
+    }
+
+    public fun reenableRemainingLetterButtons()
+    {
+        remainingLetters.forEach {
+            this[it]?.button?.isEnabled = true
         }
     }
 
