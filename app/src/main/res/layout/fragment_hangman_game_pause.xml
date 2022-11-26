@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/pauseBackgroundImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:alpha="0.7"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/abductmania_black_background"
+        tools:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/pauseBoxImage"
+        android:layout_width="323dp"
+        android:layout_height="579dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/abductmania_game_pause_box" />
+
+    <TextView
+        android:id="@+id/pausedText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Paused"
+        android:textColor="#8BC34A"
+        android:textSize="34sp"
+        app:layout_constraintBottom_toBottomOf="@+id/pauseBoxImage"
+        app:layout_constraintEnd_toEndOf="@+id/pauseBoxImage"
+        app:layout_constraintStart_toStartOf="@+id/pauseBoxImage"
+        app:layout_constraintTop_toTopOf="@+id/pauseBoxImage"
+        app:layout_constraintVertical_bias="0.25" />
+
+    <ImageView
+        android:id="@+id/pPlayIcon"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        app:layout_constraintBottom_toBottomOf="@+id/pauseBoxImage"
+        app:layout_constraintEnd_toEndOf="@+id/pauseBoxImage"
+        app:layout_constraintStart_toStartOf="@+id/pauseBoxImage"
+        app:layout_constraintTop_toBottomOf="@+id/pausedText"
+        app:layout_constraintVertical_bias="0.19999999"
+        app:srcCompat="@drawable/abductmania_mainmenu_play" />
+
+    <ImageView
+        android:id="@+id/pHomeIcon"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        app:layout_constraintBottom_toBottomOf="@+id/pauseBoxImage"
+        app:layout_constraintEnd_toEndOf="@+id/pauseBoxImage"
+        app:layout_constraintStart_toStartOf="@+id/pauseBoxImage"
+        app:layout_constraintTop_toBottomOf="@+id/pPlayIcon"
+        app:layout_constraintVertical_bias="0.19999999"
+        app:srcCompat="@drawable/abductmania_button_home" />
+</androidx.constraintlayout.widget.ConstraintLayout>

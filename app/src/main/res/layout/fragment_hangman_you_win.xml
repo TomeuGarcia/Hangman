@@ -41,13 +41,13 @@
 
     <ImageView
         android:id="@+id/ywUfosImage"
-        android:layout_width="334dp"
-        android:layout_height="313dp"
-        app:layout_constraintBottom_toBottomOf="@+id/ywYouWinText"
+        android:layout_width="313dp"
+        android:layout_height="123dp"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toTopOf="@+id/ywYouWinText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/abductmania_youwin_ufos" />
 
     <TextView
@@ -114,7 +114,7 @@
         app:layout_constraintHorizontal_bias="0.3"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.9"
+        app:layout_constraintVertical_bias="0.92"
         app:srcCompat="@drawable/abductmania_button_replay" />
 
     <ImageView
@@ -126,7 +126,7 @@
         app:layout_constraintHorizontal_bias="0.7"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.9"
+        app:layout_constraintVertical_bias="0.92"
         app:srcCompat="@drawable/abductmania_button_home" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,6 +5,10 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import com.example.hangmanapp.databinding.ActivityHangmanGameBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
@@ -33,10 +37,11 @@ class HangmanGameActivity : AppCompatActivity()
 
     private val MISSING_LETTER : Char = '_'
 
+    private val END_GAME_FRAGMENT_START_DELAY : Long = 3000
+
     private lateinit var gameKeyboardMap : GameKeyboardMap
     private lateinit var hangmanDrawer : HangmanDrawer
-
-    private val END_GAME_FRAGMENT_START_DELAY : Long = 3000
+    private lateinit var pauseFragment : HangmanGamePauseFragment
 
 
     override fun onCreate(savedInstanceState: Bundle?)
@@ -66,8 +71,13 @@ class HangmanGameActivity : AppCompatActivity()
             )
         )
 
+        pauseFragment = HangmanGamePauseFragment(this::resumeGame)
 
         createNewHangmanGame()
+
+        binding.pauseIcon.setOnClickListener {
+            pauseGame()
+        }
 
         /*
         binding.xButton.setOnClickListener {
@@ -88,6 +98,8 @@ class HangmanGameActivity : AppCompatActivity()
 
     private fun createNewHangmanGame()
     {
+        gameKeyboardMap.disableRemainingLetterButtons()
+
         val retrofit = Retrofit.Builder()
             .baseUrl(HANGMAN_API_URL)
             .addConverterFactory(GsonConverterFactory.create())
@@ -103,12 +115,16 @@ class HangmanGameActivity : AppCompatActivity()
                 gameToken = response.body()?.token ?: ""
 
                 binding.guesswordText.text = hangmanWord
+
+                gameKeyboardMap.reenableRemainingLetterButtons()
             }
 
             override fun onFailure(call: Call<HangmanGame>, t: Throwable)
             {
                 Toast.makeText(this@HangmanGameActivity,
                     "Something went wrong -> createNewHangmanGame()", Toast.LENGTH_LONG)
+
+                gameKeyboardMap.reenableRemainingLetterButtons()
             }
         })
     }
@@ -235,6 +251,7 @@ class HangmanGameActivity : AppCompatActivity()
         score += ALL_LETTERS_GUESSED_POINTS
 
         gameKeyboardMap.disableRemainingLetterButtons()
+        binding.pauseIcon.isEnabled = false
 
         Timer().schedule(END_GAME_FRAGMENT_START_DELAY) {
             setEndGameFragment(HangmanYouWinFragment(hangmanWord, score))
@@ -244,6 +261,7 @@ class HangmanGameActivity : AppCompatActivity()
     private fun doGameOver()
     {
         gameKeyboardMap.disableRemainingLetterButtons()
+        binding.pauseIcon.isEnabled = false
 
         getSolution() // this is async.... wait until solution received to do real GameOver
     }
@@ -252,7 +270,8 @@ class HangmanGameActivity : AppCompatActivity()
     {
         score = max(0, score) // Make score not negative
 
-        Timer().schedule(END_GAME_FRAGMENT_START_DELAY) {
+        CoroutineScope(Dispatchers.Default).launch {
+            delay(END_GAME_FRAGMENT_START_DELAY)
             setEndGameFragment(HangmanYouLoseFragment(hangmanWord, score))
         }
     }
@@ -275,7 +294,36 @@ class HangmanGameActivity : AppCompatActivity()
 
             commit()
         }
+    }
 
+    private fun pauseGame()
+    {
+        gameKeyboardMap.disableRemainingLetterButtons()
+        binding.pauseIcon.isEnabled = false
+
+        supportFragmentManager.beginTransaction().apply {
+            if (pauseFragment.isAdded)
+            {
+                show(pauseFragment)
+            }
+            else
+            {
+                replace(binding.fragmentFrameLayout.id, pauseFragment)
+            }
+
+            commit()
+        }
+    }
+
+    private fun resumeGame()
+    {
+        gameKeyboardMap.reenableRemainingLetterButtons()
+        binding.pauseIcon.isEnabled = true
+
+        supportFragmentManager.beginTransaction().apply {
+            hide(pauseFragment)
+            commit()
+        }
     }
 
 
