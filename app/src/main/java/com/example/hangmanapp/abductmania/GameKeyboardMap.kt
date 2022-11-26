@@ -1,8 +1,14 @@
 package com.example.hangmanapp.abductmania
 
+import android.view.View
+import com.example.hangmanapp.R
 import com.example.hangmanapp.databinding.ActivityHangmanGameBinding
 
-class LettersMap(binding: ActivityHangmanGameBinding) : HashMap<Char, LetterButtonImage>() {
+class GameKeyboardMap(binding: ActivityHangmanGameBinding)
+    : HashMap<Char, LetterButtonImage>()
+{
+
+    private var remainingLetters : MutableSet<Char> = mutableSetOf<Char>()
 
     init {
         this['a'] = LetterButtonImage(binding.aButton, binding.aOverlapImage)
@@ -31,8 +37,63 @@ class LettersMap(binding: ActivityHangmanGameBinding) : HashMap<Char, LetterButt
         this['x'] = LetterButtonImage(binding.xButton, binding.xOverlapImage)
         this['y'] = LetterButtonImage(binding.yButton, binding.yOverlapImage)
         this['z'] = LetterButtonImage(binding.zButton, binding.zOverlapImage)
+
+        this.forEach {
+            remainingLetters.add(it.key)
+        }
+
     }
 
+    public fun initButtonsClickCallback(callback : (Char) -> Unit)
+    {
+        this.forEach{
+            it.value.button.setOnClickListener{ viewIt ->
+                callback(it.key)
+            }
+        }
+    }
+
+    public fun hideOverlapImages()
+    {
+        this.forEach{
+            it.value.overlapImage.visibility = View.GONE
+        }
+    }
+
+    public fun setLetterCorrect(letter : Char)
+    {
+        setLetterDone(letter, R.drawable.abductmania_correct)
+    }
+
+    public fun setLetterWrong(letter : Char)
+    {
+        setLetterDone(letter, R.drawable.abductamania_wrong)
+    }
+
+    private fun setLetterDone(letter : Char, imageResource : Int)
+    {
+        val letterButtonImage = this[letter]
+        letterButtonImage?.button?.isEnabled = false
+
+        letterButtonImage?.overlapImage?.visibility = View.VISIBLE
+        letterButtonImage?.overlapImage?.setImageResource(imageResource)
+
+        remainingLetters.remove(letter)
+    }
+
+    public fun disableRemainingLetterButtons()
+    {
+        remainingLetters.forEach {
+            this[it]?.button?.isEnabled = false
+        }
+    }
+
+    public fun reenableRemainingLetterButtons()
+    {
+        remainingLetters.forEach {
+            this[it]?.button?.isEnabled = true
+        }
+    }
 
 
 }

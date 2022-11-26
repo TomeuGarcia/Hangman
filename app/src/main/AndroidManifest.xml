@@ -52,7 +52,7 @@
                 android:value="false" />
         </activity>
         <activity
-            android:name=".abductmania.HangmanGameActivity"
+            android:name=".abductmania.SplashScreenActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

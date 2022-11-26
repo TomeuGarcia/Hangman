@@ -10,6 +10,7 @@
     <color name="green_soft">#C1F46E</color>
     <color name="green_strong">#9CF322</color>
     <color name="purple_dark">#1F1C3B</color>
+    <color name="error_red">#A60845</color>
     <color name="mtrl_textinput_default_box_stroke_color">#9CF322</color>
 
     <color name="quarks">#673AB7</color>
