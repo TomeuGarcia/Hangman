@@ -1,8 +1,10 @@
 package com.example.hangmanapp.abductmania
 
+import android.view.View
+import com.example.hangmanapp.R
 import com.example.hangmanapp.databinding.ActivityHangmanGameBinding
 
-class LettersMap(binding: ActivityHangmanGameBinding) : HashMap<Char, LetterButtonImage>() {
+class GameKeyboardMap(binding: ActivityHangmanGameBinding) : HashMap<Char, LetterButtonImage>() {
 
     init {
         this['a'] = LetterButtonImage(binding.aButton, binding.aOverlapImage)
@@ -33,6 +35,48 @@ class LettersMap(binding: ActivityHangmanGameBinding) : HashMap<Char, LetterButt
         this['z'] = LetterButtonImage(binding.zButton, binding.zOverlapImage)
     }
 
+    public fun initButtonsClickCallback(callback : (Char) -> Unit)
+    {
+        this.forEach{
+            it.value.button.setOnClickListener{ viewIt ->
+                callback(it.key)
+            }
+        }
+    }
+
+    public fun hideOverlapImages()
+    {
+        this.forEach{
+            it.value.overlapImage.visibility = View.GONE
+        }
+    }
+
+    public fun setLetterCorrect(letter : Char)
+    {
+        val letterButtonImage = this[letter]
+
+        letterButtonImage?.button?.isEnabled = false
+
+        letterButtonImage?.overlapImage?.visibility = View.VISIBLE
+        letterButtonImage?.overlapImage?.setImageResource(R.drawable.abductmania_correct)
+    }
+
+    public fun setLetterWrong(letter : Char)
+    {
+        val letterButtonImage = this[letter]
+
+        letterButtonImage?.button?.isEnabled = false
+
+        letterButtonImage?.overlapImage?.visibility = View.VISIBLE
+        letterButtonImage?.overlapImage?.setImageResource(R.drawable.abductamania_wrong)
+    }
+
+    public fun disableAllButtons()
+    {
+        this.forEach{
+            it.value.button.isEnabled = false
+        }
+    }
 
 
 }
