@@ -42,53 +42,52 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/backgroundImageView"
-        app:layout_constraintVertical_bias="0.42000002" />
+        app:layout_constraintVertical_bias="0.32" />
 
     <Button
-        style="?attr/materialButtonOutlinedStyle"
         android:id="@+id/languageButton"
+        style="?attr/materialButtonOutlinedStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Language: English"
         android:textColor="@color/green_soft"
         app:iconTint="@color/green_strong"
         app:layout_constraintBottom_toTopOf="@+id/soundButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/settingsTextView"
+        app:layout_constraintStart_toStartOf="@+id/settingsTextView"
         app:layout_constraintTop_toBottomOf="@+id/settingsTextView"
         app:rippleColor="@color/green_strong"
         app:strokeColor="@color/green_strong" />
 
     <Button
-        style="?attr/materialButtonOutlinedStyle"
         android:id="@+id/soundButton"
+        style="?attr/materialButtonOutlinedStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Sound: ON"
         android:textColor="@color/green_soft"
         app:iconTint="@color/green_strong"
-        app:layout_constraintBottom_toTopOf="@+id/musicButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/languageButton"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/languageButton"
+        app:layout_constraintStart_toStartOf="@+id/languageButton"
+        app:layout_constraintTop_toBottomOf="@+id/settingsTextView"
+        app:layout_constraintVertical_bias="0.3"
         app:rippleColor="@color/green_strong"
         app:strokeColor="@color/green_strong" />
 
     <Button
-        style="?attr/materialButtonOutlinedStyle"
         android:id="@+id/musicButton"
+        style="?attr/materialButtonOutlinedStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Music: ON"
         android:textColor="@color/green_soft"
         app:iconTint="@color/green_strong"
-        app:layout_constraintBottom_toBottomOf="@+id/backgroundImageView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/soundButton"
+        app:layout_constraintStart_toStartOf="@+id/soundButton"
         app:layout_constraintTop_toBottomOf="@+id/soundButton"
+        app:layout_constraintVertical_bias="0.19999999"
         app:rippleColor="@color/green_strong"
         app:strokeColor="@color/green_strong" />
 

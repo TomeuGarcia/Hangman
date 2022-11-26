@@ -17,6 +17,7 @@ class MainMenuActivity : AppCompatActivity() {
 
         binding = ActivityMainMenuBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        supportActionBar?.hide()
 
 
         binding.mainMenuPlay.setOnClickListener{

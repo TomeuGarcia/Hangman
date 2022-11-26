@@ -30,7 +30,7 @@
                 android:value="false" />
         </activity>
         <activity
-            android:name=".abductmania.SplashScreenActivity"
+            android:name=".abductmania.HangmanGameActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -56,7 +56,7 @@
                 android:value="false" />
         </activity>
         <activity
-            android:name=".abductmania.HangmanGameActivity"
+            android:name=".abductmania.SplashScreenActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -86,7 +86,7 @@
             android:name=".nasa.NasaActivity"
             android:exported="false" />
         <activity
-            android:name=".ParticlesActivity"
+            android:name=".particles.ParticlesActivity"
             android:exported="false" />
     </application>
 
