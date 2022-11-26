@@ -2,64 +2,74 @@ package com.example.hangmanapp.abductmania
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ImageButton
-import android.widget.ImageView
+import android.view.View
 import android.widget.Toast
-import com.example.hangmanapp.R
 import com.example.hangmanapp.databinding.ActivityHangmanGameBinding
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
-import kotlin.collections.ArrayList
+import kotlin.concurrent.schedule
+import kotlin.math.max
 
 class HangmanGameActivity : AppCompatActivity()
 {
     private lateinit var binding: ActivityHangmanGameBinding
 
-    private val hangmanApiUrl : String = "https://hangman-api.herokuapp.com/"
+    private val HANGMAN_API_URL : String = "https://hangman-api.herokuapp.com/"
 
-    private var guessWord : String = ""
+    private var hangmanWord : String = ""
     private var gameToken : String = ""
 
     private var solution : String = ""
     private var hint : Char = ' '
 
-    private lateinit var lettersMap : LettersMap
+    private val CORRECT_LETTER_POINTS : Int = 50
+    private val WRONG_LETTER_POINTS : Int = 30
+    private val ALL_LETTERS_GUESSED_POINTS : Int = 200
+    private var score : Int = 0
+
+    private var wrongGuessesCount : Int = 0
+    private val MAX_WRONG_GUESSES : Int = 8
+
+    private val MISSING_LETTER : Char = '_'
+
+    private lateinit var gameKeyboardMap : GameKeyboardMap
+    private lateinit var hangmanDrawer : HangmanDrawer
+
+    private val END_GAME_FRAGMENT_START_DELAY : Long = 3000
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
 
         binding = ActivityHangmanGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
 
-        lettersMap = LettersMap(binding)
+        gameKeyboardMap = GameKeyboardMap(binding)
+        gameKeyboardMap.initButtonsClickCallback(this::guessLetter)
+        gameKeyboardMap.hideOverlapImages()
+
+        binding.guesswordText.text = ""
+
+        hangmanDrawer = HangmanDrawer(
+            listOf(
+                HangmanDrawingPart(binding.ufoCenterImage, View.INVISIBLE, View.VISIBLE),
+                HangmanDrawingPart(binding.ufoLeftImage, View.INVISIBLE, View.VISIBLE),
+                HangmanDrawingPart(binding.ufoRightImage, View.INVISIBLE, View.VISIBLE),
+                HangmanDrawingPart(binding.ufoWavesImage, View.INVISIBLE, View.VISIBLE),
+                HangmanDrawingPart(binding.building2Image, View.VISIBLE, View.INVISIBLE),
+                HangmanDrawingPart(binding.building4Image, View.VISIBLE, View.INVISIBLE),
+                HangmanDrawingPart(binding.building1Image, View.VISIBLE, View.INVISIBLE),
+                HangmanDrawingPart(binding.building3Image, View.VISIBLE, View.INVISIBLE)
+            )
+        )
+
 
         createNewHangmanGame()
 
-
-
-        binding.aButton.setOnClickListener {
-            guessLetter('a')
-        }
-
-        binding.eButton.setOnClickListener {
-            guessLetter('e')
-        }
-
-        binding.iButton.setOnClickListener {
-            guessLetter('i')
-        }
-
-        binding.oButton.setOnClickListener {
-            guessLetter('o')
-        }
-
-        binding.uButton.setOnClickListener {
-            guessLetter('u')
-        }
-
+        /*
         binding.xButton.setOnClickListener {
             createNewHangmanGame()
         }
@@ -71,8 +81,7 @@ class HangmanGameActivity : AppCompatActivity()
         binding.zButton.setOnClickListener {
             getHint()
         }
-
-
+        */
 
     }
 
@@ -80,7 +89,7 @@ class HangmanGameActivity : AppCompatActivity()
     private fun createNewHangmanGame()
     {
         val retrofit = Retrofit.Builder()
-            .baseUrl(hangmanApiUrl)
+            .baseUrl(HANGMAN_API_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -90,10 +99,10 @@ class HangmanGameActivity : AppCompatActivity()
 
             override fun onResponse(call: Call<HangmanGame>, response: Response<HangmanGame>)
             {
-                guessWord = response.body()?.hangman ?: ""
+                hangmanWord = response.body()?.hangman ?: ""
                 gameToken = response.body()?.token ?: ""
 
-                binding.guesswordText.text = guessWord
+                binding.guesswordText.text = hangmanWord
             }
 
             override fun onFailure(call: Call<HangmanGame>, t: Throwable)
@@ -107,7 +116,7 @@ class HangmanGameActivity : AppCompatActivity()
     private fun getSolution()
     {
         val retrofit = Retrofit.Builder()
-            .baseUrl(hangmanApiUrl)
+            .baseUrl(HANGMAN_API_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -118,10 +127,11 @@ class HangmanGameActivity : AppCompatActivity()
             {
                 solution = response.body()?.solution ?: ""
                 gameToken = response.body()?.token ?: ""
-                Toast.makeText(this@HangmanGameActivity, solution, Toast.LENGTH_LONG).show()
 
-                guessWord = solution
-                binding.guesswordText.text = guessWord
+                hangmanWord = solution
+                binding.guesswordText.text = hangmanWord
+
+                onGameOverSolutionObtained()
             }
 
             override fun onFailure(call: Call<HangmanGameSolution>, t: Throwable)
@@ -135,7 +145,7 @@ class HangmanGameActivity : AppCompatActivity()
     private fun getHint()
     {
         val retrofit = Retrofit.Builder()
-            .baseUrl(hangmanApiUrl)
+            .baseUrl(HANGMAN_API_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -147,7 +157,7 @@ class HangmanGameActivity : AppCompatActivity()
                 hint = response.body()?.hint?.get(0) ?: ' '
                 gameToken = response.body()?.token ?: ""
 
-                Toast.makeText(this@HangmanGameActivity, hint.toString(), Toast.LENGTH_LONG).show()
+                guessLetter(hint)
             }
 
             override fun onFailure(call: Call<HangmanGameHint>, t: Throwable)
@@ -161,7 +171,7 @@ class HangmanGameActivity : AppCompatActivity()
     private fun guessLetter(letter : Char)
     {
         val retrofit = Retrofit.Builder()
-            .baseUrl(hangmanApiUrl)
+            .baseUrl(HANGMAN_API_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -171,9 +181,9 @@ class HangmanGameActivity : AppCompatActivity()
             override fun onResponse(call: Call<HangmanLetterGuessResponse>,response: Response<HangmanLetterGuessResponse>)
             {
                 val isCorrect : Boolean = response.body()?.correct ?: false
-                guessWord = response.body()?.hangman ?: "";
+                hangmanWord = response.body()?.hangman ?: "";
                 gameToken = response.body()?.token ?: ""
-                binding.guesswordText.text = guessWord
+                binding.guesswordText.text = hangmanWord
 
                 if (isCorrect) { onGuessedLetterCorrectly(letter) }
                 else { onGuessedLetterIncorrectly(letter) }
@@ -190,17 +200,77 @@ class HangmanGameActivity : AppCompatActivity()
 
     private fun onGuessedLetterCorrectly(letter : Char)
     {
-        lettersMap[letter]?.button?.isEnabled = false
-        lettersMap[letter]?.overlapImage?.setImageResource(R.drawable.abductmania_correct)
+        gameKeyboardMap.setLetterCorrect(letter)
+        score += CORRECT_LETTER_POINTS
+
+        if (hasGuessedAllLetters()) doVictory()
     }
 
     private fun onGuessedLetterIncorrectly(letter : Char)
     {
-        lettersMap[letter]?.button?.isEnabled = false
-        lettersMap[letter]?.overlapImage?.setImageResource(R.drawable.abductamania_wrong)
+        gameKeyboardMap.setLetterWrong(letter)
+        score -= WRONG_LETTER_POINTS
+
+        hangmanDrawer.drawPart(wrongGuessesCount)
+
+        if (++wrongGuessesCount == MAX_WRONG_GUESSES) doGameOver()
     }
 
+    private fun hasGuessedAllLetters() : Boolean
+    {
+        return !binding.guesswordText.text.any {
+            it == MISSING_LETTER
+        }
+    }
 
+    private fun doVictory()
+    {
+        score += ALL_LETTERS_GUESSED_POINTS
+
+        gameKeyboardMap.disableAllButtons()
+
+        Timer().schedule(END_GAME_FRAGMENT_START_DELAY) {
+            setEndGameFragment(HangmanYouWinFragment(hangmanWord, score))
+        }
+    }
+
+    private fun doGameOver()
+    {
+        gameKeyboardMap.disableAllButtons()
+
+        getSolution() // this is async.... wait until solution received to do real GameOver
+    }
+
+    private fun onGameOverSolutionObtained()
+    {
+        score = max(0, score) // Make score not negative
+
+        Timer().schedule(END_GAME_FRAGMENT_START_DELAY) {
+            setEndGameFragment(HangmanYouLoseFragment(hangmanWord, score))
+        }
+
+    }
+
+    private fun setEndGameFragment(fragment: HangmanEndGameFragment)
+    {
+        supportFragmentManager.beginTransaction().apply {
+            supportFragmentManager.fragments.forEach {
+                hide(it)
+            }
+
+            if (fragment.isAdded)
+            {
+                show(fragment)
+            }
+            else
+            {
+                replace(binding.fragmentFrameLayout.id, fragment)
+            }
+
+            commit()
+        }
+
+    }
 
 
 }
