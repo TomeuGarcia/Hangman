@@ -2,7 +2,9 @@ package com.example.hangmanapp.abductmania
 
 import androidx.fragment.app.Fragment
 
-abstract class HangmanEndGameFragment : Fragment()
+abstract class HangmanEndGameFragment(protected var hangmanWord : String,
+                                      protected var score : Int)
+    : Fragment()
 {
-    public abstract fun init(hangmanWord : String, score : Int)
+    protected abstract fun initViewComponents()
 }

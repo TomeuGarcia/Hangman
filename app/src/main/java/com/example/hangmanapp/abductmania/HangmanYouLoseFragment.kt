@@ -5,27 +5,26 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import com.example.hangmanapp.databinding.FragmentHangmanYouWinBinding
+import com.example.hangmanapp.databinding.FragmentHangmanYouLoseBinding
 
-open class HangmanYouWinFragment(hangmanWord: String, score: Int)
+open class HangmanYouLoseFragment(hangmanWord: String, score: Int)
     : HangmanEndGameFragment(hangmanWord, score)
 {
-    private lateinit var binding: FragmentHangmanYouWinBinding
+    private lateinit var binding: FragmentHangmanYouLoseBinding
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?) : View?
     {
-        binding = FragmentHangmanYouWinBinding.inflate(inflater, container, false)
+        binding = FragmentHangmanYouLoseBinding.inflate(inflater, container, false)
 
 
-        binding.ywHomeIcon.setOnClickListener {
+        binding.ylHomeIcon.setOnClickListener {
             val intent = Intent(activity, MainMenuActivity::class.java)
             startActivity(intent)
         }
 
-        binding.ywReplayIcon.setOnClickListener {
+        binding.ylReplayIcon.setOnClickListener {
             activity?.finish()
             startActivity(activity?.intent);
         }
@@ -33,14 +32,11 @@ open class HangmanYouWinFragment(hangmanWord: String, score: Int)
         initViewComponents()
 
         return binding.root
-    }
 
+    }
     public override fun initViewComponents()
     {
-        binding.ywHangmanWordText.text = hangmanWord
-        binding.ywScoreText.text = score.toString()
+        binding.ylHangmanWordText.text = hangmanWord
+        binding.ylScoreText.text = score.toString()
     }
-
-
-
 }

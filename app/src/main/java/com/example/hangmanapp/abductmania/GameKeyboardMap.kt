@@ -71,4 +71,12 @@ class GameKeyboardMap(binding: ActivityHangmanGameBinding) : HashMap<Char, Lette
         letterButtonImage?.overlapImage?.setImageResource(R.drawable.abductamania_wrong)
     }
 
+    public fun disableAllButtons()
+    {
+        this.forEach{
+            it.value.button.isEnabled = false
+        }
+    }
+
+
 }

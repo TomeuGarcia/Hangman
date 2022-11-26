@@ -2,17 +2,20 @@ package com.example.hangmanapp.abductmania
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import com.example.hangmanapp.databinding.ActivityHangmanGameBinding
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
+import kotlin.concurrent.schedule
 import kotlin.math.max
 
 class HangmanGameActivity : AppCompatActivity()
 {
     private lateinit var binding: ActivityHangmanGameBinding
 
-    private val hangmanApiUrl : String = "https://hangman-api.herokuapp.com/"
+    private val HANGMAN_API_URL : String = "https://hangman-api.herokuapp.com/"
 
     private var hangmanWord : String = ""
     private var gameToken : String = ""
@@ -20,17 +23,20 @@ class HangmanGameActivity : AppCompatActivity()
     private var solution : String = ""
     private var hint : Char = ' '
 
-    private lateinit var gameKeyboardMap : GameKeyboardMap
-
     private val CORRECT_LETTER_POINTS : Int = 50
     private val WRONG_LETTER_POINTS : Int = 30
     private val ALL_LETTERS_GUESSED_POINTS : Int = 200
     private var score : Int = 0
 
     private var wrongGuessesCount : Int = 0
-    private val MAX_WRONG_GUESSES : Int = 7
+    private val MAX_WRONG_GUESSES : Int = 8
 
     private val MISSING_LETTER : Char = '_'
+
+    private lateinit var gameKeyboardMap : GameKeyboardMap
+    private lateinit var hangmanDrawer : HangmanDrawer
+
+    private val END_GAME_FRAGMENT_START_DELAY : Long = 3000
 
 
     override fun onCreate(savedInstanceState: Bundle?)
@@ -44,6 +50,21 @@ class HangmanGameActivity : AppCompatActivity()
         gameKeyboardMap = GameKeyboardMap(binding)
         gameKeyboardMap.initButtonsClickCallback(this::guessLetter)
         gameKeyboardMap.hideOverlapImages()
+
+        binding.guesswordText.text = ""
+
+        hangmanDrawer = HangmanDrawer(
+            listOf(
+                HangmanDrawingPart(binding.ufoCenterImage, View.INVISIBLE, View.VISIBLE),
+                HangmanDrawingPart(binding.ufoLeftImage, View.INVISIBLE, View.VISIBLE),
+                HangmanDrawingPart(binding.ufoRightImage, View.INVISIBLE, View.VISIBLE),
+                HangmanDrawingPart(binding.ufoWavesImage, View.INVISIBLE, View.VISIBLE),
+                HangmanDrawingPart(binding.building2Image, View.VISIBLE, View.INVISIBLE),
+                HangmanDrawingPart(binding.building4Image, View.VISIBLE, View.INVISIBLE),
+                HangmanDrawingPart(binding.building1Image, View.VISIBLE, View.INVISIBLE),
+                HangmanDrawingPart(binding.building3Image, View.VISIBLE, View.INVISIBLE)
+            )
+        )
 
 
         createNewHangmanGame()
@@ -68,7 +89,7 @@ class HangmanGameActivity : AppCompatActivity()
     private fun createNewHangmanGame()
     {
         val retrofit = Retrofit.Builder()
-            .baseUrl(hangmanApiUrl)
+            .baseUrl(HANGMAN_API_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -95,7 +116,7 @@ class HangmanGameActivity : AppCompatActivity()
     private fun getSolution()
     {
         val retrofit = Retrofit.Builder()
-            .baseUrl(hangmanApiUrl)
+            .baseUrl(HANGMAN_API_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -106,7 +127,6 @@ class HangmanGameActivity : AppCompatActivity()
             {
                 solution = response.body()?.solution ?: ""
                 gameToken = response.body()?.token ?: ""
-                Toast.makeText(this@HangmanGameActivity, solution, Toast.LENGTH_LONG).show()
 
                 hangmanWord = solution
                 binding.guesswordText.text = hangmanWord
@@ -125,7 +145,7 @@ class HangmanGameActivity : AppCompatActivity()
     private fun getHint()
     {
         val retrofit = Retrofit.Builder()
-            .baseUrl(hangmanApiUrl)
+            .baseUrl(HANGMAN_API_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -137,7 +157,7 @@ class HangmanGameActivity : AppCompatActivity()
                 hint = response.body()?.hint?.get(0) ?: ' '
                 gameToken = response.body()?.token ?: ""
 
-                Toast.makeText(this@HangmanGameActivity, hint.toString(), Toast.LENGTH_LONG).show()
+                guessLetter(hint)
             }
 
             override fun onFailure(call: Call<HangmanGameHint>, t: Throwable)
@@ -151,7 +171,7 @@ class HangmanGameActivity : AppCompatActivity()
     private fun guessLetter(letter : Char)
     {
         val retrofit = Retrofit.Builder()
-            .baseUrl(hangmanApiUrl)
+            .baseUrl(HANGMAN_API_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -191,6 +211,8 @@ class HangmanGameActivity : AppCompatActivity()
         gameKeyboardMap.setLetterWrong(letter)
         score -= WRONG_LETTER_POINTS
 
+        hangmanDrawer.drawPart(wrongGuessesCount)
+
         if (++wrongGuessesCount == MAX_WRONG_GUESSES) doGameOver()
     }
 
@@ -204,24 +226,29 @@ class HangmanGameActivity : AppCompatActivity()
     private fun doVictory()
     {
         score += ALL_LETTERS_GUESSED_POINTS
-        Toast.makeText(this, "GUESSED ALL LETTERS", Toast.LENGTH_LONG).show()
 
-        // TODO Open WIN fragment
-        setEndGameFragment(HangmanYouWinFragment())
+        gameKeyboardMap.disableAllButtons()
+
+        Timer().schedule(END_GAME_FRAGMENT_START_DELAY) {
+            setEndGameFragment(HangmanYouWinFragment(hangmanWord, score))
+        }
     }
 
     private fun doGameOver()
     {
+        gameKeyboardMap.disableAllButtons()
+
         getSolution() // this is async.... wait until solution received to do real GameOver
     }
 
     private fun onGameOverSolutionObtained()
     {
         score = max(0, score) // Make score not negative
-        Toast.makeText(this, "GAME OVER", Toast.LENGTH_LONG).show()
 
-        // TODO Open LOSE fragment
-        setEndGameFragment(HangmanYouWinFragment())
+        Timer().schedule(END_GAME_FRAGMENT_START_DELAY) {
+            setEndGameFragment(HangmanYouLoseFragment(hangmanWord, score))
+        }
+
     }
 
     private fun setEndGameFragment(fragment: HangmanEndGameFragment)
@@ -241,8 +268,6 @@ class HangmanGameActivity : AppCompatActivity()
             }
 
             commit()
-
-            fragment.init(hangmanWord, score)
         }
 
     }
