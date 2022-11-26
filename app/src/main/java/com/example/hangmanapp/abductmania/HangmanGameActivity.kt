@@ -56,13 +56,13 @@ class HangmanGameActivity : AppCompatActivity()
         hangmanDrawer = HangmanDrawer(
             listOf(
                 HangmanDrawingPart(binding.ufoCenterImage, View.INVISIBLE, View.VISIBLE),
-                HangmanDrawingPart(binding.ufoLeftImage, View.INVISIBLE, View.VISIBLE),
-                HangmanDrawingPart(binding.ufoRightImage, View.INVISIBLE, View.VISIBLE),
-                HangmanDrawingPart(binding.ufoWavesImage, View.INVISIBLE, View.VISIBLE),
-                HangmanDrawingPart(binding.building2Image, View.VISIBLE, View.INVISIBLE),
-                HangmanDrawingPart(binding.building4Image, View.VISIBLE, View.INVISIBLE),
-                HangmanDrawingPart(binding.building1Image, View.VISIBLE, View.INVISIBLE),
-                HangmanDrawingPart(binding.building3Image, View.VISIBLE, View.INVISIBLE)
+                HangmanDrawingPart(binding.ufoLeftImage,   View.INVISIBLE, View.VISIBLE),
+                HangmanDrawingPart(binding.ufoRightImage,  View.INVISIBLE, View.VISIBLE),
+                HangmanDrawingPart(binding.ufoWavesImage,  View.INVISIBLE, View.VISIBLE),
+                HangmanDrawingPart(binding.building2Image, View.VISIBLE,   View.INVISIBLE),
+                HangmanDrawingPart(binding.building4Image, View.VISIBLE,   View.INVISIBLE),
+                HangmanDrawingPart(binding.building1Image, View.VISIBLE,   View.INVISIBLE),
+                HangmanDrawingPart(binding.building3Image, View.VISIBLE,   View.INVISIBLE)
             )
         )
 
@@ -177,6 +177,8 @@ class HangmanGameActivity : AppCompatActivity()
 
         val call = retrofit.create(ApiHangman::class.java)
 
+        gameKeyboardMap.disableRemainingLetterButtons()
+
         call.guessLetter(letter.toString(), gameToken).enqueue(object : Callback<HangmanLetterGuessResponse>{
             override fun onResponse(call: Call<HangmanLetterGuessResponse>,response: Response<HangmanLetterGuessResponse>)
             {
@@ -193,6 +195,8 @@ class HangmanGameActivity : AppCompatActivity()
             {
                 Toast.makeText(this@HangmanGameActivity,
                     "Something went wrong -> guessLetter()", Toast.LENGTH_LONG).show()
+
+                gameKeyboardMap.reenableRemainingLetterButtons()
             }
         })
     }
@@ -204,6 +208,8 @@ class HangmanGameActivity : AppCompatActivity()
         score += CORRECT_LETTER_POINTS
 
         if (hasGuessedAllLetters()) doVictory()
+        else gameKeyboardMap.reenableRemainingLetterButtons()
+
     }
 
     private fun onGuessedLetterIncorrectly(letter : Char)
@@ -214,6 +220,7 @@ class HangmanGameActivity : AppCompatActivity()
         hangmanDrawer.drawPart(wrongGuessesCount)
 
         if (++wrongGuessesCount == MAX_WRONG_GUESSES) doGameOver()
+        else gameKeyboardMap.reenableRemainingLetterButtons()
     }
 
     private fun hasGuessedAllLetters() : Boolean
@@ -227,7 +234,7 @@ class HangmanGameActivity : AppCompatActivity()
     {
         score += ALL_LETTERS_GUESSED_POINTS
 
-        gameKeyboardMap.disableAllButtons()
+        gameKeyboardMap.disableRemainingLetterButtons()
 
         Timer().schedule(END_GAME_FRAGMENT_START_DELAY) {
             setEndGameFragment(HangmanYouWinFragment(hangmanWord, score))
@@ -236,7 +243,7 @@ class HangmanGameActivity : AppCompatActivity()
 
     private fun doGameOver()
     {
-        gameKeyboardMap.disableAllButtons()
+        gameKeyboardMap.disableRemainingLetterButtons()
 
         getSolution() // this is async.... wait until solution received to do real GameOver
     }
@@ -248,7 +255,6 @@ class HangmanGameActivity : AppCompatActivity()
         Timer().schedule(END_GAME_FRAGMENT_START_DELAY) {
             setEndGameFragment(HangmanYouLoseFragment(hangmanWord, score))
         }
-
     }
 
     private fun setEndGameFragment(fragment: HangmanEndGameFragment)
