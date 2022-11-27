@@ -4,22 +4,45 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import com.example.hangmanapp.R
 import com.example.hangmanapp.databinding.ActivityConfigurationBinding
+import com.google.firebase.firestore.FirebaseFirestore
 
 class ConfigurationActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityConfigurationBinding
+    private val USERS_COLLECTION = "users"
 
-    private val languages = arrayOf<String>("English", "Spanish", "Catalan")
+    private lateinit var binding: ActivityConfigurationBinding
+    private lateinit var firestore: FirebaseFirestore
+
+    private val languages = arrayOf<String>("English", "Catalan", "Spanish")
     private var currentLang = 0
     private var music = true
     private var sound = true
+
+    private var users = arrayListOf<User>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityConfigurationBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        supportActionBar?.hide()
+
+        firestore = FirebaseFirestore.getInstance()
+        val usersCollection = firestore.collection(USERS_COLLECTION)
+
+        usersCollection.get()
+            .addOnSuccessListener {
+                users = it?.documents?.mapNotNull { dbUser ->
+                    dbUser.toObject(User::class.java)
+                } as ArrayList<User>
+
+                Toast.makeText(this, users.size, Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, getString(R.string.somethingWentWrong), Toast.LENGTH_LONG).show()
+            }
 
         //val sharedPreferences = getSharedPreferences(getString(R.string.preferences_config), MODE_PRIVATE)
         //var editor = sharedPreferences.edit()
