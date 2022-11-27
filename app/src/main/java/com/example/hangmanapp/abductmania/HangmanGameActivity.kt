@@ -1,16 +1,24 @@
 package com.example.hangmanapp.abductmania
 
+import android.animation.ObjectAnimator
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.View
 import android.widget.Toast
+import com.example.hangmanapp.R
 import com.example.hangmanapp.databinding.ActivityHangmanGameBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
 import kotlin.concurrent.schedule
 import kotlin.math.max
 
+@Suppress("DEPRECATION")
 class HangmanGameActivity : AppCompatActivity()
 {
     private lateinit var binding: ActivityHangmanGameBinding
@@ -33,11 +41,18 @@ class HangmanGameActivity : AppCompatActivity()
 
     private val MISSING_LETTER : Char = '_'
 
-    private lateinit var gameKeyboardMap : GameKeyboardMap
-    private lateinit var hangmanDrawer : HangmanDrawer
-
     private val END_GAME_FRAGMENT_START_DELAY : Long = 3000
 
+    private val COUNTDOWN_TOTAL_TIME : Long = 10000
+    private val COUNTDOWN_INTERVAL_TIME : Long = 1000
+    private val COUNTDOWN_ANIM_START_TIME : Long = COUNTDOWN_TOTAL_TIME / 2
+    private var countDownCurrentTime : Long = COUNTDOWN_TOTAL_TIME
+
+    private lateinit var gameKeyboardMap : GameKeyboardMap
+    private lateinit var hangmanDrawer : HangmanDrawer
+    private lateinit var pauseFragment : HangmanGamePauseFragment
+    private lateinit var countDownTimer : CountDownTimer
+    private var isGameOver : Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -56,18 +71,23 @@ class HangmanGameActivity : AppCompatActivity()
         hangmanDrawer = HangmanDrawer(
             listOf(
                 HangmanDrawingPart(binding.ufoCenterImage, View.INVISIBLE, View.VISIBLE),
-                HangmanDrawingPart(binding.ufoLeftImage, View.INVISIBLE, View.VISIBLE),
-                HangmanDrawingPart(binding.ufoRightImage, View.INVISIBLE, View.VISIBLE),
-                HangmanDrawingPart(binding.ufoWavesImage, View.INVISIBLE, View.VISIBLE),
-                HangmanDrawingPart(binding.building2Image, View.VISIBLE, View.INVISIBLE),
-                HangmanDrawingPart(binding.building4Image, View.VISIBLE, View.INVISIBLE),
-                HangmanDrawingPart(binding.building1Image, View.VISIBLE, View.INVISIBLE),
-                HangmanDrawingPart(binding.building3Image, View.VISIBLE, View.INVISIBLE)
+                HangmanDrawingPart(binding.ufoLeftImage,   View.INVISIBLE, View.VISIBLE),
+                HangmanDrawingPart(binding.ufoRightImage,  View.INVISIBLE, View.VISIBLE),
+                HangmanDrawingPart(binding.ufoWavesImage,  View.INVISIBLE, View.VISIBLE),
+                HangmanDrawingPart(binding.building2Image, View.VISIBLE,   View.INVISIBLE),
+                HangmanDrawingPart(binding.building4Image, View.VISIBLE,   View.INVISIBLE),
+                HangmanDrawingPart(binding.building1Image, View.VISIBLE,   View.INVISIBLE),
+                HangmanDrawingPart(binding.building3Image, View.VISIBLE,   View.INVISIBLE)
             )
         )
 
+        pauseFragment = HangmanGamePauseFragment(this::resumeGame)
 
         createNewHangmanGame()
+
+        binding.pauseIcon.setOnClickListener {
+            pauseGame()
+        }
 
         /*
         binding.xButton.setOnClickListener {
@@ -82,12 +102,14 @@ class HangmanGameActivity : AppCompatActivity()
             getHint()
         }
         */
+        updateCountDownText()
 
     }
 
-
     private fun createNewHangmanGame()
     {
+        gameKeyboardMap.disableRemainingLetterButtons()
+
         val retrofit = Retrofit.Builder()
             .baseUrl(HANGMAN_API_URL)
             .addConverterFactory(GsonConverterFactory.create())
@@ -103,12 +125,19 @@ class HangmanGameActivity : AppCompatActivity()
                 gameToken = response.body()?.token ?: ""
 
                 binding.guesswordText.text = hangmanWord
+
+                gameKeyboardMap.reenableRemainingLetterButtons()
+
+                countDownTime(countDownCurrentTime)
+                countDownTimer.start()
             }
 
             override fun onFailure(call: Call<HangmanGame>, t: Throwable)
             {
                 Toast.makeText(this@HangmanGameActivity,
                     "Something went wrong -> createNewHangmanGame()", Toast.LENGTH_LONG)
+
+                gameKeyboardMap.reenableRemainingLetterButtons()
             }
         })
     }
@@ -177,26 +206,32 @@ class HangmanGameActivity : AppCompatActivity()
 
         val call = retrofit.create(ApiHangman::class.java)
 
+        gameKeyboardMap.disableRemainingLetterButtons()
+
         call.guessLetter(letter.toString(), gameToken).enqueue(object : Callback<HangmanLetterGuessResponse>{
             override fun onResponse(call: Call<HangmanLetterGuessResponse>,response: Response<HangmanLetterGuessResponse>)
             {
-                val isCorrect : Boolean = response.body()?.correct ?: false
-                hangmanWord = response.body()?.hangman ?: "";
-                gameToken = response.body()?.token ?: ""
-                binding.guesswordText.text = hangmanWord
+                if (!isGameOver)
+                {
+                    val isCorrect : Boolean = response.body()?.correct ?: false
+                    hangmanWord = response.body()?.hangman ?: "";
+                    gameToken = response.body()?.token ?: ""
+                    binding.guesswordText.text = hangmanWord
 
-                if (isCorrect) { onGuessedLetterCorrectly(letter) }
-                else { onGuessedLetterIncorrectly(letter) }
+                    if (isCorrect) { onGuessedLetterCorrectly(letter) }
+                    else { onGuessedLetterIncorrectly(letter) }
+                }
             }
 
             override fun onFailure(call: Call<HangmanLetterGuessResponse>, t: Throwable)
             {
                 Toast.makeText(this@HangmanGameActivity,
                     "Something went wrong -> guessLetter()", Toast.LENGTH_LONG).show()
+
+                gameKeyboardMap.reenableRemainingLetterButtons()
             }
         })
     }
-
 
     private fun onGuessedLetterCorrectly(letter : Char)
     {
@@ -204,6 +239,8 @@ class HangmanGameActivity : AppCompatActivity()
         score += CORRECT_LETTER_POINTS
 
         if (hasGuessedAllLetters()) doVictory()
+        else gameKeyboardMap.reenableRemainingLetterButtons()
+
     }
 
     private fun onGuessedLetterIncorrectly(letter : Char)
@@ -214,6 +251,7 @@ class HangmanGameActivity : AppCompatActivity()
         hangmanDrawer.drawPart(wrongGuessesCount)
 
         if (++wrongGuessesCount == MAX_WRONG_GUESSES) doGameOver()
+        else gameKeyboardMap.reenableRemainingLetterButtons()
     }
 
     private fun hasGuessedAllLetters() : Boolean
@@ -225,9 +263,10 @@ class HangmanGameActivity : AppCompatActivity()
 
     private fun doVictory()
     {
-        score += ALL_LETTERS_GUESSED_POINTS
+        score += ALL_LETTERS_GUESSED_POINTS + countDownCurrentTime.toInt()
 
-        gameKeyboardMap.disableAllButtons()
+        gameKeyboardMap.disableRemainingLetterButtons()
+        binding.pauseIcon.isEnabled = false
 
         Timer().schedule(END_GAME_FRAGMENT_START_DELAY) {
             setEndGameFragment(HangmanYouWinFragment(hangmanWord, score))
@@ -236,7 +275,9 @@ class HangmanGameActivity : AppCompatActivity()
 
     private fun doGameOver()
     {
-        gameKeyboardMap.disableAllButtons()
+        isGameOver = true
+        gameKeyboardMap.disableRemainingLetterButtons()
+        binding.pauseIcon.isEnabled = false
 
         getSolution() // this is async.... wait until solution received to do real GameOver
     }
@@ -245,10 +286,10 @@ class HangmanGameActivity : AppCompatActivity()
     {
         score = max(0, score) // Make score not negative
 
-        Timer().schedule(END_GAME_FRAGMENT_START_DELAY) {
+        CoroutineScope(Dispatchers.Default).launch {
+            delay(END_GAME_FRAGMENT_START_DELAY)
             setEndGameFragment(HangmanYouLoseFragment(hangmanWord, score))
         }
-
     }
 
     private fun setEndGameFragment(fragment: HangmanEndGameFragment)
@@ -269,8 +310,73 @@ class HangmanGameActivity : AppCompatActivity()
 
             commit()
         }
-
     }
 
+    private fun pauseGame()
+    {
+        gameKeyboardMap.disableRemainingLetterButtons()
+        binding.pauseIcon.isEnabled = false
+        countDownTimer.cancel()
+
+        supportFragmentManager.beginTransaction().apply {
+            if (pauseFragment.isAdded)
+            {
+                show(pauseFragment)
+            }
+            else
+            {
+                replace(binding.fragmentFrameLayout.id, pauseFragment)
+            }
+
+            commit()
+        }
+    }
+
+    private fun resumeGame()
+    {
+        gameKeyboardMap.reenableRemainingLetterButtons()
+        binding.pauseIcon.isEnabled = true
+        //countDownTime(countDownCurrentTime)
+        countDownTimer.start()
+
+        supportFragmentManager.beginTransaction().apply {
+            hide(pauseFragment)
+            commit()
+        }
+    }
+
+    private fun countDownTime(startTime : Long)
+    {
+        countDownTimer = object : CountDownTimer(startTime,COUNTDOWN_INTERVAL_TIME){
+            override fun onTick(millisUntilFinished: Long)
+            {
+                countDownCurrentTime = millisUntilFinished / 1000
+                updateCountDownText()
+                if (millisUntilFinished <= COUNTDOWN_ANIM_START_TIME) playCountDownTextColorAnim()
+            }
+            override fun onFinish(){
+                if(countDownCurrentTime <= 0)
+                {
+                    doGameOver()
+                }
+            }
+
+        }
+    }
+
+    private fun updateCountDownText()
+    {
+        binding.countDownText.text = countDownCurrentTime.toString() + "s"
+    }
+
+    private fun playCountDownTextColorAnim()
+    {
+        ObjectAnimator.ofArgb(binding.countDownText, "textColor",
+            resources.getColor(R.color.error_red), resources.getColor(R.color.green_soft))
+            .apply {
+                duration = COUNTDOWN_INTERVAL_TIME
+                start()
+            }
+    }
 
 }

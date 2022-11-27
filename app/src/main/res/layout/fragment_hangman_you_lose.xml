@@ -30,13 +30,13 @@
 
     <ImageView
         android:id="@+id/ylUfosImage"
-        android:layout_width="334dp"
-        android:layout_height="313dp"
-        app:layout_constraintBottom_toBottomOf="@+id/ywYouWinText"
+        android:layout_width="313dp"
+        android:layout_height="123dp"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toTopOf="@+id/ylYouLoseText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/abductmania_youlose_ufos" />
 
     <TextView
@@ -84,10 +84,11 @@
         android:id="@+id/ylHangmanWordText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:autoText="false"
         android:text="veryweirdword"
         android:textAlignment="center"
         android:textColor="#A50845"
-        android:textSize="24sp"
+        android:textSize="34sp"
         app:layout_constraintBottom_toBottomOf="@+id/ylTextBoxImage"
         app:layout_constraintEnd_toEndOf="@+id/ylTextBoxImage"
         app:layout_constraintStart_toStartOf="@+id/ylTextBoxImage"
@@ -103,7 +104,7 @@
         app:layout_constraintHorizontal_bias="0.3"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.9"
+        app:layout_constraintVertical_bias="0.92"
         app:srcCompat="@drawable/abductmania_button_replay" />
 
     <ImageView
@@ -115,7 +116,7 @@
         app:layout_constraintHorizontal_bias="0.7"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.9"
+        app:layout_constraintVertical_bias="0.92"
         app:srcCompat="@drawable/abductmania_button_home" />
 
     <ImageView
@@ -128,4 +129,5 @@
         app:layout_constraintTop_toTopOf="@+id/ylTextBoxImage"
         app:layout_constraintVertical_bias="0.13"
         app:srcCompat="@drawable/abductmania_youlose_text" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
