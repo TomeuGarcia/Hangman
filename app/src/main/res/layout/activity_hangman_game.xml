@@ -155,7 +155,7 @@
         android:id="@+id/countDownText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:text="00"
         android:textAlignment="textStart"
         android:textColor="#8BC34A"
         android:textSize="34sp"

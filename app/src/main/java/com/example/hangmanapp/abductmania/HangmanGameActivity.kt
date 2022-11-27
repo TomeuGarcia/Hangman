@@ -1,10 +1,12 @@
 package com.example.hangmanapp.abductmania
 
+import android.animation.ObjectAnimator
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
 import android.widget.Toast
+import com.example.hangmanapp.R
 import com.example.hangmanapp.databinding.ActivityHangmanGameBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -16,6 +18,7 @@ import java.util.*
 import kotlin.concurrent.schedule
 import kotlin.math.max
 
+@Suppress("DEPRECATION")
 class HangmanGameActivity : AppCompatActivity()
 {
     private lateinit var binding: ActivityHangmanGameBinding
@@ -42,12 +45,14 @@ class HangmanGameActivity : AppCompatActivity()
 
     private val COUNTDOWN_TOTAL_TIME : Long = 10000
     private val COUNTDOWN_INTERVAL_TIME : Long = 1000
+    private val COUNTDOWN_ANIM_START_TIME : Long = COUNTDOWN_TOTAL_TIME / 2
     private var countDownCurrentTime : Long = COUNTDOWN_TOTAL_TIME
 
     private lateinit var gameKeyboardMap : GameKeyboardMap
     private lateinit var hangmanDrawer : HangmanDrawer
     private lateinit var pauseFragment : HangmanGamePauseFragment
     private lateinit var countDownTimer : CountDownTimer
+    private var isGameOver : Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -98,8 +103,7 @@ class HangmanGameActivity : AppCompatActivity()
         }
         */
         updateCountDownText()
-        countDownTime(countDownCurrentTime)
-        countDownTimer.start()
+
     }
 
     private fun createNewHangmanGame()
@@ -123,6 +127,9 @@ class HangmanGameActivity : AppCompatActivity()
                 binding.guesswordText.text = hangmanWord
 
                 gameKeyboardMap.reenableRemainingLetterButtons()
+
+                countDownTime(countDownCurrentTime)
+                countDownTimer.start()
             }
 
             override fun onFailure(call: Call<HangmanGame>, t: Throwable)
@@ -204,13 +211,16 @@ class HangmanGameActivity : AppCompatActivity()
         call.guessLetter(letter.toString(), gameToken).enqueue(object : Callback<HangmanLetterGuessResponse>{
             override fun onResponse(call: Call<HangmanLetterGuessResponse>,response: Response<HangmanLetterGuessResponse>)
             {
-                val isCorrect : Boolean = response.body()?.correct ?: false
-                hangmanWord = response.body()?.hangman ?: "";
-                gameToken = response.body()?.token ?: ""
-                binding.guesswordText.text = hangmanWord
+                if (!isGameOver)
+                {
+                    val isCorrect : Boolean = response.body()?.correct ?: false
+                    hangmanWord = response.body()?.hangman ?: "";
+                    gameToken = response.body()?.token ?: ""
+                    binding.guesswordText.text = hangmanWord
 
-                if (isCorrect) { onGuessedLetterCorrectly(letter) }
-                else { onGuessedLetterIncorrectly(letter) }
+                    if (isCorrect) { onGuessedLetterCorrectly(letter) }
+                    else { onGuessedLetterIncorrectly(letter) }
+                }
             }
 
             override fun onFailure(call: Call<HangmanLetterGuessResponse>, t: Throwable)
@@ -253,7 +263,7 @@ class HangmanGameActivity : AppCompatActivity()
 
     private fun doVictory()
     {
-        score += ALL_LETTERS_GUESSED_POINTS
+        score += ALL_LETTERS_GUESSED_POINTS + countDownCurrentTime.toInt()
 
         gameKeyboardMap.disableRemainingLetterButtons()
         binding.pauseIcon.isEnabled = false
@@ -265,6 +275,7 @@ class HangmanGameActivity : AppCompatActivity()
 
     private fun doGameOver()
     {
+        isGameOver = true
         gameKeyboardMap.disableRemainingLetterButtons()
         binding.pauseIcon.isEnabled = false
 
@@ -341,6 +352,7 @@ class HangmanGameActivity : AppCompatActivity()
             {
                 countDownCurrentTime = millisUntilFinished / 1000
                 updateCountDownText()
+                if (millisUntilFinished <= COUNTDOWN_ANIM_START_TIME) playCountDownTextColorAnim()
             }
             override fun onFinish(){
                 if(countDownCurrentTime <= 0)
@@ -355,6 +367,16 @@ class HangmanGameActivity : AppCompatActivity()
     private fun updateCountDownText()
     {
         binding.countDownText.text = countDownCurrentTime.toString() + "s"
-
     }
+
+    private fun playCountDownTextColorAnim()
+    {
+        ObjectAnimator.ofArgb(binding.countDownText, "textColor",
+            resources.getColor(R.color.error_red), resources.getColor(R.color.green_soft))
+            .apply {
+                duration = COUNTDOWN_INTERVAL_TIME
+                start()
+            }
+    }
+
 }
