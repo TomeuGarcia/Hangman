@@ -10,7 +10,7 @@ import com.example.hangmanapp.databinding.ActivityConfigurationBinding
 class ConfigurationActivity : AppCompatActivity() {
     private lateinit var binding: ActivityConfigurationBinding
 
-    private val languages = arrayOf<String>("English", "Spanish", "Catalan")
+    private val languages = arrayOf<String>("English", "Catalan", "Spanish")
     private var currentLang = 0
     private var music = true
     private var sound = true
@@ -20,6 +20,7 @@ class ConfigurationActivity : AppCompatActivity() {
 
         binding = ActivityConfigurationBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        supportActionBar?.hide()
 
         //val sharedPreferences = getSharedPreferences(getString(R.string.preferences_config), MODE_PRIVATE)
         //var editor = sharedPreferences.edit()
@@ -33,8 +34,7 @@ class ConfigurationActivity : AppCompatActivity() {
 
         binding.languageButton.setOnClickListener() {
             // Change Current Language
-            currentLang++
-            if (currentLang > languages.size) { currentLang = 0 }
+            currentLang = ++currentLang % languages.size
 
             binding.languageButton.text = "Language: " + languages[currentLang]
 

@@ -42,7 +42,7 @@ class ParticlesActivity : AppCompatActivity()
     }
 
 
-    private val adapter =  ParticlesAdapter(this)
+    //private val adapter =  ParticlesAdapter(this)
 
 
 
@@ -54,7 +54,7 @@ class ParticlesActivity : AppCompatActivity()
 
         firestore = FirebaseFirestore.getInstance()
 
-        binding.particlesRecycleView.adapter = adapter;
+        //binding.particlesRecycleView.adapter = adapter;
 
 
         val particlesCollection = firestore.collection(PARTICLES_COLLECTION)

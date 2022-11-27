@@ -13,11 +13,13 @@ class RankingActivity : AppCompatActivity() {
     private lateinit var binding : ActivityRankingBinding
     private var adapter = RankingRecyclerViewAdapter()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
 
         binding = ActivityRankingBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        supportActionBar?.hide()
 
         binding.rankingRecyclerView.adapter = adapter
 
