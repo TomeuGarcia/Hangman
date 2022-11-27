@@ -4,15 +4,17 @@ import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import com.example.hangmanapp.ParticlesAdapter
 import com.example.hangmanapp.databinding.ActivityParticlesBinding
 import com.example.hangmanapp.particles.Particle.Family.*
-//simport com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestore
+
 
 class ParticlesActivity : AppCompatActivity()
 {
     private lateinit var binding: ActivityParticlesBinding
 
-    //private lateinit var firestore: FirebaseFirestore
+    private lateinit var firestore: FirebaseFirestore
 
     private val PARTICLES_COLLECTION = "particles"
 
@@ -42,7 +44,7 @@ class ParticlesActivity : AppCompatActivity()
     }
 
 
-    //private val adapter =  ParticlesAdapter(this)
+    private val adapter =  ParticlesAdapter(particles)
 
 
 
@@ -52,16 +54,16 @@ class ParticlesActivity : AppCompatActivity()
         binding = ActivityParticlesBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-       /*
+
         firestore = FirebaseFirestore.getInstance()
 
-        //binding.particlesRecycleView.adapter = adapter;
+        binding.particlesRecycleView.adapter = adapter;
 
 
         val particlesCollection = firestore.collection(PARTICLES_COLLECTION)
-        */
 
-        /*
+
+
         particlesCollection.get()
             .addOnSuccessListener {
                 particles = it?.documents?.mapNotNull { dbParticle ->
@@ -73,19 +75,19 @@ class ParticlesActivity : AppCompatActivity()
             .addOnFailureListener {
                 Toast.makeText(this, "Something went wrong loading particles", Toast.LENGTH_LONG).show()
             }
-         */
+
 
     }
 
     override fun onPause() {
         super.onPause()
 
-        //val particlesCollection = firestore.collection(PARTICLES_COLLECTION)
-        /*
+        val particlesCollection = firestore.collection(PARTICLES_COLLECTION)
+
         particles.forEach{
             particlesCollection.document(it.name).set(it)
         }
-        */
+
     }
 
 }

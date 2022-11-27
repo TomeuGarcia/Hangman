@@ -87,7 +87,7 @@
             android:name=".nasa.NasaActivity"
             android:exported="false" />
         <activity
-            android:name=".ParticlesActivity"
+            android:name=".particles.ParticlesActivity"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

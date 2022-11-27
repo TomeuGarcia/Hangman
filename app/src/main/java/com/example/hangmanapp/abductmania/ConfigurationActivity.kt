@@ -24,7 +24,7 @@ class ConfigurationActivity : AppCompatActivity() {
 
     private var users = arrayListOf<User>()
 
-    @SuppressLint("SetTextI18n")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -35,7 +35,7 @@ class ConfigurationActivity : AppCompatActivity() {
         firestore = FirebaseFirestore.getInstance()
         val usersCollection = firestore.collection(USERS_COLLECTION)
 
-        //Toast.makeText(this, "wtf man", Toast.LENGTH_LONG).show()
+        Toast.makeText(this, "wtf man", Toast.LENGTH_LONG).show()
 
         usersCollection.get()
             .addOnSuccessListener {
