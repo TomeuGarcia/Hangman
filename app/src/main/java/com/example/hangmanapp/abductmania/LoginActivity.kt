@@ -79,6 +79,8 @@ class LoginActivity : AppCompatActivity()
             firebaseAuth.signInAnonymously()
                 .addOnSuccessListener {
                     val user = firebaseAuth.currentUser
+                    val intent = Intent(this, MainMenuActivity::class.java)
+                    startActivity(intent)
                 }
                 .addOnFailureListener {
                     Toast.makeText(baseContext, "Authentication failed.",
