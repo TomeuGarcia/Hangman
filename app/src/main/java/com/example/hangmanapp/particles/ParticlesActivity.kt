@@ -6,13 +6,13 @@ import android.os.Bundle
 import android.widget.Toast
 import com.example.hangmanapp.databinding.ActivityParticlesBinding
 import com.example.hangmanapp.particles.Particle.Family.*
-import com.google.firebase.firestore.FirebaseFirestore
+//simport com.google.firebase.firestore.FirebaseFirestore
 
 class ParticlesActivity : AppCompatActivity()
 {
     private lateinit var binding: ActivityParticlesBinding
 
-    private lateinit var firestore: FirebaseFirestore
+    //private lateinit var firestore: FirebaseFirestore
 
     private val PARTICLES_COLLECTION = "particles"
 
@@ -42,7 +42,7 @@ class ParticlesActivity : AppCompatActivity()
     }
 
 
-    private val adapter =  ParticlesAdapter(this)
+    //private val adapter =  ParticlesAdapter(this)
 
 
 
@@ -52,12 +52,15 @@ class ParticlesActivity : AppCompatActivity()
         binding = ActivityParticlesBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+       /*
         firestore = FirebaseFirestore.getInstance()
 
         binding.particlesRecycleView.adapter = adapter;
 
 
         val particlesCollection = firestore.collection(PARTICLES_COLLECTION)
+        */
+
         /*
         particlesCollection.get()
             .addOnSuccessListener {
@@ -77,7 +80,7 @@ class ParticlesActivity : AppCompatActivity()
     override fun onPause() {
         super.onPause()
 
-        val particlesCollection = firestore.collection(PARTICLES_COLLECTION)
+        //val particlesCollection = firestore.collection(PARTICLES_COLLECTION)
         /*
         particles.forEach{
             particlesCollection.document(it.name).set(it)

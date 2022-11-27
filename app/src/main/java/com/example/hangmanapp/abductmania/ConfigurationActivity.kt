@@ -1,5 +1,6 @@
 package com.example.hangmanapp.abductmania
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +9,7 @@ import android.widget.Toast
 import com.example.hangmanapp.R
 import com.example.hangmanapp.databinding.ActivityConfigurationBinding
 import com.google.firebase.firestore.FirebaseFirestore
+
 
 class ConfigurationActivity : AppCompatActivity() {
     private val USERS_COLLECTION = "users"
@@ -22,6 +24,7 @@ class ConfigurationActivity : AppCompatActivity() {
 
     private var users = arrayListOf<User>()
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -32,16 +35,18 @@ class ConfigurationActivity : AppCompatActivity() {
         firestore = FirebaseFirestore.getInstance()
         val usersCollection = firestore.collection(USERS_COLLECTION)
 
+        //Toast.makeText(this, "wtf man", Toast.LENGTH_LONG).show()
+
         usersCollection.get()
             .addOnSuccessListener {
                 users = it?.documents?.mapNotNull { dbUser ->
                     dbUser.toObject(User::class.java)
                 } as ArrayList<User>
 
-                Toast.makeText(this, users.size, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@ConfigurationActivity, users.size, Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener {
-                Toast.makeText(this, getString(R.string.somethingWentWrong), Toast.LENGTH_LONG).show()
+                Toast.makeText(this@ConfigurationActivity, getString(R.string.somethingWentWrong), Toast.LENGTH_LONG).show()
             }
 
         //val sharedPreferences = getSharedPreferences(getString(R.string.preferences_config), MODE_PRIVATE)

@@ -30,14 +30,6 @@
                 android:value="false" />
         </activity>
         <activity
-            android:name=".abductmania.SplashScreenActivity"
-            android:exported="false">
-
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="false" />
-        </activity>
-        <activity
             android:name=".abductmania.ConfigurationActivity"
             android:exported="false">
             <meta-data
