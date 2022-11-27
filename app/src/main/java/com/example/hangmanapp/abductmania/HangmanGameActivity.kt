@@ -2,6 +2,7 @@ package com.example.hangmanapp.abductmania
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.View
 import android.widget.Toast
 import com.example.hangmanapp.databinding.ActivityHangmanGameBinding
@@ -39,10 +40,14 @@ class HangmanGameActivity : AppCompatActivity()
 
     private val END_GAME_FRAGMENT_START_DELAY : Long = 3000
 
+    private val COUNTDOWN_TOTAL_TIME : Long = 10000
+    private val COUNTDOWN_INTERVAL_TIME : Long = 1000
+    private var countDownCurrentTime : Long = COUNTDOWN_TOTAL_TIME
+
     private lateinit var gameKeyboardMap : GameKeyboardMap
     private lateinit var hangmanDrawer : HangmanDrawer
     private lateinit var pauseFragment : HangmanGamePauseFragment
-
+    private lateinit var countDownTimer : CountDownTimer
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -92,9 +97,10 @@ class HangmanGameActivity : AppCompatActivity()
             getHint()
         }
         */
-
+        updateCountDownText()
+        countDownTime(countDownCurrentTime)
+        countDownTimer.start()
     }
-
 
     private fun createNewHangmanGame()
     {
@@ -217,7 +223,6 @@ class HangmanGameActivity : AppCompatActivity()
         })
     }
 
-
     private fun onGuessedLetterCorrectly(letter : Char)
     {
         gameKeyboardMap.setLetterCorrect(letter)
@@ -300,6 +305,7 @@ class HangmanGameActivity : AppCompatActivity()
     {
         gameKeyboardMap.disableRemainingLetterButtons()
         binding.pauseIcon.isEnabled = false
+        countDownTimer.cancel()
 
         supportFragmentManager.beginTransaction().apply {
             if (pauseFragment.isAdded)
@@ -319,6 +325,8 @@ class HangmanGameActivity : AppCompatActivity()
     {
         gameKeyboardMap.reenableRemainingLetterButtons()
         binding.pauseIcon.isEnabled = true
+        //countDownTime(countDownCurrentTime)
+        countDownTimer.start()
 
         supportFragmentManager.beginTransaction().apply {
             hide(pauseFragment)
@@ -326,5 +334,27 @@ class HangmanGameActivity : AppCompatActivity()
         }
     }
 
+    private fun countDownTime(startTime : Long)
+    {
+        countDownTimer = object : CountDownTimer(startTime,COUNTDOWN_INTERVAL_TIME){
+            override fun onTick(millisUntilFinished: Long)
+            {
+                countDownCurrentTime = millisUntilFinished / 1000
+                updateCountDownText()
+            }
+            override fun onFinish(){
+                if(countDownCurrentTime <= 0)
+                {
+                    doGameOver()
+                }
+            }
 
+        }
+    }
+
+    private fun updateCountDownText()
+    {
+        binding.countDownText.text = countDownCurrentTime.toString() + "s"
+
+    }
 }
