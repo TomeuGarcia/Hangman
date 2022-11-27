@@ -12,7 +12,8 @@ class MainMenuActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainMenuBinding
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainMenuBinding.inflate(layoutInflater)
@@ -39,4 +40,5 @@ class MainMenuActivity : AppCompatActivity() {
             exitProcess(0)
         }
     }
+
 }

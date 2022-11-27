@@ -43,7 +43,7 @@ class HangmanGameActivity : AppCompatActivity()
 
     private val END_GAME_FRAGMENT_START_DELAY : Long = 3000
 
-    private val COUNTDOWN_TOTAL_TIME : Long = 10000
+    private val COUNTDOWN_TOTAL_TIME : Long = 60000
     private val COUNTDOWN_INTERVAL_TIME : Long = 1000
     private val COUNTDOWN_ANIM_START_TIME : Long = COUNTDOWN_TOTAL_TIME / 2
     private var countDownCurrentTime : Long = COUNTDOWN_TOTAL_TIME
@@ -102,7 +102,7 @@ class HangmanGameActivity : AppCompatActivity()
             getHint()
         }
         */
-        updateCountDownText()
+        updateCountDownText(COUNTDOWN_TOTAL_TIME / 1000)
 
     }
 
@@ -351,7 +351,7 @@ class HangmanGameActivity : AppCompatActivity()
             override fun onTick(millisUntilFinished: Long)
             {
                 countDownCurrentTime = millisUntilFinished / 1000
-                updateCountDownText()
+                updateCountDownText(countDownCurrentTime)
                 if (millisUntilFinished <= COUNTDOWN_ANIM_START_TIME) playCountDownTextColorAnim()
             }
             override fun onFinish(){
@@ -364,9 +364,9 @@ class HangmanGameActivity : AppCompatActivity()
         }
     }
 
-    private fun updateCountDownText()
+    private fun updateCountDownText(currentTime: Long)
     {
-        binding.countDownText.text = countDownCurrentTime.toString() + "s"
+        binding.countDownText.text = currentTime.toString() + "s"
     }
 
     private fun playCountDownTextColorAnim()

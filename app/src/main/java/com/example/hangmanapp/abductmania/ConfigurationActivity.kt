@@ -61,8 +61,7 @@ class ConfigurationActivity : AppCompatActivity() {
 
         binding.languageButton.setOnClickListener() {
             // Change Current Language
-            currentLang++
-            if (currentLang > languages.size) { currentLang = 0 }
+            currentLang = ++currentLang % languages.size
 
             binding.languageButton.text = "Language: " + languages[currentLang]
 
