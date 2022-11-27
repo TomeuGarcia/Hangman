@@ -46,7 +46,7 @@ class HangmanGameActivity : AppCompatActivity()
     private val COUNTDOWN_TOTAL_TIME : Long = 10000
     private val COUNTDOWN_INTERVAL_TIME : Long = 1000
     private val COUNTDOWN_ANIM_START_TIME : Long = COUNTDOWN_TOTAL_TIME / 2
-    private var countDownCurrentTime : Long = COUNTDOWN_TOTAL_TIME
+    private var countDownCurrentTime : Long = COUNTDOWN_TOTAL_TIME / 1000
 
     private lateinit var gameKeyboardMap : GameKeyboardMap
     private lateinit var hangmanDrawer : HangmanDrawer
