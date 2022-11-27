@@ -1,16 +1,13 @@
-package com.example.hangmanapp.particles
+package com.example.hangmanapp
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.hangmanapp.databinding.ItemParticleBinding
 
-class ParticlesAdapter(private val context: Context)
-    : RecyclerView.Adapter<ParticlesAdapter.ParticlesViewHolder>()
+class ParticlesAdapter(private val particles: List<ParticlesActivity.ParticleData>) :
+    RecyclerView.Adapter<ParticlesAdapter.ParticlesViewHolder>()
 {
-    private var particles: List<Particle> = listOf()
-
 
     inner class ParticlesViewHolder(binding: ItemParticleBinding)
         : RecyclerView.ViewHolder(binding.root)
@@ -31,17 +28,15 @@ class ParticlesAdapter(private val context: Context)
         val particle = particles[position]
 
         holder.name.text = particle.name
-        holder.image.setColorFilter(context.getColor(particle.family.color()))
+
+        val color = ParticlesActivity.familyToColor[particle.family]
+
+        holder.image.setColorFilter(color!!)
     }
 
     override fun getItemCount(): Int {
         return particles.size
     }
 
-    public fun updateParticles(particles : List<Particle>)
-    {
-        this.particles = particles
-        notifyDataSetChanged()
-    }
 
 }
