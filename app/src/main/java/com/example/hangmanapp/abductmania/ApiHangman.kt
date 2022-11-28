@@ -10,7 +10,7 @@ import retrofit2.http.Query
 interface ApiHangman
 {
     @POST("hangman")
-    fun createNewHangmanGame() : Call<HangmanGame>
+    fun createNewHangmanGame() : Call<HangmanNewGame>
 
     @GET("hangman")
     fun getSolution(@Query("token") token : String) : Call<HangmanGameSolution>

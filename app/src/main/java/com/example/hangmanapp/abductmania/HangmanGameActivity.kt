@@ -12,18 +12,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import retrofit2.*
-import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
 import kotlin.concurrent.schedule
 import kotlin.math.max
 
-@Suppress("DEPRECATION")
+
 class HangmanGameActivity : AppCompatActivity()
 {
     private lateinit var binding: ActivityHangmanGameBinding
-
-    private val HANGMAN_API_URL : String = "https://hangman-api.herokuapp.com/"
 
     private var hangmanWord : String = ""
     private var gameToken : String = ""
@@ -48,11 +44,13 @@ class HangmanGameActivity : AppCompatActivity()
     private val COUNTDOWN_ANIM_START_TIME : Long = COUNTDOWN_TOTAL_TIME / 2
     private var countDownCurrentTime : Long = COUNTDOWN_TOTAL_TIME
 
+    private var isGameOver : Boolean = false
+
+    private lateinit var hangmanApiCommunication : HangmanApiCommunication
     private lateinit var gameKeyboardMap : GameKeyboardMap
     private lateinit var hangmanDrawer : HangmanDrawer
     private lateinit var pauseFragment : HangmanGamePauseFragment
     private lateinit var countDownTimer : CountDownTimer
-    private var isGameOver : Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -62,11 +60,26 @@ class HangmanGameActivity : AppCompatActivity()
         setContentView(binding.root)
         supportActionBar?.hide()
 
+
+        binding.guesswordText.text = ""
+
+        binding.pauseIcon.setOnClickListener {
+            pauseGame()
+        }
+
+        updateCountDownText(COUNTDOWN_TOTAL_TIME / 1000)
+
+
+        hangmanApiCommunication = HangmanApiCommunication(
+            this::onCreateNewHangmanGameResponse, this::onCreateNewHangmanGameFailure,
+            this::onGetSolutionResponse,          this::onGetSolutionFailure,
+            this::onGetHintResponse,              this::onGetHintFailure,
+            this::onGuessLetterResponse,          this::onGuessLetterFailure
+        )
+
         gameKeyboardMap = GameKeyboardMap(binding)
         gameKeyboardMap.initButtonsClickCallback(this::guessLetter)
         gameKeyboardMap.hideOverlapImages()
-
-        binding.guesswordText.text = ""
 
         hangmanDrawer = HangmanDrawer(
             listOf(
@@ -85,153 +98,106 @@ class HangmanGameActivity : AppCompatActivity()
 
         createNewHangmanGame()
 
-        binding.pauseIcon.setOnClickListener {
-            pauseGame()
-        }
-
-        /*
-        binding.xButton.setOnClickListener {
-            createNewHangmanGame()
-        }
-
-        binding.yButton.setOnClickListener {
-            getSolution()
-        }
-
-        binding.zButton.setOnClickListener {
-            getHint()
-        }
-        */
-        updateCountDownText(COUNTDOWN_TOTAL_TIME / 1000)
-
     }
+
+
 
     private fun createNewHangmanGame()
     {
         gameKeyboardMap.disableRemainingLetterButtons()
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl(HANGMAN_API_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val call = retrofit.create(ApiHangman::class.java)
-
-        call.createNewHangmanGame().enqueue(object : Callback<HangmanGame>{
-
-            override fun onResponse(call: Call<HangmanGame>, response: Response<HangmanGame>)
-            {
-                hangmanWord = response.body()?.hangman ?: ""
-                gameToken = response.body()?.token ?: ""
-
-                binding.guesswordText.text = hangmanWord
-
-                gameKeyboardMap.reenableRemainingLetterButtons()
-
-                countDownTime(countDownCurrentTime)
-                countDownTimer.start()
-            }
-
-            override fun onFailure(call: Call<HangmanGame>, t: Throwable)
-            {
-                Toast.makeText(this@HangmanGameActivity,
-                    "Something went wrong -> createNewHangmanGame()", Toast.LENGTH_LONG)
-
-                gameKeyboardMap.reenableRemainingLetterButtons()
-            }
-        })
+        hangmanApiCommunication.createNewHangmanGame()
     }
+    private fun onCreateNewHangmanGameResponse(hangmanNewGame : HangmanNewGame)
+    {
+        hangmanWord = hangmanNewGame.hangman
+        gameToken = hangmanNewGame.token
+
+        binding.guesswordText.text = hangmanWord
+
+        gameKeyboardMap.reenableRemainingLetterButtons()
+
+        startCountDownTimer(countDownCurrentTime)
+        countDownTimer.start()
+    }
+    private fun onCreateNewHangmanGameFailure()
+    {
+        Toast.makeText(this@HangmanGameActivity,
+            "Something went wrong -> createNewHangmanGame()", Toast.LENGTH_LONG)
+
+        gameKeyboardMap.reenableRemainingLetterButtons()
+    }
+
+
 
     private fun getSolution()
     {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(HANGMAN_API_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val call = retrofit.create(ApiHangman::class.java)
-
-        call.getSolution(gameToken).enqueue(object : Callback<HangmanGameSolution>{
-            override fun onResponse(call: Call<HangmanGameSolution>,response: Response<HangmanGameSolution>)
-            {
-                solution = response.body()?.solution ?: ""
-                gameToken = response.body()?.token ?: ""
-
-                hangmanWord = solution
-                binding.guesswordText.text = hangmanWord
-
-                onGameOverSolutionObtained()
-            }
-
-            override fun onFailure(call: Call<HangmanGameSolution>, t: Throwable)
-            {
-                Toast.makeText(this@HangmanGameActivity,
-                    "Something went wrong -> getSolution()", Toast.LENGTH_LONG)
-            }
-        })
+        hangmanApiCommunication.getSolution(gameToken)
     }
+    private fun onGetSolutionResponse(hangmanGameSolution : HangmanGameSolution)
+    {
+        solution = hangmanGameSolution.solution
+        gameToken = hangmanGameSolution.token
+
+        hangmanWord = solution
+        binding.guesswordText.text = hangmanWord
+
+        onGameOverSolutionObtained()
+    }
+    private fun onGetSolutionFailure()
+    {
+        Toast.makeText(this@HangmanGameActivity,
+            "Something went wrong -> getSolution()", Toast.LENGTH_LONG)
+    }
+
+
 
     private fun getHint()
     {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(HANGMAN_API_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val call = retrofit.create(ApiHangman::class.java)
-
-        call.getHint(gameToken).enqueue(object : Callback<HangmanGameHint>{
-            override fun onResponse(call: Call<HangmanGameHint>,response: Response<HangmanGameHint>)
-            {
-                hint = response.body()?.hint?.get(0) ?: ' '
-                gameToken = response.body()?.token ?: ""
-
-                guessLetter(hint)
-            }
-
-            override fun onFailure(call: Call<HangmanGameHint>, t: Throwable)
-            {
-                Toast.makeText(this@HangmanGameActivity,
-                    "Something went wrong -> getHint()", Toast.LENGTH_LONG)
-            }
-        })
+        hangmanApiCommunication.getHint(gameToken)
     }
+    private fun onGetHintResponse(hangmanGameHint : HangmanGameHint)
+    {
+        hint = hangmanGameHint.hint[0]
+        gameToken = hangmanGameHint.token
+
+        guessLetter(hint)
+    }
+    private fun onGetHintFailure()
+    {
+        Toast.makeText(this@HangmanGameActivity,
+            "Something went wrong -> getHint()", Toast.LENGTH_LONG)
+    }
+
+
 
     private fun guessLetter(letter : Char)
     {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(HANGMAN_API_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val call = retrofit.create(ApiHangman::class.java)
-
         gameKeyboardMap.disableRemainingLetterButtons()
-
-        call.guessLetter(letter.toString(), gameToken).enqueue(object : Callback<HangmanLetterGuessResponse>{
-            override fun onResponse(call: Call<HangmanLetterGuessResponse>,response: Response<HangmanLetterGuessResponse>)
-            {
-                if (!isGameOver)
-                {
-                    val isCorrect : Boolean = response.body()?.correct ?: false
-                    hangmanWord = response.body()?.hangman ?: "";
-                    gameToken = response.body()?.token ?: ""
-                    binding.guesswordText.text = hangmanWord
-
-                    if (isCorrect) { onGuessedLetterCorrectly(letter) }
-                    else { onGuessedLetterIncorrectly(letter) }
-                }
-            }
-
-            override fun onFailure(call: Call<HangmanLetterGuessResponse>, t: Throwable)
-            {
-                Toast.makeText(this@HangmanGameActivity,
-                    "Something went wrong -> guessLetter()", Toast.LENGTH_LONG).show()
-
-                gameKeyboardMap.reenableRemainingLetterButtons()
-            }
-        })
+        hangmanApiCommunication.guessLetter(gameToken, letter)
     }
+    private fun onGuessLetterResponse(hangmanLetterGuessResponse : HangmanLetterGuessResponse,
+                                      letter : Char)
+    {
+        if (!isGameOver)
+        {
+            val isCorrect : Boolean = hangmanLetterGuessResponse.correct
+            hangmanWord = hangmanLetterGuessResponse.hangman
+            gameToken = hangmanLetterGuessResponse.token
+            binding.guesswordText.text = hangmanWord
+
+            if (isCorrect) { onGuessedLetterCorrectly(letter) }
+            else { onGuessedLetterIncorrectly(letter) }
+        }
+    }
+    private fun onGuessLetterFailure()
+    {
+        Toast.makeText(this@HangmanGameActivity,
+            "Something went wrong -> guessLetter()", Toast.LENGTH_LONG).show()
+
+        gameKeyboardMap.reenableRemainingLetterButtons()
+    }
+
+
 
     private fun onGuessedLetterCorrectly(letter : Char)
     {
@@ -345,7 +311,7 @@ class HangmanGameActivity : AppCompatActivity()
         }
     }
 
-    private fun countDownTime(startTime : Long)
+    private fun startCountDownTimer(startTime : Long)
     {
         countDownTimer = object : CountDownTimer(startTime,COUNTDOWN_INTERVAL_TIME){
             override fun onTick(millisUntilFinished: Long)

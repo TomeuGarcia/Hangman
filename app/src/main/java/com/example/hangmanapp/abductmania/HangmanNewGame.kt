@@ -1,7 +1,7 @@
 package com.example.hangmanapp.abductmania
 
-data class HangmanGame(val hangman: String,
-                       val token: String)
+data class HangmanNewGame(val hangman: String,
+                          val token: String)
 {
 }
 
