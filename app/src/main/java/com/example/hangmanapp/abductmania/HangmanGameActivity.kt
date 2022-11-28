@@ -24,7 +24,6 @@ class HangmanGameActivity : AppCompatActivity()
     private var hangmanWord : String = ""
     private var gameToken : String = ""
 
-    private var solution : String = ""
     private var hint : Char = ' '
 
     private val CORRECT_LETTER_POINTS : Int = 50
@@ -112,7 +111,7 @@ class HangmanGameActivity : AppCompatActivity()
         hangmanWord = hangmanNewGame.hangman
         gameToken = hangmanNewGame.token
 
-        binding.guesswordText.text = hangmanWord
+        updateGuessWord(hangmanWord)
 
         gameKeyboardMap.reenableRemainingLetterButtons()
 
@@ -135,11 +134,10 @@ class HangmanGameActivity : AppCompatActivity()
     }
     private fun onGetSolutionResponse(hangmanGameSolution : HangmanGameSolution)
     {
-        solution = hangmanGameSolution.solution
+        hangmanWord = hangmanGameSolution.solution
         gameToken = hangmanGameSolution.token
 
-        hangmanWord = solution
-        binding.guesswordText.text = hangmanWord
+        updateGuessWord(hangmanWord)
 
         onGameOverSolutionObtained()
     }
@@ -183,7 +181,7 @@ class HangmanGameActivity : AppCompatActivity()
             val isCorrect : Boolean = hangmanLetterGuessResponse.correct
             hangmanWord = hangmanLetterGuessResponse.hangman
             gameToken = hangmanLetterGuessResponse.token
-            binding.guesswordText.text = hangmanWord
+            updateGuessWord(hangmanWord)
 
             if (isCorrect) { onGuessedLetterCorrectly(letter) }
             else { onGuessedLetterIncorrectly(letter) }
@@ -198,6 +196,11 @@ class HangmanGameActivity : AppCompatActivity()
     }
 
 
+
+    private fun updateGuessWord(hangmanWord : String)
+    {
+        binding.guesswordText.text = hangmanWord
+    }
 
     private fun onGuessedLetterCorrectly(letter : Char)
     {
@@ -222,7 +225,7 @@ class HangmanGameActivity : AppCompatActivity()
 
     private fun hasGuessedAllLetters() : Boolean
     {
-        return !binding.guesswordText.text.any {
+        return !hangmanWord.any {
             it == MISSING_LETTER
         }
     }
@@ -326,7 +329,6 @@ class HangmanGameActivity : AppCompatActivity()
                     doGameOver()
                 }
             }
-
         }
     }
 

@@ -18,6 +18,17 @@ class HangmanApiCommunication(private val createNewHangmanGameResponseCallback :
 
     private val HANGMAN_API_URL : String = "https://hangman-api.herokuapp.com/"
 
+    /*
+    private val retrofit = Retrofit.Builder()
+        .baseUrl(HANGMAN_API_URL)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+     */
+
+    //private val call = retrofit.create(ApiHangman::class.java)
+
+
 
 
     public fun createNewHangmanGame()
@@ -26,9 +37,7 @@ class HangmanApiCommunication(private val createNewHangmanGameResponseCallback :
             .baseUrl(HANGMAN_API_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-
         val call = retrofit.create(ApiHangman::class.java)
-
         call.createNewHangmanGame().enqueue(object : Callback<HangmanNewGame> {
 
             override fun onResponse(call: Call<HangmanNewGame>,
@@ -58,9 +67,7 @@ class HangmanApiCommunication(private val createNewHangmanGameResponseCallback :
             .baseUrl(HANGMAN_API_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-
         val call = retrofit.create(ApiHangman::class.java)
-
         call.getSolution(gameToken).enqueue(object : Callback<HangmanGameSolution> {
             override fun onResponse(call: Call<HangmanGameSolution>,
                                     response: Response<HangmanGameSolution>)
@@ -89,9 +96,7 @@ class HangmanApiCommunication(private val createNewHangmanGameResponseCallback :
             .baseUrl(HANGMAN_API_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-
         val call = retrofit.create(ApiHangman::class.java)
-
         call.getHint(gameToken).enqueue(object : Callback<HangmanGameHint> {
             override fun onResponse(call: Call<HangmanGameHint>,
                                     response: Response<HangmanGameHint>)
@@ -120,9 +125,7 @@ class HangmanApiCommunication(private val createNewHangmanGameResponseCallback :
             .baseUrl(HANGMAN_API_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-
         val call = retrofit.create(ApiHangman::class.java)
-
         call.guessLetter(letter.toString(), gameToken).enqueue(object :
             Callback<HangmanLetterGuessResponse> {
             override fun onResponse(call: Call<HangmanLetterGuessResponse>,
@@ -145,5 +148,7 @@ class HangmanApiCommunication(private val createNewHangmanGameResponseCallback :
             }
         })
     }
+
+
 
 }
