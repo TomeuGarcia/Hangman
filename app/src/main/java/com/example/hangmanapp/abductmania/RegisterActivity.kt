@@ -4,25 +4,21 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Patterns
 import android.view.View
 import android.widget.Toast
-import androidx.annotation.NonNull
-import androidx.core.widget.addTextChangedListener
 import com.example.hangmanapp.R
 import com.example.hangmanapp.databinding.ActivityRegisterBinding
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class RegisterActivity : AppCompatActivity() {
-    private val SIGNATURE = "users"
+    private val USERS_COLLECTION = "users"
+    private val EMAIL = "email"
 
     private lateinit var binding: ActivityRegisterBinding
     private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var firestore: FirebaseFirestore
 
     private var canRegister = true//false
 
@@ -34,6 +30,8 @@ class RegisterActivity : AppCompatActivity() {
         supportActionBar?.hide()
 
         firebaseAuth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
+
         binding.progressBar.visibility = View.INVISIBLE
 
         emailFocusListener()
@@ -57,14 +55,9 @@ class RegisterActivity : AppCompatActivity() {
 
                         if (it.isSuccessful) {
                             // Good registration
-                            val firebaseUser = firebaseAuth.currentUser
+                            savedSharedPrefsRegisteredUser(email)
 
-                            Toast.makeText(this, firebaseUser.toString(), Toast.LENGTH_SHORT).show()
-
-                            val shared = PreferenceManager.getDefaultSharedPreferences(this)
-                            val editor = shared.edit()
-                            editor.putString(SIGNATURE, binding.userInputEditText.text.toString())
-                            editor.apply()
+                            fireStoreRegisterUser(username, email)
 
                             val intent = Intent(this, MainMenuActivity::class.java)
                             startActivity(intent)
@@ -158,4 +151,21 @@ class RegisterActivity : AppCompatActivity() {
 
         return null
     }
+
+    private fun savedSharedPrefsRegisteredUser(email : String)
+    {
+        val shared = PreferenceManager.getDefaultSharedPreferences(this)
+        val editor = shared.edit()
+        editor.putString(EMAIL, email)
+        editor.apply()
+    }
+
+    private fun fireStoreRegisterUser(username : String, email :String)
+    {
+        val usersCollection = firestore.collection(USERS_COLLECTION)
+        val user = User(username, email)
+
+        usersCollection.document(user.username).set(user)
+    }
+
 }
