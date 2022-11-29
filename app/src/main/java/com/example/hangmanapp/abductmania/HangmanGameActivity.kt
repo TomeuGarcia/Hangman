@@ -41,7 +41,7 @@ class HangmanGameActivity : AppCompatActivity()
     private val COUNTDOWN_TOTAL_TIME : Long = 60000
     private val COUNTDOWN_INTERVAL_TIME : Long = 1000
     private val COUNTDOWN_ANIM_START_TIME : Long = COUNTDOWN_TOTAL_TIME / 2
-    private var countDownCurrentTime : Long = COUNTDOWN_TOTAL_TIME
+    private var countDownCurrentTime : Long = COUNTDOWN_TOTAL_TIME / 1000
 
     private var isGameOver : Boolean = false
 
@@ -115,8 +115,7 @@ class HangmanGameActivity : AppCompatActivity()
 
         gameKeyboardMap.reenableRemainingLetterButtons()
 
-        startCountDownTimer(countDownCurrentTime)
-        countDownTimer.start()
+        startCountDownTimer(COUNTDOWN_TOTAL_TIME)
     }
     private fun onCreateNewHangmanGameFailure()
     {
@@ -236,6 +235,7 @@ class HangmanGameActivity : AppCompatActivity()
 
         gameKeyboardMap.disableRemainingLetterButtons()
         binding.pauseIcon.isEnabled = false
+        countDownTimer.cancel()
 
         Timer().schedule(END_GAME_FRAGMENT_START_DELAY) {
             setEndGameFragment(HangmanYouWinFragment(hangmanWord, score))
@@ -305,8 +305,7 @@ class HangmanGameActivity : AppCompatActivity()
     {
         gameKeyboardMap.reenableRemainingLetterButtons()
         binding.pauseIcon.isEnabled = true
-        //countDownTime(countDownCurrentTime)
-        countDownTimer.start()
+        startCountDownTimer(countDownCurrentTime * 1000)
 
         supportFragmentManager.beginTransaction().apply {
             hide(pauseFragment)
@@ -316,7 +315,7 @@ class HangmanGameActivity : AppCompatActivity()
 
     private fun startCountDownTimer(startTime : Long)
     {
-        countDownTimer = object : CountDownTimer(startTime,COUNTDOWN_INTERVAL_TIME){
+        countDownTimer = object : CountDownTimer(startTime, COUNTDOWN_INTERVAL_TIME){
             override fun onTick(millisUntilFinished: Long)
             {
                 countDownCurrentTime = millisUntilFinished / 1000
@@ -329,7 +328,7 @@ class HangmanGameActivity : AppCompatActivity()
                     doGameOver()
                 }
             }
-        }
+        }.start()
     }
 
     private fun updateCountDownText(currentTime: Long)
