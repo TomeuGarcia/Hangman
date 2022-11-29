@@ -41,25 +41,31 @@ class ConfigurationActivity : AppCompatActivity() {
 
         // Shared prefs
         val shared = PreferenceManager.getDefaultSharedPreferences(this)
-        val signature = shared.getString(USERS_COLLECTION, null)
+        var signature = shared.getString(USERS_COLLECTION, null) // CHANGE TO A VAL
         currentLang = shared.getInt(CURRENT_LANGUAGE, 0)
         music = shared.getBoolean(MUSIC, true)
         sound = shared.getBoolean(SOUND, true)
 
         updateButtons()
 
+        if (signature == null) { signature = "a" }
         // Firestore
-        /*usersCollection.get()
-            .addOnSuccessListener {
-                users = it?.documents?.mapNotNull { dbUser ->
-                    dbUser.toObject(User::class.java)
-                } as ArrayList<User>
+        if (signature != null) {
+            usersCollection.get()
+                .addOnSuccessListener {
+                    users = it?.documents?.mapNotNull { dbUser ->
+                        dbUser.toObject(User::class.java)
+                    } as ArrayList<User>
 
-                Toast.makeText(this@ConfigurationActivity, users.size, Toast.LENGTH_SHORT).show()
-            }
-            .addOnFailureListener {
-                Toast.makeText(this@ConfigurationActivity, getString(R.string.somethingWentWrong), Toast.LENGTH_LONG).show()
-            }*/
+                    Toast.makeText(this@ConfigurationActivity, "Hello " + users.get(0).username, Toast.LENGTH_SHORT).show()
+
+                    updateValues(users.get(0).language, users.get(0).music, users.get(0).sound)
+                    updateButtons()
+                }
+                .addOnFailureListener {
+                    Toast.makeText(this@ConfigurationActivity, getString(R.string.somethingWentWrong), Toast.LENGTH_LONG).show()
+                }
+        }
 
         binding.backButtonImage.setOnClickListener() {
             // Go To Main Menu
@@ -96,13 +102,15 @@ class ConfigurationActivity : AppCompatActivity() {
         val editor = shared.edit()
 
         editor.putInt("language", currentLang)
-        editor.apply()
-
         editor.putBoolean("music", music)
-        editor.apply()
-
         editor.putBoolean("sound", sound)
         editor.apply()
+    }
+
+    private fun updateValues(_lang: Int, _music: Boolean, _sound: Boolean) {
+        currentLang = _lang
+        music = _music
+        sound = _sound
     }
 
     @SuppressLint("SetTextI18n")
