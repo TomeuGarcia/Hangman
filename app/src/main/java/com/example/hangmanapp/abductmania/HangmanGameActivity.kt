@@ -247,6 +247,7 @@ class HangmanGameActivity : AppCompatActivity()
         isGameOver = true
         gameKeyboardMap.disableRemainingLetterButtons()
         binding.pauseIcon.isEnabled = false
+        countDownTimer.cancel()
 
         getSolution() // this is async.... wait until solution received to do real GameOver
     }

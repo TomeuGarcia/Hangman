@@ -1,7 +1,6 @@
 package com.example.hangmanapp.abductmania
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -15,7 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class ConfigurationActivity : AppCompatActivity() {
     private val USERS_COLLECTION = "users"
-    private val CURRENT_LANGUAGE = "language"
+    private val LANGUAGE = "language"
     private val MUSIC = "music"
     private val SOUND = "sound"
     private val EMAIL = "email"
@@ -47,7 +46,7 @@ class ConfigurationActivity : AppCompatActivity() {
         val shared = PreferenceManager.getDefaultSharedPreferences(this)
         email = shared.getString(EMAIL, null)?: ""
 
-        updateValues(shared.getInt(CURRENT_LANGUAGE, 0), shared.getBoolean(MUSIC, true), shared.getBoolean(SOUND, true))
+        updateValues(shared.getInt(LANGUAGE, 0), shared.getBoolean(MUSIC, true), shared.getBoolean(SOUND, true))
         updateButtons()
 
         // Firestore
@@ -108,9 +107,9 @@ class ConfigurationActivity : AppCompatActivity() {
         val shared = PreferenceManager.getDefaultSharedPreferences(this)
         val editor = shared.edit()
 
-        editor.putInt("language", currentLang)
-        editor.putBoolean("music", music)
-        editor.putBoolean("sound", sound)
+        editor.putInt(LANGUAGE, currentLang)
+        editor.putBoolean(MUSIC, music)
+        editor.putBoolean(SOUND, sound)
         editor.apply()
 
         // Firestore
