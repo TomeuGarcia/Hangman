@@ -17,6 +17,7 @@ class ConfigurationActivity : AppCompatActivity() {
     private val CURRENT_LANGUAGE = "language"
     private val MUSIC = "music"
     private val SOUND = "sound"
+    private val EMAIL = "email"
 
     private lateinit var binding: ActivityConfigurationBinding
     private lateinit var firestore: FirebaseFirestore
@@ -52,8 +53,8 @@ class ConfigurationActivity : AppCompatActivity() {
                 users = it?.documents?.mapNotNull { dbUser ->
                     dbUser.toObject(User::class.java)
                 } as ArrayList<User>
-
-                updateValues(users.get(1).language, users.get(1).music, users.get(1).sound)
+                Toast.makeText(this, "${users.size}", Toast.LENGTH_SHORT).show()
+                updateValues(users[1].language, users[1].music, users[1].sound)
                 updateButtons()
             }
             .addOnFailureListener {
