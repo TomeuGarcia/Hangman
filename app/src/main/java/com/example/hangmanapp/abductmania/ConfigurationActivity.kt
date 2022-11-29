@@ -41,31 +41,24 @@ class ConfigurationActivity : AppCompatActivity() {
 
         // Shared prefs
         val shared = PreferenceManager.getDefaultSharedPreferences(this)
-        var signature = shared.getString(USERS_COLLECTION, null) // CHANGE TO A VAL
-        currentLang = shared.getInt(CURRENT_LANGUAGE, 0)
-        music = shared.getBoolean(MUSIC, true)
-        sound = shared.getBoolean(SOUND, true)
+        val signature = shared.getString(USERS_COLLECTION, null)
 
+        updateValues(shared.getInt(CURRENT_LANGUAGE, 0), shared.getBoolean(MUSIC, true), shared.getBoolean(SOUND, true))
         updateButtons()
 
-        if (signature == null) { signature = "a" }
         // Firestore
-        if (signature != null) {
-            usersCollection.get()
-                .addOnSuccessListener {
-                    users = it?.documents?.mapNotNull { dbUser ->
-                        dbUser.toObject(User::class.java)
-                    } as ArrayList<User>
+        usersCollection.get()
+            .addOnSuccessListener {
+                users = it?.documents?.mapNotNull { dbUser ->
+                    dbUser.toObject(User::class.java)
+                } as ArrayList<User>
 
-                    Toast.makeText(this@ConfigurationActivity, "Hello " + users.get(0).username, Toast.LENGTH_SHORT).show()
-
-                    updateValues(users.get(0).language, users.get(0).music, users.get(0).sound)
-                    updateButtons()
-                }
-                .addOnFailureListener {
-                    Toast.makeText(this@ConfigurationActivity, getString(R.string.somethingWentWrong), Toast.LENGTH_LONG).show()
-                }
-        }
+                updateValues(users.get(0).language, users.get(0).music, users.get(0).sound)
+                updateButtons()
+            }
+            .addOnFailureListener {
+                Toast.makeText(this@ConfigurationActivity, getString(R.string.somethingWentWrong), Toast.LENGTH_LONG).show()
+            }
 
         binding.backButtonImage.setOnClickListener() {
             // Go To Main Menu
@@ -98,6 +91,7 @@ class ConfigurationActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
 
+        // Shared Prefs
         val shared = PreferenceManager.getDefaultSharedPreferences(this)
         val editor = shared.edit()
 
@@ -105,6 +99,13 @@ class ConfigurationActivity : AppCompatActivity() {
         editor.putBoolean("music", music)
         editor.putBoolean("sound", sound)
         editor.apply()
+
+        // Firestore
+        val usersCollection = firestore.collection(USERS_COLLECTION)
+
+        users.forEach {
+            usersCollection.document(it.username).set(it)
+        }
     }
 
     private fun updateValues(_lang: Int, _music: Boolean, _sound: Boolean) {
