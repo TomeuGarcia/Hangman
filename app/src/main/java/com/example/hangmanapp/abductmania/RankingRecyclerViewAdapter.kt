@@ -37,12 +37,8 @@ class RankingRecyclerViewAdapter
         val image = rankingImagesList?.get(position)
 
         holder.username.text = image?.username ?: ""
-        holder.score.text = image?.score ?: ""
-        holder.rank.text = image?.rank ?: ""
-
-        Picasso.get()
-            .load(image?.link)
-            .into(holder.image)
+        holder.score.text = image?.score.toString() ?: ""
+        holder.rank.text = image?.rank.toString() ?: ""
     }
 
     override fun getItemCount(): Int
