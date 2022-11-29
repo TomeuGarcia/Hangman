@@ -3,6 +3,7 @@ package com.example.hangmanapp.abductmania
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Patterns
@@ -18,6 +19,8 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 
 class RegisterActivity : AppCompatActivity() {
+    private val SIGNATURE = "users"
+
     private lateinit var binding: ActivityRegisterBinding
     private lateinit var firebaseAuth: FirebaseAuth
 
@@ -57,6 +60,11 @@ class RegisterActivity : AppCompatActivity() {
                             val firebaseUser = firebaseAuth.currentUser
 
                             Toast.makeText(this, firebaseUser.toString(), Toast.LENGTH_SHORT).show()
+
+                            val shared = PreferenceManager.getDefaultSharedPreferences(this)
+                            val editor = shared.edit()
+                            editor.putString(SIGNATURE, binding.userInputEditText.text.toString())
+                            editor.apply()
 
                             val intent = Intent(this, MainMenuActivity::class.java)
                             startActivity(intent)
