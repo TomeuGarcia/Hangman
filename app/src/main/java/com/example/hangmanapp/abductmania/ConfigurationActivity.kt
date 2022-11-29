@@ -9,6 +9,7 @@ import android.preference.PreferenceManager
 import android.widget.Toast
 import com.example.hangmanapp.R
 import com.example.hangmanapp.databinding.ActivityConfigurationBinding
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 
 
@@ -21,13 +22,15 @@ class ConfigurationActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityConfigurationBinding
     private lateinit var firestore: FirebaseFirestore
+    private lateinit var email: String
+    private lateinit var currentUser : User
 
     private val languages = arrayOf<String>("English", "Catalan", "Spanish")
     private var currentLang = 0
     private var music = true
     private var sound = true
-
     private var users = arrayListOf<User>()
+    private lateinit var usersCollection : CollectionReference
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,11 +41,11 @@ class ConfigurationActivity : AppCompatActivity() {
         supportActionBar?.hide()
 
         firestore = FirebaseFirestore.getInstance()
-        val usersCollection = firestore.collection(USERS_COLLECTION)
+        usersCollection = firestore.collection(USERS_COLLECTION)
 
         // Shared prefs
         val shared = PreferenceManager.getDefaultSharedPreferences(this)
-        val signature = shared.getString(USERS_COLLECTION, null)
+        email = shared.getString(EMAIL, null)?: ""
 
         updateValues(shared.getInt(CURRENT_LANGUAGE, 0), shared.getBoolean(MUSIC, true), shared.getBoolean(SOUND, true))
         updateButtons()
@@ -53,8 +56,16 @@ class ConfigurationActivity : AppCompatActivity() {
                 users = it?.documents?.mapNotNull { dbUser ->
                     dbUser.toObject(User::class.java)
                 } as ArrayList<User>
-                Toast.makeText(this, "${users.size}", Toast.LENGTH_SHORT).show()
-                updateValues(users[1].language, users[1].music, users[1].sound)
+
+                val currentUser = users.find {
+                    isUserCurrentUser(it)
+                }
+
+                if (currentUser != null)
+                {
+                    updateValues(currentUser.language, currentUser.music, currentUser.sound)
+                    this.currentUser = currentUser
+                }
                 updateButtons()
             }
             .addOnFailureListener {
@@ -89,6 +100,7 @@ class ConfigurationActivity : AppCompatActivity() {
         }
     }
 
+
     override fun onPause() {
         super.onPause()
 
@@ -102,14 +114,24 @@ class ConfigurationActivity : AppCompatActivity() {
         editor.apply()
 
         // Firestore
-        val usersCollection = firestore.collection(USERS_COLLECTION)
-
+        /*
         users.forEach { it ->
             usersCollection.document(it.username).set(it)
                 .addOnFailureListener { exception ->
                     Toast.makeText(this, exception.message, Toast.LENGTH_SHORT).show()
                 }
         }
+         */
+        currentUser.language = currentLang
+        currentUser.music = music
+        currentUser.sound = sound
+
+        usersCollection.document(currentUser.username).set(currentUser)
+    }
+
+    private fun isUserCurrentUser(user : User) : Boolean
+    {
+        return user.email == email
     }
 
     private fun updateValues(_lang: Int, _music: Boolean, _sound: Boolean) {

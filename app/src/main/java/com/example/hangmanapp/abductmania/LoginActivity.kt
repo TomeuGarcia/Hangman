@@ -1,21 +1,24 @@
 package com.example.hangmanapp.abductmania
 
 import android.content.Intent
-import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.util.Patterns
 import android.view.View
 import android.widget.Toast
-import com.example.hangmanapp.MainActivity
 import com.example.hangmanapp.R
 import com.example.hangmanapp.databinding.ActivityLoginBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class LoginActivity : AppCompatActivity()
 {
+    private val EMAIL = "email"
+
     private lateinit var binding: ActivityLoginBinding
     private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var firestore: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +27,7 @@ class LoginActivity : AppCompatActivity()
         setContentView(binding.root)
 
         firebaseAuth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
 
         if (firebaseAuth.currentUser != null)
         {
@@ -51,15 +55,17 @@ class LoginActivity : AppCompatActivity()
         }
 
         binding.loginButton.setOnClickListener {
-            val username = binding.emailInputEditText.text.toString()
+            val email = binding.emailInputEditText.text.toString()
+
             val password = binding.passwordInputEditText.text.toString()
-            println(username)
-            println(password)
 
             binding.loginButton.setTextColor(getColor(R.color.purple_dark)) // Show darker color when held
 
-            firebaseAuth.signInWithEmailAndPassword(username, password)
+            firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnSuccessListener {
+
+                    savedSharedPrefsLogedUser(email)
+
                     val intent = Intent(this@LoginActivity, MainMenuActivity::class.java)
                     startActivity(intent)
                     finish()
@@ -78,7 +84,6 @@ class LoginActivity : AppCompatActivity()
         binding.guestButton.setOnClickListener {
             firebaseAuth.signInAnonymously()
                 .addOnSuccessListener {
-                    val user = firebaseAuth.currentUser
                     val intent = Intent(this, MainMenuActivity::class.java)
                     startActivity(intent)
                 }
@@ -88,4 +93,13 @@ class LoginActivity : AppCompatActivity()
                 }
         }
     }
+
+    private fun savedSharedPrefsLogedUser(email : String)
+    {
+        val shared = PreferenceManager.getDefaultSharedPreferences(this)
+        val editor = shared.edit()
+        editor.putString(EMAIL, email)
+        editor.apply()
+    }
+
 }
