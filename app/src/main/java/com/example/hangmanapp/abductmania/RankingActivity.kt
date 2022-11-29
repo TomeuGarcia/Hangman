@@ -34,15 +34,16 @@ class RankingActivity : AppCompatActivity() {
 
     fun loadRanking()
     {
-        val rankingImages = listOf<RankingImage>(RankingImage("Juan", 334434342,1 ),
-            RankingImage("xXPussyDickstroyer69Xx", 69,2 ),
-            RankingImage("Ju", 10,3 ),
-            RankingImage("Na", 9,4 ),
-            RankingImage("Nau", 8,5 ),
-            RankingImage("Napalm", 7,6 ),
-            RankingImage("Enemy UAV", 6,7 ),
-            RankingImage("VTOL", 5,8 ),
-            RankingImage("Dron Bomba", 4,9 ))
+        val namesScores = listOf<Pair<String, Int>>(
+            Pair("Juan", 900000), Pair("xXEricAkaYuukiasXx", 696969), Pair("Ju", 1243),
+            Pair("NaCl", 434), Pair("Naplm", 77), Pair("Enemy UAV", 60),
+            Pair("VTOL", 59), Pair("Dron Bomba", 2)
+        )
+
+        val rankingImages = arrayListOf<RankingImage>()
+        namesScores.forEachIndexed { index, pair ->
+            rankingImages.add(RankingImage(pair.first, pair.second, index))
+        }
 
         adapter.submitList(rankingImages)
     }
