@@ -12,20 +12,22 @@ class MainMenuActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainMenuBinding
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainMenuBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        supportActionBar?.hide()
 
 
         binding.mainMenuPlay.setOnClickListener{
-            val intent = Intent(this, LoginActivity::class.java)
+            val intent = Intent(this, HangmanGameActivity::class.java)
             startActivity(intent)
         }
 
         binding.mainMenuSettings.setOnClickListener{
-            val intent = Intent(this, SplashScreenActivity::class.java)
+            val intent = Intent(this, ConfigurationActivity::class.java)
             startActivity(intent)
         }
         binding.mainMenuLeaderboard.setOnClickListener{
@@ -38,4 +40,5 @@ class MainMenuActivity : AppCompatActivity() {
             exitProcess(0)
         }
     }
+
 }

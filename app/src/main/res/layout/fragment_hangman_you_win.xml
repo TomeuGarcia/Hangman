@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/ywBackgroundImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/abductmania_background"
+        tools:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/ywTextBoxImage"
+        android:layout_width="285dp"
+        android:layout_height="494dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.7"
+        app:srcCompat="@drawable/abductmania_youwin_text_box" />
+
+    <ImageView
+        android:id="@+id/ywYouWinText"
+        android:layout_width="226dp"
+        android:layout_height="100dp"
+        app:layout_constraintBottom_toBottomOf="@+id/ywTextBoxImage"
+        app:layout_constraintEnd_toEndOf="@+id/ywTextBoxImage"
+        app:layout_constraintStart_toStartOf="@+id/ywTextBoxImage"
+        app:layout_constraintTop_toTopOf="@+id/ywTextBoxImage"
+        app:layout_constraintVertical_bias="0.13"
+        app:srcCompat="@drawable/abductmania_youwin_text" />
+
+    <ImageView
+        android:id="@+id/ywUfosImage"
+        android:layout_width="313dp"
+        android:layout_height="123dp"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toTopOf="@+id/ywYouWinText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/abductmania_youwin_ufos" />
+
+    <TextView
+        android:id="@+id/ywScoreTextText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Score:"
+        android:textAlignment="center"
+        android:textColor="#8BC34A"
+        android:textSize="34sp"
+        app:layout_constraintBottom_toBottomOf="@+id/ywTextBoxImage"
+        app:layout_constraintEnd_toEndOf="@+id/ywTextBoxImage"
+        app:layout_constraintStart_toStartOf="@+id/ywTextBoxImage"
+        app:layout_constraintTop_toBottomOf="@+id/ywYouWinText"
+        app:layout_constraintVertical_bias="0.060000002" />
+
+    <TextView
+        android:id="@+id/ywScoreText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="234"
+        android:textAlignment="center"
+        android:textColor="#8BC34A"
+        android:textSize="34sp"
+        app:layout_constraintBottom_toBottomOf="@+id/ywTextBoxImage"
+        app:layout_constraintEnd_toEndOf="@+id/ywTextBoxImage"
+        app:layout_constraintStart_toStartOf="@+id/ywTextBoxImage"
+        app:layout_constraintTop_toBottomOf="@+id/ywScoreTextText"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/ywYouGuessedCorrectlyText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="You guessed correctly:"
+        android:textColor="#8BC34A"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/ywTextBoxImage"
+        app:layout_constraintEnd_toEndOf="@+id/ywTextBoxImage"
+        app:layout_constraintStart_toStartOf="@+id/ywTextBoxImage"
+        app:layout_constraintTop_toBottomOf="@+id/ywScoreText"
+        app:layout_constraintVertical_bias="0.110000014" />
+
+    <TextView
+        android:id="@+id/ywHangmanWordText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="veryweirdword"
+        android:textAlignment="center"
+        android:textColor="#8BC34A"
+        android:textSize="34sp"
+        app:layout_constraintBottom_toBottomOf="@+id/ywTextBoxImage"
+        app:layout_constraintEnd_toEndOf="@+id/ywTextBoxImage"
+        app:layout_constraintStart_toStartOf="@+id/ywTextBoxImage"
+        app:layout_constraintTop_toBottomOf="@+id/ywYouGuessedCorrectlyText"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageView
+        android:id="@+id/ywReplayIcon"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.92"
+        app:srcCompat="@drawable/abductmania_button_replay" />
+
+    <ImageView
+        android:id="@+id/ywHomeIcon"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.7"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.92"
+        app:srcCompat="@drawable/abductmania_button_home" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

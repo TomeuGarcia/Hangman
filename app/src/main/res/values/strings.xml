@@ -3,4 +3,9 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="errorUsernameOrPassword">Incorrect username or password</string>
+    <string name="somethingWentWrong">Something went wrong</string>
+    <string name="preferences_config">config</string>
+    <string name="prefLanguage">language</string>
+    <string name="prefMusic">music</string>
+    <string name="prefSound">sound</string>
 </resources>
