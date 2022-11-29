@@ -19,7 +19,7 @@ import kotlin.math.max
 
 class HangmanGameActivity : AppCompatActivity()
 {
-    private lateinit var binding: ActivityHangmanGameBinding
+    private lateinit var binding : ActivityHangmanGameBinding
 
     private var hangmanWord : String = ""
     private var gameToken : String = ""
@@ -296,7 +296,6 @@ class HangmanGameActivity : AppCompatActivity()
             {
                 replace(binding.fragmentFrameLayout.id, pauseFragment)
             }
-
             commit()
         }
     }
