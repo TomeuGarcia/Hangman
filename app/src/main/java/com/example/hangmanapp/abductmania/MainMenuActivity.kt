@@ -3,7 +3,6 @@ package com.example.hangmanapp.abductmania
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.hangmanapp.databinding.ActivityMainBinding
 import com.example.hangmanapp.databinding.ActivityMainMenuBinding
 import kotlin.system.exitProcess
 
