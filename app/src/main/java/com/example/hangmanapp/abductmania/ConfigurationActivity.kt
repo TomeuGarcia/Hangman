@@ -53,7 +53,7 @@ class ConfigurationActivity : AppCompatActivity() {
                     dbUser.toObject(User::class.java)
                 } as ArrayList<User>
 
-                updateValues(users.get(0).language, users.get(0).music, users.get(0).sound)
+                updateValues(users.get(1).language, users.get(1).music, users.get(1).sound)
                 updateButtons()
             }
             .addOnFailureListener {
@@ -103,8 +103,11 @@ class ConfigurationActivity : AppCompatActivity() {
         // Firestore
         val usersCollection = firestore.collection(USERS_COLLECTION)
 
-        users.forEach {
+        users.forEach { it ->
             usersCollection.document(it.username).set(it)
+                .addOnFailureListener { exception ->
+                    Toast.makeText(this, exception.message, Toast.LENGTH_SHORT).show()
+                }
         }
     }
 
