@@ -3,7 +3,6 @@ package com.example.hangmanapp.abductmania
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.hangmanapp.databinding.ActivityMainBinding
 import com.example.hangmanapp.databinding.ActivityMainMenuBinding
 import kotlin.system.exitProcess
 
@@ -12,7 +11,8 @@ class MainMenuActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainMenuBinding
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainMenuBinding.inflate(layoutInflater)
@@ -39,4 +39,5 @@ class MainMenuActivity : AppCompatActivity() {
             exitProcess(0)
         }
     }
+
 }

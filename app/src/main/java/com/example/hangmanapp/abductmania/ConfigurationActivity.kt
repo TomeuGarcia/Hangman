@@ -1,72 +1,131 @@
 package com.example.hangmanapp.abductmania
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.preference.PreferenceManager
+import android.widget.Toast
 import com.example.hangmanapp.R
 import com.example.hangmanapp.databinding.ActivityConfigurationBinding
+import com.google.firebase.firestore.FirebaseFirestore
+
 
 class ConfigurationActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityConfigurationBinding
+    private val USERS_COLLECTION = "users"
+    private val CURRENT_LANGUAGE = "language"
+    private val MUSIC = "music"
+    private val SOUND = "sound"
+    private val EMAIL = "email"
 
-    private val languages = arrayOf<String>("English", "Spanish", "Catalan")
+    private lateinit var binding: ActivityConfigurationBinding
+    private lateinit var firestore: FirebaseFirestore
+
+    private val languages = arrayOf<String>("English", "Catalan", "Spanish")
     private var currentLang = 0
     private var music = true
     private var sound = true
+
+    private var users = arrayListOf<User>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityConfigurationBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        supportActionBar?.hide()
 
-        //val sharedPreferences = getSharedPreferences(getString(R.string.preferences_config), MODE_PRIVATE)
-        //var editor = sharedPreferences.edit()
+        firestore = FirebaseFirestore.getInstance()
+        val usersCollection = firestore.collection(USERS_COLLECTION)
+
+        // Shared prefs
+        val shared = PreferenceManager.getDefaultSharedPreferences(this)
+        val signature = shared.getString(USERS_COLLECTION, null)
+
+        updateValues(shared.getInt(CURRENT_LANGUAGE, 0), shared.getBoolean(MUSIC, true), shared.getBoolean(SOUND, true))
+        updateButtons()
+
+        // Firestore
+        usersCollection.get()
+            .addOnSuccessListener {
+                users = it?.documents?.mapNotNull { dbUser ->
+                    dbUser.toObject(User::class.java)
+                } as ArrayList<User>
+                Toast.makeText(this, "${users.size}", Toast.LENGTH_SHORT).show()
+                updateValues(users[1].language, users[1].music, users[1].sound)
+                updateButtons()
+            }
+            .addOnFailureListener {
+                Toast.makeText(this@ConfigurationActivity, getString(R.string.somethingWentWrong), Toast.LENGTH_LONG).show()
+            }
 
         binding.backButtonImage.setOnClickListener() {
             // Go To Main Menu
             val intent = Intent(this, MainMenuActivity::class.java)
-
             startActivity(intent)
         }
 
         binding.languageButton.setOnClickListener() {
             // Change Current Language
-            currentLang++
-            if (currentLang > languages.size) { currentLang = 0 }
+            currentLang = ++currentLang % languages.size
 
-            binding.languageButton.text = "Language: " + languages[currentLang]
-
-            //editor.putInt(getString(R.string.prefLanguage), currentLang).apply()
+            updateButtons()
         }
 
         binding.musicButton.setOnClickListener() {
             // Turn On/Off Music
             music = !music
 
-            if (music) {
-                binding.musicButton.text = "Music: ON"
-                //editor.putBoolean(getString(R.string.prefMusic), true).apply()
-            }
-            else {
-                binding.musicButton.text = "Music: OFF"
-                //editor.putBoolean(getString(R.string.prefMusic), false).apply()
-            }
+            updateButtons()
         }
 
         binding.soundButton.setOnClickListener() {
             // Turn On/Off Sound
             sound = !sound
 
-            if (sound) {
-                binding.soundButton.text = "Sound: ON"
-                //editor.putBoolean(getString(R.string.prefSound), true).apply()
-            }
-            else {
-                binding.soundButton.text = "Sound: OFF"
-                //editor.putBoolean(getString(R.string.prefSound), false).apply()
-            }
+            updateButtons()
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        // Shared Prefs
+        val shared = PreferenceManager.getDefaultSharedPreferences(this)
+        val editor = shared.edit()
+
+        editor.putInt("language", currentLang)
+        editor.putBoolean("music", music)
+        editor.putBoolean("sound", sound)
+        editor.apply()
+
+        // Firestore
+        val usersCollection = firestore.collection(USERS_COLLECTION)
+
+        users.forEach { it ->
+            usersCollection.document(it.username).set(it)
+                .addOnFailureListener { exception ->
+                    Toast.makeText(this, exception.message, Toast.LENGTH_SHORT).show()
+                }
+        }
+    }
+
+    private fun updateValues(_lang: Int, _music: Boolean, _sound: Boolean) {
+        currentLang = _lang
+        music = _music
+        sound = _sound
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun updateButtons() {
+        binding.languageButton.text = "Language: " + languages[currentLang]
+
+        if (music) { binding.musicButton.text = "Music: ON" }
+        else { binding.musicButton.text = "Music: OFF" }
+
+        if (sound) { binding.soundButton.text = "Sound: ON" }
+        else { binding.soundButton.text = "Sound: OFF" }
     }
 }

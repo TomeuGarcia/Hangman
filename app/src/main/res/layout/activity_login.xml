@@ -105,7 +105,7 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/guestButton"
-        app:layout_constraintVertical_bias="0.226" />
+        app:layout_constraintVertical_bias="0.815" />
 
     <Button
         android:id="@+id/loginButton"
@@ -137,6 +137,7 @@
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/loginButton"
+        app:layout_constraintVertical_bias="0.405"
         app:rippleColor="@color/green_strong"
         app:strokeColor="@color/green_strong" />
 
@@ -153,7 +154,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/registerButton"
         app:layout_constraintTop_toBottomOf="@+id/passwordInputLayout"
-        app:layout_constraintVertical_bias="0.379"
+        app:layout_constraintVertical_bias="0.561"
         app:rippleColor="@color/green_strong"
         app:strokeColor="@color/green_strong" />
 
