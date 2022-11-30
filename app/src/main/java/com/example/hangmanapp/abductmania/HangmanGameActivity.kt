@@ -19,7 +19,7 @@ import kotlin.math.max
 
 class HangmanGameActivity : AppCompatActivity()
 {
-    private lateinit var binding: ActivityHangmanGameBinding
+    private lateinit var binding : ActivityHangmanGameBinding
 
     private var hangmanWord : String = ""
     private var gameToken : String = ""
@@ -247,6 +247,7 @@ class HangmanGameActivity : AppCompatActivity()
         isGameOver = true
         gameKeyboardMap.disableRemainingLetterButtons()
         binding.pauseIcon.isEnabled = false
+        countDownTimer.cancel()
 
         getSolution() // this is async.... wait until solution received to do real GameOver
     }
@@ -296,7 +297,6 @@ class HangmanGameActivity : AppCompatActivity()
             {
                 replace(binding.fragmentFrameLayout.id, pauseFragment)
             }
-
             commit()
         }
     }
