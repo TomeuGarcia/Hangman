@@ -4,10 +4,6 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.hangmanapp.databinding.ActivityRankingBinding
-import com.example.hangmanapp.nasa.NasaImage
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class RankingActivity : AppCompatActivity() {
 
@@ -32,7 +28,7 @@ class RankingActivity : AppCompatActivity() {
         loadRanking()
     }
 
-    fun loadRanking()
+    private fun loadRanking()
     {
         val namesScores = listOf<Pair<String, Int>>(
             Pair("Juan", 900000), Pair("xXEricAkaYuukiasXx", 696969), Pair("Ju", 1243),
@@ -40,9 +36,9 @@ class RankingActivity : AppCompatActivity() {
             Pair("VTOL", 59), Pair("Dron Bomba", 2)
         )
 
-        val rankingImages = arrayListOf<RankingImage>()
+        val rankingImages = arrayListOf<RankingItem>()
         namesScores.forEachIndexed { index, pair ->
-            rankingImages.add(RankingImage(pair.first, pair.second, index))
+            rankingImages.add(RankingItem(pair.first, pair.second, index+1))
         }
 
         adapter.submitList(rankingImages)

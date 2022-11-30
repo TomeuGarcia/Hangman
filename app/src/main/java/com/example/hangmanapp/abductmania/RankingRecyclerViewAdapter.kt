@@ -1,19 +1,17 @@
 package com.example.hangmanapp.abductmania
 
 import android.annotation.SuppressLint
-import android.service.notification.NotificationListenerService.Ranking
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.hangmanapp.databinding.ItemLeaderboardBinding
-import com.squareup.picasso.Picasso
+import com.example.hangmanapp.databinding.ItemRankingBinding
 
 class RankingRecyclerViewAdapter
     : RecyclerView.Adapter<RankingRecyclerViewAdapter.RankingViewHolder>()
 {
-    private var rankingImagesList : List<RankingImage>? = null
+    private var rankingImagesList : List<RankingItem>? = null
 
-    inner class RankingViewHolder(binding: ItemLeaderboardBinding)
+    inner class RankingViewHolder(binding: ItemRankingBinding)
         : RecyclerView.ViewHolder(binding.root)
     {
         val image = binding.leaderboardProfileImage
@@ -26,7 +24,7 @@ class RankingRecyclerViewAdapter
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RankingViewHolder
     {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = ItemLeaderboardBinding.inflate(inflater, parent, false)
+        val binding = ItemRankingBinding.inflate(inflater, parent, false)
 
         return RankingViewHolder(binding)
     }
@@ -47,7 +45,7 @@ class RankingRecyclerViewAdapter
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun submitList(newList : List<RankingImage>)
+    fun submitList(newList : List<RankingItem>)
     {
         rankingImagesList = newList
         notifyDataSetChanged()

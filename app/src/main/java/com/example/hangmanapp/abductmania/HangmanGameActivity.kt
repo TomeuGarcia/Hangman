@@ -23,7 +23,6 @@ class HangmanGameActivity : AppCompatActivity()
 
     private var hangmanWord : String = ""
     private var gameToken : String = ""
-
     private var hint : Char = ' '
 
     private val CORRECT_LETTER_POINTS : Int = 50
@@ -31,17 +30,17 @@ class HangmanGameActivity : AppCompatActivity()
     private val ALL_LETTERS_GUESSED_POINTS : Int = 200
     private var score : Int = 0
 
-    private var wrongGuessesCount : Int = 0
     private val MAX_WRONG_GUESSES : Int = 8
+    private var wrongGuessesCount : Int = 0
 
     private val MISSING_LETTER : Char = '_'
 
-    private val END_GAME_FRAGMENT_START_DELAY : Long = 3000
+    private val END_GAME_FRAGMENT_START_DELAY_MILLISECONDS : Long = 3000
 
-    private val COUNTDOWN_TOTAL_TIME : Long = 60000
-    private val COUNTDOWN_INTERVAL_TIME : Long = 1000
-    private val COUNTDOWN_ANIM_START_TIME : Long = COUNTDOWN_TOTAL_TIME / 2
-    private var countDownCurrentTime : Long = COUNTDOWN_TOTAL_TIME / 1000
+    private val COUNTDOWN_TOTAL_TIME_MILLISECONDS : Long = 60000
+    private val COUNTDOWN_INTERVAL_TIME_MILLISECONDS : Long = 1000
+    private val COUNTDOWN_ANIM_START_TIME_MILLISECONDS : Long = COUNTDOWN_TOTAL_TIME_MILLISECONDS / 2
+    private var countDownCurrentTimeSeconds : Long = COUNTDOWN_TOTAL_TIME_MILLISECONDS / 1000
 
     private var isGameOver : Boolean = false
 
@@ -66,7 +65,7 @@ class HangmanGameActivity : AppCompatActivity()
             pauseGame()
         }
 
-        updateCountDownText(COUNTDOWN_TOTAL_TIME / 1000)
+        updateCountDownText(COUNTDOWN_TOTAL_TIME_MILLISECONDS / 1000)
 
 
         hangmanApiCommunication = HangmanApiCommunication(
@@ -115,7 +114,7 @@ class HangmanGameActivity : AppCompatActivity()
 
         gameKeyboardMap.reenableRemainingLetterButtons()
 
-        startCountDownTimer(COUNTDOWN_TOTAL_TIME)
+        startCountDownTimer(COUNTDOWN_TOTAL_TIME_MILLISECONDS)
     }
     private fun onCreateNewHangmanGameFailure()
     {
@@ -231,13 +230,13 @@ class HangmanGameActivity : AppCompatActivity()
 
     private fun doVictory()
     {
-        score += ALL_LETTERS_GUESSED_POINTS + countDownCurrentTime.toInt()
+        score += ALL_LETTERS_GUESSED_POINTS + countDownCurrentTimeSeconds.toInt()
 
         gameKeyboardMap.disableRemainingLetterButtons()
         binding.pauseIcon.isEnabled = false
         countDownTimer.cancel()
 
-        Timer().schedule(END_GAME_FRAGMENT_START_DELAY) {
+        Timer().schedule(END_GAME_FRAGMENT_START_DELAY_MILLISECONDS) {
             setEndGameFragment(HangmanYouWinFragment(hangmanWord, score))
         }
     }
@@ -257,7 +256,7 @@ class HangmanGameActivity : AppCompatActivity()
         score = max(0, score) // Make score not negative
 
         CoroutineScope(Dispatchers.Default).launch {
-            delay(END_GAME_FRAGMENT_START_DELAY)
+            delay(END_GAME_FRAGMENT_START_DELAY_MILLISECONDS)
             setEndGameFragment(HangmanYouLoseFragment(hangmanWord, score))
         }
     }
@@ -305,7 +304,7 @@ class HangmanGameActivity : AppCompatActivity()
     {
         gameKeyboardMap.reenableRemainingLetterButtons()
         binding.pauseIcon.isEnabled = true
-        startCountDownTimer(countDownCurrentTime * 1000)
+        startCountDownTimer(countDownCurrentTimeSeconds * 1000)
 
         supportFragmentManager.beginTransaction().apply {
             hide(pauseFragment)
@@ -315,15 +314,15 @@ class HangmanGameActivity : AppCompatActivity()
 
     private fun startCountDownTimer(startTime : Long)
     {
-        countDownTimer = object : CountDownTimer(startTime, COUNTDOWN_INTERVAL_TIME){
+        countDownTimer = object : CountDownTimer(startTime, COUNTDOWN_INTERVAL_TIME_MILLISECONDS){
             override fun onTick(millisUntilFinished: Long)
             {
-                countDownCurrentTime = millisUntilFinished / 1000
-                updateCountDownText(countDownCurrentTime)
-                if (millisUntilFinished <= COUNTDOWN_ANIM_START_TIME) playCountDownTextColorAnim()
+                countDownCurrentTimeSeconds = millisUntilFinished / 1000
+                updateCountDownText(countDownCurrentTimeSeconds)
+                if (millisUntilFinished <= COUNTDOWN_ANIM_START_TIME_MILLISECONDS) playCountDownTextColorAnim()
             }
             override fun onFinish(){
-                if(countDownCurrentTime <= 0)
+                if(countDownCurrentTimeSeconds <= 0)
                 {
                     doGameOver()
                 }
@@ -341,7 +340,7 @@ class HangmanGameActivity : AppCompatActivity()
         ObjectAnimator.ofArgb(binding.countDownText, "textColor",
             resources.getColor(R.color.error_red), resources.getColor(R.color.green_soft))
             .apply {
-                duration = COUNTDOWN_INTERVAL_TIME
+                duration = COUNTDOWN_INTERVAL_TIME_MILLISECONDS
                 start()
             }
     }
