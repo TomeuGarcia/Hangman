@@ -12,8 +12,10 @@ import kotlinx.coroutines.launch
 
 class SplashScreenActivity : AppCompatActivity()
 {
-
     private lateinit var binding: ActivitySplashScreenBinding
+
+    private val START_LOGIN_DELAY_MILLISECONDS : Long = 2000
+
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -24,14 +26,14 @@ class SplashScreenActivity : AppCompatActivity()
         binding = ActivitySplashScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        startLoginActivity(2000)
+        startLoginActivity(START_LOGIN_DELAY_MILLISECONDS)
     }
 
 
-    private fun startLoginActivity(delayMilis: Long)
+    private fun startLoginActivity(delay: Long)
     {
         CoroutineScope(Dispatchers.Default).launch {
-            delay(delayMilis)
+            delay(delay)
 
             val intent = Intent(this@SplashScreenActivity, LoginActivity::class.java)
             startActivity(intent)
