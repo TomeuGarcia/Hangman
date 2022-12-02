@@ -48,7 +48,7 @@ class HangmanGameActivity : AppCompatActivity()
     private lateinit var gameKeyboardMap : GameKeyboardMap
     private lateinit var hangmanDrawer : HangmanDrawer
     private lateinit var pauseFragment : HangmanGamePauseFragment
-    private lateinit var countDownTimer : CountDownTimer
+    private var countDownTimer : CountDownTimer? = null
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -96,6 +96,17 @@ class HangmanGameActivity : AppCompatActivity()
 
         createNewHangmanGame()
 
+        // TEST while API not working
+        binding.aButton.setOnClickListener {
+            doVictory(0)
+        }
+        binding.bButton.setOnClickListener {
+            isGameOver = true
+            gameKeyboardMap.disableRemainingLetterButtons()
+            binding.pauseIcon.isEnabled = false
+            countDownTimer?.cancel()
+            onGameOverSolutionObtained(0)
+        }
     }
 
 
@@ -137,7 +148,7 @@ class HangmanGameActivity : AppCompatActivity()
 
         updateGuessWord(hangmanWord)
 
-        onGameOverSolutionObtained()
+        onGameOverSolutionObtained(END_GAME_FRAGMENT_START_DELAY_MILLISECONDS)
     }
     private fun onGetSolutionFailure()
     {
@@ -205,7 +216,7 @@ class HangmanGameActivity : AppCompatActivity()
         gameKeyboardMap.setLetterCorrect(letter)
         score += CORRECT_LETTER_POINTS
 
-        if (hasGuessedAllLetters()) doVictory()
+        if (hasGuessedAllLetters()) doVictory(END_GAME_FRAGMENT_START_DELAY_MILLISECONDS)
         else gameKeyboardMap.reenableRemainingLetterButtons()
 
     }
@@ -228,15 +239,15 @@ class HangmanGameActivity : AppCompatActivity()
         }
     }
 
-    private fun doVictory()
+    private fun doVictory(startFragmentDelay : Long)
     {
         score += ALL_LETTERS_GUESSED_POINTS + countDownCurrentTimeSeconds.toInt()
 
         gameKeyboardMap.disableRemainingLetterButtons()
         binding.pauseIcon.isEnabled = false
-        countDownTimer.cancel()
+        countDownTimer?.cancel()
 
-        Timer().schedule(END_GAME_FRAGMENT_START_DELAY_MILLISECONDS) {
+        Timer().schedule(startFragmentDelay) {
             setEndGameFragment(HangmanYouWinFragment(hangmanWord, score))
         }
     }
@@ -246,17 +257,17 @@ class HangmanGameActivity : AppCompatActivity()
         isGameOver = true
         gameKeyboardMap.disableRemainingLetterButtons()
         binding.pauseIcon.isEnabled = false
-        countDownTimer.cancel()
+        countDownTimer?.cancel()
 
         getSolution() // this is async.... wait until solution received to do real GameOver
     }
 
-    private fun onGameOverSolutionObtained()
+    private fun onGameOverSolutionObtained(startFragmentDelay : Long)
     {
         score = max(0, score) // Make score not negative
 
         CoroutineScope(Dispatchers.Default).launch {
-            delay(END_GAME_FRAGMENT_START_DELAY_MILLISECONDS)
+            delay(startFragmentDelay)
             setEndGameFragment(HangmanYouLoseFragment(hangmanWord, score))
         }
     }
@@ -285,7 +296,7 @@ class HangmanGameActivity : AppCompatActivity()
     {
         gameKeyboardMap.disableRemainingLetterButtons()
         binding.pauseIcon.isEnabled = false
-        countDownTimer.cancel()
+        countDownTimer?.cancel()
 
         supportFragmentManager.beginTransaction().apply {
             if (pauseFragment.isAdded)
