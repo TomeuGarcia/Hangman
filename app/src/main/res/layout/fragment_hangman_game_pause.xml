@@ -35,6 +35,7 @@
         android:text="Paused"
         android:textColor="#8BC34A"
         android:textSize="34sp"
+        android:fontFamily="@font/simpy_rounded"
         app:layout_constraintBottom_toBottomOf="@+id/pauseBoxImage"
         app:layout_constraintEnd_toEndOf="@+id/pauseBoxImage"
         app:layout_constraintStart_toStartOf="@+id/pauseBoxImage"

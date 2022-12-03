@@ -22,7 +22,7 @@ class ConfigurationActivity : AppCompatActivity() {
     private lateinit var binding: ActivityConfigurationBinding
     private lateinit var firestore: FirebaseFirestore
     private lateinit var email: String
-    private lateinit var currentUser : User
+    private var currentUser : User? = null
 
     private val languages = arrayOf<String>("English", "Catalan", "Spanish")
     private var currentLang = 0
@@ -56,14 +56,12 @@ class ConfigurationActivity : AppCompatActivity() {
                     dbUser.toObject(User::class.java)
                 } as ArrayList<User>
 
-                val currentUser = users.find {
+                currentUser = users.find {
                     isUserCurrentUser(it)
                 }
 
-                if (currentUser != null)
-                {
-                    updateValues(currentUser.language, currentUser.music, currentUser.sound)
-                    this.currentUser = currentUser
+                currentUser?.apply{
+                    updateValues(language, music, sound)
                 }
                 updateButtons()
             }
@@ -121,11 +119,15 @@ class ConfigurationActivity : AppCompatActivity() {
                 }
         }
          */
-        currentUser.language = currentLang
-        currentUser.music = music
-        currentUser.sound = sound
 
-        usersCollection.document(currentUser.username).set(currentUser)
+        currentUser?.let {
+            it.language = currentLang
+            it.music = music
+            it.sound = sound
+
+            usersCollection.document(it.username).set(it)
+        }
+
     }
 
     private fun isUserCurrentUser(user : User) : Boolean

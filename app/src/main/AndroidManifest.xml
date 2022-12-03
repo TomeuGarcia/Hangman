@@ -70,26 +70,6 @@
                 android:name="android.app.lib_name"
                 android:value="false" />
         </activity>
-        <activity
-            android:name=".fragments.BottomNavigationActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="false" />
-        </activity>
-        <activity
-            android:name=".quotes.QuotesActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
-            android:exported="false" />
-        <activity
-            android:name=".nasa.NasaActivity"
-            android:exported="false" />
-        <activity
-            android:name=".particles.ParticlesActivity"
-            android:exported="true" >
-        </activity>
     </application>
 
 </manifest>
