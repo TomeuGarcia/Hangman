@@ -16,7 +16,8 @@ class HangmanApiCommunication(private val createNewHangmanGameResponseCallback :
                               private val guessLetterFailureCallback : () -> Unit)
 {
 
-    private val HANGMAN_API_URL : String = "https://hangman-api.herokuapp.com/"
+    //private val HANGMAN_API_URL : String = "https://hangman-api.herokuapp.com/"
+    private val HANGMAN_API_URL : String = "http://hangman.enti.cat:5002/"
 
 
     private val retrofit = Retrofit.Builder()

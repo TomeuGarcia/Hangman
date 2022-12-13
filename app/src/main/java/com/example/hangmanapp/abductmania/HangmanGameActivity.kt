@@ -97,6 +97,7 @@ class HangmanGameActivity : AppCompatActivity()
         createNewHangmanGame()
 
         // TEST while API not working
+        /*
         binding.aButton.setOnClickListener {
             doVictory(0)
         }
@@ -107,6 +108,7 @@ class HangmanGameActivity : AppCompatActivity()
             countDownTimer?.cancel()
             onGameOverSolutionObtained(0)
         }
+        */
     }
 
 
