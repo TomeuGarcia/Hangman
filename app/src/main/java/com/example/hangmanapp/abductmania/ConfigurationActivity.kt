@@ -15,30 +15,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class ConfigurationActivity : AppCompatActivity()
 {
-    /*
-    private val USERS_COLLECTION = "users"
-    private val LANGUAGE = "language"
-    private val MUSIC = "music"
-    private val SOUND = "sound"
-    private val EMAIL = "email"
-     */
-
     private lateinit var binding: ActivityConfigurationBinding
 
     private val configurationViewModel : ConfigurationViewModel by viewModels()
 
-    /*
-    private lateinit var firestore: FirebaseFirestore
-    private lateinit var email: String
-    private var currentUser : User? = null
-
-    private val languages = arrayOf<String>("English", "Catalan", "Spanish")
-    private var currentLang = 0
-    private var music = true
-    private var sound = true
-    private var users = arrayListOf<User>()
-    private lateinit var usersCollection : CollectionReference
-    */
 
 
     override fun onCreate(savedInstanceState: Bundle?)

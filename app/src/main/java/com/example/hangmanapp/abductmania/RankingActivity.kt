@@ -3,12 +3,17 @@ package com.example.hangmanapp.abductmania
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.viewModels
 import com.example.hangmanapp.databinding.ActivityRankingBinding
 
 class RankingActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityRankingBinding
     private var adapter = RankingRecyclerViewAdapter()
+
+    private val rankingViewModel : RankingViewModel by viewModels()
+
+
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -25,20 +30,20 @@ class RankingActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-        loadRanking()
+
+        rankingViewModel.rankingUsersData.observe(this) {
+            updateRanking(it)
+        }
+
+        rankingViewModel.loadRanking()
     }
 
-    private fun loadRanking()
+    private fun updateRanking(rankingUsersData : List<RankingViewModel.RankingUserData>)
     {
-        val namesScores = listOf<Pair<String, Int>>(
-            Pair("Juan", 900000), Pair("xXEricAkaYuukiasXx", 696969), Pair("Ju", 1243),
-            Pair("NaCl", 434), Pair("Naplm", 77), Pair("Enemy UAV", 60),
-            Pair("VTOL", 59), Pair("Dron Bomba", 2)
-        )
-
         val rankingImages = arrayListOf<RankingItem>()
-        namesScores.forEachIndexed { index, pair ->
-            rankingImages.add(RankingItem(pair.first, pair.second, index+1))
+
+        rankingUsersData.forEachIndexed { index, e ->
+            rankingImages.add(RankingItem(e.username, e.score, index+1))
         }
 
         adapter.submitList(rankingImages)
