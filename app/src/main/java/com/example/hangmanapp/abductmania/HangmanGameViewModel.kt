@@ -3,17 +3,10 @@ package com.example.hangmanapp.abductmania
 
 import android.content.Context
 import android.os.CountDownTimer
-import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.hangmanapp.databinding.ActivityHangmanGameBinding
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import java.util.*
-import kotlin.concurrent.schedule
 import kotlin.math.max
 
 class HangmanGameViewModel()
@@ -48,16 +41,16 @@ class HangmanGameViewModel()
     private val COUNTDOWN_INTERVAL_TIME_MILLISECONDS : Long = 1000
     public var countDownCurrentTimeSeconds = MutableLiveData<Long>()
 
-    private lateinit var context : Context  // Used to debug with Toast()
+    private lateinit var activityContext : Context  // Used to debug with Toast()
 
     private lateinit var onDisablePausingCallback : () -> Unit
     private lateinit var onVictoryCallback : (String, Int, Long) -> Unit
     private lateinit var onGameOverCallback : (String, Int, Long) -> Unit
 
 
-    public fun create(context: Context, binding: ActivityHangmanGameBinding)
+    public fun createGame(context: Context, binding: ActivityHangmanGameBinding)
     {
-        this.context = context
+        activityContext = context
 
         hangmanWord.value = ""
         countDownCurrentTimeSeconds.value = COUNTDOWN_TOTAL_TIME_MILLISECONDS / 1000
@@ -75,14 +68,14 @@ class HangmanGameViewModel()
 
         hangmanDrawer = HangmanDrawer(
             listOf(
-                HangmanDrawingPart(binding.ufoCenterImage, View.INVISIBLE, View.VISIBLE),
-                HangmanDrawingPart(binding.ufoLeftImage,   View.INVISIBLE, View.VISIBLE),
-                HangmanDrawingPart(binding.ufoRightImage,  View.INVISIBLE, View.VISIBLE),
-                HangmanDrawingPart(binding.ufoWavesImage,  View.INVISIBLE, View.VISIBLE),
-                HangmanDrawingPart(binding.building2Image, View.VISIBLE,   View.INVISIBLE),
-                HangmanDrawingPart(binding.building4Image, View.VISIBLE,   View.INVISIBLE),
-                HangmanDrawingPart(binding.building1Image, View.VISIBLE,   View.INVISIBLE),
-                HangmanDrawingPart(binding.building3Image, View.VISIBLE,   View.INVISIBLE)
+                HangmanDrawingUFO(binding.ufoCenterImage),
+                HangmanDrawingUFO(binding.ufoLeftImage),
+                HangmanDrawingUFO(binding.ufoRightImage),
+                HangmanDrawingWaves(binding.ufoWavesImage),
+                HangmanDrawingBuilding(binding.building2Image, 10f),
+                HangmanDrawingBuilding(binding.building4Image, -15f),
+                HangmanDrawingBuilding(binding.building1Image, 15f),
+                HangmanDrawingBuilding(binding.building3Image, -10f)
             )
         )
 
@@ -115,8 +108,8 @@ class HangmanGameViewModel()
     }
     private fun onCreateNewHangmanGameFailure()
     {
-        Toast.makeText(context,
-            "Something went wrong -> createNewHangmanGame()", Toast.LENGTH_LONG).show()
+        Toast.makeText(activityContext,"Something went wrong -> createNewHangmanGame()",
+            Toast.LENGTH_LONG).show()
 
         gameKeyboardMap.reenableRemainingLetterButtons()
     }
@@ -132,12 +125,12 @@ class HangmanGameViewModel()
         hangmanWord.value = hangmanGameSolution.solution
         gameToken = hangmanGameSolution.token
 
-        onGameOverSolutionObtained(END_GAME_FRAGMENT_START_DELAY_MILLISECONDS)
+        onGameOverSolutionObtained()
     }
     private fun onGetSolutionFailure()
     {
-        Toast.makeText(context,
-            "Something went wrong -> getSolution()", Toast.LENGTH_LONG)
+        Toast.makeText(activityContext,"Something went wrong -> getSolution()",
+            Toast.LENGTH_LONG).show()
     }
 
 
@@ -155,8 +148,8 @@ class HangmanGameViewModel()
     }
     private fun onGetHintFailure()
     {
-        Toast.makeText(context,
-            "Something went wrong -> getHint()", Toast.LENGTH_LONG)
+        Toast.makeText(activityContext,"Something went wrong -> getHint()",
+            Toast.LENGTH_LONG).show()
     }
 
 
@@ -181,8 +174,8 @@ class HangmanGameViewModel()
     }
     private fun onGuessLetterFailure()
     {
-        Toast.makeText(context,
-            "Something went wrong -> guessLetter()", Toast.LENGTH_LONG).show()
+        Toast.makeText(activityContext,"Something went wrong -> guessLetter()",
+            Toast.LENGTH_LONG).show()
 
         gameKeyboardMap.reenableRemainingLetterButtons()
     }
@@ -194,7 +187,7 @@ class HangmanGameViewModel()
         score += CORRECT_LETTER_POINTS
 
         if (hasGuessedAllLetters())
-            doVictory(END_GAME_FRAGMENT_START_DELAY_MILLISECONDS)
+            doVictory()
         else
             gameKeyboardMap.reenableRemainingLetterButtons()
 
@@ -225,7 +218,7 @@ class HangmanGameViewModel()
     }
 
 
-    private fun doVictory(startFragmentDelay : Long)
+    private fun doVictory()
     {
         countDownCurrentTimeSeconds.value?.apply {
             score += ALL_LETTERS_GUESSED_POINTS + this.toInt()
@@ -235,7 +228,7 @@ class HangmanGameViewModel()
         countDownTimer?.cancel()
 
         onDisablePausingCallback()
-        onVictoryCallback(hangmanWord.value ?: "", score, startFragmentDelay)
+        onVictoryCallback(hangmanWord.value ?: "", score, END_GAME_FRAGMENT_START_DELAY_MILLISECONDS)
     }
 
     private fun doGameOver()
@@ -248,11 +241,11 @@ class HangmanGameViewModel()
         onDisablePausingCallback()
     }
 
-    private fun onGameOverSolutionObtained(startFragmentDelay : Long)
+    private fun onGameOverSolutionObtained()
     {
         score = max(0, score) // Make score not negative
 
-        onGameOverCallback(hangmanWord.value ?: "", score, startFragmentDelay)
+        onGameOverCallback(hangmanWord.value ?: "", score, END_GAME_FRAGMENT_START_DELAY_MILLISECONDS)
     }
 
 

@@ -1,12 +1,8 @@
 package com.example.hangmanapp.abductmania
 
 import android.animation.ObjectAnimator
-import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.CountDownTimer
-import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import com.example.hangmanapp.R
 import com.example.hangmanapp.databinding.ActivityHangmanGameBinding
@@ -14,9 +10,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.*
-import kotlin.concurrent.schedule
-import kotlin.math.max
 
 
 class HangmanGameActivity : AppCompatActivity()
@@ -51,7 +44,7 @@ class HangmanGameActivity : AppCompatActivity()
         pauseFragment = HangmanGamePauseFragment(this::resumeGame)
 
 
-        hangmanGameViewModel.create(this, binding)
+        hangmanGameViewModel.createGame(this, binding)
         hangmanGameViewModel.initCallbacks(this::disablePausing,
                                            this::startWinFragment,
                                            this::startGameOverFragment)

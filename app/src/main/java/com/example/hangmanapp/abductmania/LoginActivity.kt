@@ -64,7 +64,7 @@ class LoginActivity : AppCompatActivity()
             firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnSuccessListener {
 
-                    savedSharedPrefsLogedUser(email)
+                    savedSharedPrefsLoggedUser(email)
 
                     val intent = Intent(this@LoginActivity, MainMenuActivity::class.java)
                     startActivity(intent)
@@ -94,7 +94,7 @@ class LoginActivity : AppCompatActivity()
         }
     }
 
-    private fun savedSharedPrefsLogedUser(email : String)
+    private fun savedSharedPrefsLoggedUser(email : String)
     {
         val shared = PreferenceManager.getDefaultSharedPreferences(this)
         val editor = shared.edit()
