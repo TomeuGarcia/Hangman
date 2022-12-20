@@ -3,6 +3,7 @@ package com.example.hangmanapp.abductmania.Login
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.method.KeyListener
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -17,6 +18,8 @@ class LoginActivity : AppCompatActivity()
 
     private val loginViewModel : LoginViewModel by viewModels()
 
+    private lateinit var emailKeyListener : KeyListener
+    private lateinit var passwordKeyListener : KeyListener
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,6 +29,9 @@ class LoginActivity : AppCompatActivity()
         setContentView(binding.root)
 
         supportActionBar?.hide()
+
+        emailKeyListener = binding.emailInputEditText.keyListener
+        passwordKeyListener = binding.passwordInputEditText.keyListener
 
         if (loginViewModel.hasLoggedUserAlready())
         {
@@ -51,22 +57,17 @@ class LoginActivity : AppCompatActivity()
         }
 
         binding.loginButton.setOnClickListener {
-            val email = binding.emailInputEditText.text.toString()
-            val password = binding.passwordInputEditText.text.toString()
-
-            binding.loginButton.setTextColor(getColor(R.color.purple_dark)) // Show darker color when held
-
-            loginViewModel.signIn(this, email, password,
-                                   this::startMainMenuActivity, this::displayErrorUsernameOrPassword)
-
-            binding.loginButton.setTextColor(getColor(R.color.green_soft)) // Return color to normal
+            tryLogin()
         }
 
         binding.registerButton.setOnClickListener {
+            disableButtons()
             startRegisterActivity()
         }
 
-        binding.guestButton.setOnClickListener {
+        binding.guestText.setOnClickListener {
+            disableButtons()
+            binding.guestText.setTextColor(getColor(R.color.green_strong_selected))
             loginViewModel.signInAsGuest(this::startMainMenuActivity, this::displayErrorUsernameOrPassword)
         }
     }
@@ -88,8 +89,46 @@ class LoginActivity : AppCompatActivity()
 
     private fun displayErrorUsernameOrPassword()
     {
+        enableButtons()
+
         Toast.makeText(this, getString(R.string.errorUsernameOrPassword),
             Toast.LENGTH_LONG).show()
+    }
+
+    private fun disableButtons()
+    {
+        binding.loginButton.isEnabled = false
+        binding.registerButton.isEnabled = false
+        binding.guestText.isEnabled = false
+
+        binding.emailInputEditText.keyListener = null
+        binding.passwordInputEditText.keyListener = null
+    }
+
+    private fun enableButtons()
+    {
+        binding.loginButton.isEnabled = true
+        binding.registerButton.isEnabled = true
+        binding.guestText.isEnabled = true
+
+        binding.emailInputEditText.keyListener = emailKeyListener
+        binding.passwordInputEditText.keyListener = passwordKeyListener
+    }
+
+    private fun tryLogin()
+    {
+        val email = binding.emailInputEditText.text.toString()
+        val password = binding.passwordInputEditText.text.toString()
+        if (email.isEmpty() || password.isEmpty())
+        {
+            displayErrorUsernameOrPassword()
+            return
+        }
+
+        disableButtons()
+
+        loginViewModel.signIn(this, email, password,
+            this::startMainMenuActivity, this::displayErrorUsernameOrPassword)
     }
 
 }

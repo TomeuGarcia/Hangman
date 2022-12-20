@@ -27,8 +27,6 @@ class RankingActivity : AppCompatActivity() {
         binding.rankingRecyclerView.adapter = adapter
 
         binding.leaderboardBack.setOnClickListener{
-            val intent = Intent(this@RankingActivity, MainMenuActivity::class.java)
-            startActivity(intent)
             finish()
         }
 

@@ -21,13 +21,12 @@ open class HangmanYouWinFragment(hangmanWord: String, score: Int)
 
 
         binding.ywHomeIcon.setOnClickListener {
-            val intent = Intent(activity, MainMenuActivity::class.java)
-            startActivity(intent)
+            activity?.finish()
         }
 
         binding.ywReplayIcon.setOnClickListener {
+            startActivity(activity?.intent)
             activity?.finish()
-            startActivity(activity?.intent);
         }
 
         initViewComponents()

@@ -28,18 +28,15 @@ class MainMenuActivity : AppCompatActivity() {
         binding.mainMenuPlay.setOnClickListener{
             val intent = Intent(this, HangmanGameActivity::class.java)
             startActivity(intent)
-            finish()
         }
 
         binding.mainMenuSettings.setOnClickListener{
             val intent = Intent(this, ConfigurationActivity::class.java)
             startActivity(intent)
-            finish()
         }
         binding.mainMenuLeaderboard.setOnClickListener{
             val intent = Intent(this, RankingActivity::class.java)
             startActivity(intent)
-            finish()
         }
 
         binding.mainMenuExit.setOnClickListener{

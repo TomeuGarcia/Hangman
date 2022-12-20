@@ -49,8 +49,7 @@ class ConfigurationActivity : AppCompatActivity()
 
         binding.backButtonImage.setOnClickListener {
             // Go To Main Menu
-            val intent = Intent(this, MainMenuActivity::class.java)
-            startActivity(intent)
+            finish()
         }
 
         binding.languageButton.setOnClickListener {

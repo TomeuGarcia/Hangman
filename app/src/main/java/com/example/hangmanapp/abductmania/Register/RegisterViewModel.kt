@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.preference.PreferenceManager
 import android.util.Patterns
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.hangmanapp.abductmania.DatabaseUtils.User
 import com.google.firebase.auth.FirebaseAuth
@@ -21,6 +22,9 @@ class RegisterViewModel : ViewModel()
     private var usernameIsValid = true
     private var passwordIsValid = true
 
+    public val hasRegisterSucceeded = MutableLiveData<Boolean>()
+    public val hasRegisterFailed = MutableLiveData<Boolean>()
+
 
     init
     {
@@ -29,10 +33,11 @@ class RegisterViewModel : ViewModel()
     }
 
     public fun registerNewUser(contextActivity : Activity,
-                               email : String, username : String, password : String,
-                               onRegisterSuccessCallback : () -> Unit,
-                               onRegisterFailureCallback : () -> Unit)
+                               email : String, username : String, password : String)
     {
+        hasRegisterSucceeded.value = false
+        hasRegisterFailed.value = false
+
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(contextActivity) {
                 if (it.isSuccessful)
@@ -40,20 +45,21 @@ class RegisterViewModel : ViewModel()
                     saveSharedPrefsRegisteredUser(contextActivity, email)
                     fireStoreRegisterUser(username, email)
 
-                    onRegisterSuccessCallback()
+                    hasRegisterSucceeded.value = true
                 }
                 else
                 {
-                    onRegisterFailureCallback()
+                    hasRegisterFailed.value = true
                 }
             }
             .addOnFailureListener {
-                onRegisterFailureCallback()
+                hasRegisterFailed.value = true
             }
 
     }
 
-    public fun canRegisterUser(emailText : String?, usernameText : String?, passwordText : String?) : Boolean
+    public fun canRegisterUser(emailText : String?, usernameText : String?, passwordText : String?)
+        : Boolean
     {
         validateEmail(emailText)
         validateUsername(usernameText)
@@ -92,12 +98,7 @@ class RegisterViewModel : ViewModel()
     // PASSWORD
     public fun validatePassword(passwordText : String?) : String?
     {
-        passwordIsValid = passwordText == null
-
-        if (passwordIsValid)
-        {
-            return null
-        }
+        passwordIsValid = false
 
         passwordText?.apply {
             if (passwordText.length < 8) {
@@ -113,6 +114,8 @@ class RegisterViewModel : ViewModel()
                 return "Must Contain 1 Special Character"
             }
         }
+
+        passwordIsValid = true
         return null
     }
 
