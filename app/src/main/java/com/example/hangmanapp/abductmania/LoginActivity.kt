@@ -23,11 +23,9 @@ class LoginActivity : AppCompatActivity()
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        loginViewModel.loadDatabases()
-
         if (loginViewModel.hasLoggedUserAlready())
         {
-            startMainManuActivity()
+            startMainMenuActivity()
         }
 
 
@@ -55,7 +53,7 @@ class LoginActivity : AppCompatActivity()
             binding.loginButton.setTextColor(getColor(R.color.purple_dark)) // Show darker color when held
 
             loginViewModel.signIn(this, email, password,
-                                   this::startMainManuActivity, this::displayErrorUsernameOrPassword)
+                                   this::startMainMenuActivity, this::displayErrorUsernameOrPassword)
 
             binding.loginButton.setTextColor(getColor(R.color.green_soft)) // Return color to normal
         }
@@ -65,12 +63,12 @@ class LoginActivity : AppCompatActivity()
         }
 
         binding.guestButton.setOnClickListener {
-            loginViewModel.signInAsGuest(this::startMainManuActivity, this::displayErrorUsernameOrPassword)
+            loginViewModel.signInAsGuest(this::startMainMenuActivity, this::displayErrorUsernameOrPassword)
         }
     }
 
 
-    private fun startMainManuActivity()
+    private fun startMainMenuActivity()
     {
         val intent = Intent(this, MainMenuActivity::class.java)
         startActivity(intent)

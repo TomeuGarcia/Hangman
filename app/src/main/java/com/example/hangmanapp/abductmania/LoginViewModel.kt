@@ -15,7 +15,7 @@ class LoginViewModel : ViewModel()
     private lateinit var firestore: FirebaseFirestore
 
 
-    public fun loadDatabases()
+    init
     {
         firebaseAuth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()

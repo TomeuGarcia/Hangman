@@ -27,6 +27,7 @@ class HangmanGamePauseFragment(private val backToPlayCallback : () -> Unit)
         binding.pHomeIcon.setOnClickListener {
             val intent = Intent(activity, MainMenuActivity::class.java)
             startActivity(intent)
+            activity?.finish()
         }
 
         binding.pauseBackgroundImage.setOnClickListener {  }
