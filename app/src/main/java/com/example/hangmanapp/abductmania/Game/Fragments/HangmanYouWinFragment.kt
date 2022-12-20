@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.hangmanapp.abductmania.Game.Drawings.HangmanDrawingUFO
 import com.example.hangmanapp.abductmania.MainMenu.MainMenuActivity
 import com.example.hangmanapp.databinding.FragmentHangmanYouWinBinding
 
@@ -12,6 +13,9 @@ open class HangmanYouWinFragment(hangmanWord: String, score: Int)
     : HangmanEndGameFragment(hangmanWord, score)
 {
     private lateinit var binding: FragmentHangmanYouWinBinding
+
+    private lateinit var drawingUFOs : HangmanDrawingUFO
+
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
@@ -28,6 +32,10 @@ open class HangmanYouWinFragment(hangmanWord: String, score: Int)
             startActivity(activity?.intent)
             activity?.finish()
         }
+
+        drawingUFOs = HangmanDrawingUFO(binding.ywUfosImage, 3000, 30f)
+        drawingUFOs.setEndVisibility()
+
 
         initViewComponents()
 

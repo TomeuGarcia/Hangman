@@ -73,10 +73,10 @@ class HangmanGameViewModel()
 
         hangmanDrawer = HangmanDrawer(
             listOf(
-                HangmanDrawingUFO(binding.ufoCenterImage),
-                HangmanDrawingUFO(binding.ufoLeftImage),
-                HangmanDrawingUFO(binding.ufoRightImage),
-                HangmanDrawingWaves(binding.ufoWavesImage),
+                HangmanDrawingUFO(binding.ufoCenterImage, 2000, 20f),
+                HangmanDrawingUFO(binding.ufoLeftImage, 2000, 20f),
+                HangmanDrawingUFO(binding.ufoRightImage, 2000, 20f),
+                HangmanDrawingWaves(binding.ufoWavesImage, 2000, 20f),
                 HangmanDrawingBuilding(binding.building2Image, 10f),
                 HangmanDrawingBuilding(binding.building4Image, -15f),
                 HangmanDrawingBuilding(binding.building1Image, 15f),
