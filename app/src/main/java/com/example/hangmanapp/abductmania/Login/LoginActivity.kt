@@ -67,8 +67,7 @@ class LoginActivity : AppCompatActivity()
 
         binding.guestText.setOnClickListener {
             disableButtons()
-            binding.guestText.setTextColor(getColor(R.color.green_strong_selected))
-            loginViewModel.signInAsGuest(this::startMainMenuActivity, this::displayErrorUsernameOrPassword)
+            loginAsGuest()
         }
     }
 
@@ -78,6 +77,8 @@ class LoginActivity : AppCompatActivity()
         val intent = Intent(this, MainMenuActivity::class.java)
         startActivity(intent)
         finish()
+
+        binding.loadingBar.visibility = View.VISIBLE
     }
 
     private fun startRegisterActivity()
@@ -85,6 +86,8 @@ class LoginActivity : AppCompatActivity()
         val intent = Intent(this, RegisterActivity::class.java)
         startActivity(intent)
         finish()
+
+        binding.loadingBar.visibility = View.VISIBLE
     }
 
     private fun displayErrorUsernameOrPassword()
@@ -129,6 +132,14 @@ class LoginActivity : AppCompatActivity()
 
         loginViewModel.signIn(this, email, password,
             this::startMainMenuActivity, this::displayErrorUsernameOrPassword)
+    }
+
+    private fun loginAsGuest()
+    {
+        binding.guestText.setTextColor(getColor(R.color.green_strong_selected))
+        binding.loadingBar.visibility = View.VISIBLE
+
+        loginViewModel.signInAsGuest(this::startMainMenuActivity, this::displayErrorUsernameOrPassword)
     }
 
 }

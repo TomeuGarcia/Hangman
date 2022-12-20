@@ -10,7 +10,11 @@ class HangmanDrawingBuilding(image : ImageView,
 {
     public override fun setEndVisibility()
     {
-        image.animate().scaleX(0f).scaleY(1.3f)
+        val endY = image.y - 200f
+
+        image.animate()
+            .scaleX(0f).scaleY(1.3f)
+            .y(endY)
             .rotationBy(getRandomRotationValue())
             .setDuration(300).withEndAction {
                 image.visibility = endVisibility

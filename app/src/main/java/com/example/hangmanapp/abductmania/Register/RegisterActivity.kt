@@ -54,7 +54,7 @@ class RegisterActivity : AppCompatActivity()
             {
                 binding.progressBar.visibility = View.VISIBLE
                 binding.doRegisterButton.isEnabled = false
-                binding.backLoginButton.isEnabled = false
+                binding.backArrow.isEnabled = false
 
                 registerUserCredentials()
             }
@@ -64,7 +64,7 @@ class RegisterActivity : AppCompatActivity()
             }
         }
 
-        binding.backLoginButton.setOnClickListener {
+        binding.backArrow.setOnClickListener {
             startLoginActivity()
         }
 
@@ -98,6 +98,8 @@ class RegisterActivity : AppCompatActivity()
 
     private fun startLoginActivity()
     {
+        binding.progressBar.visibility = View.VISIBLE
+
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
         finish()
@@ -105,7 +107,7 @@ class RegisterActivity : AppCompatActivity()
 
     private fun startMainMenuActivity()
     {
-        binding.progressBar.visibility = View.INVISIBLE
+        binding.progressBar.visibility = View.VISIBLE
 
         val intent = Intent(this, MainMenuActivity::class.java)
         startActivity(intent)
@@ -116,7 +118,7 @@ class RegisterActivity : AppCompatActivity()
     {
         binding.progressBar.visibility = View.INVISIBLE
 
-        binding.backLoginButton.isEnabled = true
+        binding.backArrow.isEnabled = true
 
         Toast.makeText(this, getString(R.string.somethingWentWrong),
             Toast.LENGTH_SHORT).show()
