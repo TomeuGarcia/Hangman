@@ -18,6 +18,7 @@ class HangmanGameActivity : AppCompatActivity()
 
     private val COUNTDOWN_ANIM_START_TIME_SECONDS : Long = 30
     private val COUNTDOWN_ANIM_TICK_TIME_MILLISECONDS : Long = 1000
+    private val END_GAME_FRAGMENT_START_DELAY_MILLISECONDS : Long = 3000
 
     private lateinit var pauseFragment : HangmanGamePauseFragment
 
@@ -44,18 +45,24 @@ class HangmanGameActivity : AppCompatActivity()
         pauseFragment = HangmanGamePauseFragment(this::resumeGame)
 
 
-        hangmanGameViewModel.createGame(this, binding)
-        hangmanGameViewModel.initCallbacks(this::disablePausing,
-                                           this::startWinFragment,
-                                           this::startGameOverFragment)
-
+        hangmanGameViewModel.isPausingDisabled.observe(this) {
+            if (it) disablePausing()
+        }
+        hangmanGameViewModel.hasVictoryHappened.observe(this) {
+            if (it) startWinFragment()
+        }
+        hangmanGameViewModel.hasGameOverHappened.observe(this) {
+            if (it) startGameOverFragment()
+        }
         hangmanGameViewModel.countDownCurrentTimeSeconds.observe(this) {
             updateCountDownText(it)
         }
-
         hangmanGameViewModel.hangmanWord.observe(this) {
             updateGuessWord(it)
         }
+        hangmanGameViewModel.createGame(this, binding)
+
+
     }
 
 
@@ -72,19 +79,21 @@ class HangmanGameActivity : AppCompatActivity()
         binding.pauseIcon.isEnabled = false
     }
 
-    private fun startWinFragment(hangmanWord : String, score : Int, startFragmentDelay : Long)
+    private fun startWinFragment()
     {
         CoroutineScope(Dispatchers.Default).launch {
-            delay(startFragmentDelay)
-            setEndGameFragment(HangmanYouWinFragment(hangmanWord, score))
+            delay(END_GAME_FRAGMENT_START_DELAY_MILLISECONDS)
+            setEndGameFragment(HangmanYouWinFragment(hangmanGameViewModel.getHangmanWord(),
+                                                     hangmanGameViewModel.getScore()))
         }
     }
 
-    private fun startGameOverFragment(hangmanWord : String, score : Int, startFragmentDelay : Long)
+    private fun startGameOverFragment()
     {
         CoroutineScope(Dispatchers.Default).launch {
-            delay(startFragmentDelay)
-            setEndGameFragment(HangmanYouLoseFragment(hangmanWord, score))
+            delay(END_GAME_FRAGMENT_START_DELAY_MILLISECONDS)
+            setEndGameFragment(HangmanYouLoseFragment(hangmanGameViewModel.getHangmanWord(),
+                                                      hangmanGameViewModel.getScore()))
         }
     }
 

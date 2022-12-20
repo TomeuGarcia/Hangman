@@ -42,8 +42,7 @@ class MainMenuActivity : AppCompatActivity() {
 
         binding.mainMenuExit.setOnClickListener{
             firebaseAuth.signOut()
-            moveTaskToBack(true)
-            exitProcess(-1)
+            finish()
         }
     }
 
