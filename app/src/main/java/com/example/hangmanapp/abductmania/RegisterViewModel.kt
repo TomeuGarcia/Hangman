@@ -56,8 +56,12 @@ class RegisterViewModel : ViewModel()
 
     }
 
-    public fun canRegisterUser() : Boolean
+    public fun canRegisterUser(emailText : String?, usernameText : String?, passwordText : String?) : Boolean
     {
+        validateEmail(emailText)
+        validateUsername(usernameText)
+        validatePassword(passwordText)
+
         return emailIsValid && usernameIsValid && passwordIsValid
     }
 

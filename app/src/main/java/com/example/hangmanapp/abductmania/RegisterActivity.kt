@@ -48,7 +48,10 @@ class RegisterActivity : AppCompatActivity()
         }
 
         binding.doRegisterButton.setOnClickListener {
-            if (registerViewModel.canRegisterUser())
+            if (registerViewModel.canRegisterUser(
+                    binding.emailInputEditText.text.toString(),
+                    binding.userInputEditText.text.toString(),
+                    binding.passwordInputEditText.text.toString()))
             {
                 binding.progressBar.visibility = View.VISIBLE
 
