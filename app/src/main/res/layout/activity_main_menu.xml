@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".abductmania.MainMenuActivity">
+    tools:context=".abductmania.MainMenu.MainMenuActivity">
 
     <ImageView
         android:id="@+id/mainMenuBackground"
