@@ -50,23 +50,13 @@ class RegisterActivity : AppCompatActivity()
         }
 
         binding.doRegisterButton.setOnClickListener {
-            if (registerViewModel.canRegisterUser(
-                    binding.emailInputEditText.text.toString(),
-                    binding.userInputEditText.text.toString(),
-                    binding.passwordInputEditText.text.toString()))
+            if (canRegisterCredentials())
             {
                 binding.progressBar.visibility = View.VISIBLE
-
+                binding.doRegisterButton.isEnabled = false
                 binding.backLoginButton.isEnabled = false
 
-                val email = binding.emailInputEditText.text.toString()
-                val username = binding.userInputEditText.text.toString()
-                val password = binding.passwordInputEditText.text.toString()
-
-                registerViewModel.registerNewUser(this,
-                                                  email, username, password,
-                                                  this::startMainMenuActivity,
-                                                  this::displayRegisterError)
+                registerUserCredentials()
             }
             else
             {
@@ -77,7 +67,34 @@ class RegisterActivity : AppCompatActivity()
         binding.backLoginButton.setOnClickListener {
             startLoginActivity()
         }
+
+        registerViewModel.hasRegisterSucceeded.observe(this) {
+            if (it) startMainMenuActivity()
+        }
+
+        registerViewModel.hasRegisterFailed.observe(this) {
+            if (it) displayRegisterError()
+        }
     }
+
+    private fun canRegisterCredentials() : Boolean
+    {
+        return registerViewModel.canRegisterUser(
+            binding.emailInputEditText.text.toString(),
+            binding.userInputEditText.text.toString(),
+            binding.passwordInputEditText.text.toString()
+        )
+    }
+
+    private fun registerUserCredentials()
+    {
+        val email = binding.emailInputEditText.text.toString()
+        val username = binding.userInputEditText.text.toString()
+        val password = binding.passwordInputEditText.text.toString()
+
+        registerViewModel.registerNewUser(this, email, username, password)
+    }
+
 
     private fun startLoginActivity()
     {

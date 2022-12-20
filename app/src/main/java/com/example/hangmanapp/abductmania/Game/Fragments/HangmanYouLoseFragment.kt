@@ -21,13 +21,12 @@ open class HangmanYouLoseFragment(hangmanWord: String, score: Int)
 
 
         binding.ylHomeIcon.setOnClickListener {
-            val intent = Intent(activity, MainMenuActivity::class.java)
-            startActivity(intent)
+            activity?.finish()
         }
 
         binding.ylReplayIcon.setOnClickListener {
+            startActivity(activity?.intent)
             activity?.finish()
-            startActivity(activity?.intent);
         }
 
         initViewComponents()
