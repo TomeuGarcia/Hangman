@@ -8,15 +8,15 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/abductmania_icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/abductmania_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.HangmanApp"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".abductmania.SplashScreenActivity"
+            android:name=".abductmania.SplashScreen.SplashScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,44 +28,44 @@
                 android:value="false" />
         </activity>
         <activity
-            android:name=".abductmania.LoginActivity"
-            android:windowSoftInputMode="adjustResize"
+            android:name=".abductmania.Login.LoginActivity"
+            android:windowSoftInputMode="stateUnchanged|adjustResize"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="false" />
         </activity>
         <activity
-            android:name=".abductmania.RegisterActivity"
-            android:windowSoftInputMode="adjustResize"
+            android:name=".abductmania.Register.RegisterActivity"
+            android:windowSoftInputMode="stateUnchanged|adjustResize"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".abductmania.MainMenuActivity"
+            android:name=".abductmania.MainMenu.MainMenuActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="false" />
         </activity>
         <activity
-            android:name=".abductmania.ConfigurationActivity"
+            android:name=".abductmania.Config.ConfigurationActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="false" />
         </activity>
         <activity
-            android:name=".abductmania.RankingActivity"
+            android:name=".abductmania.Ranking.RankingActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="false" />
         </activity>
         <activity
-            android:name=".abductmania.HangmanGameActivity"
+            android:name=".abductmania.Game.HangmanGameActivity"
             android:exported="false">
 
             <meta-data
