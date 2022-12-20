@@ -26,9 +26,6 @@ class HangmanGameViewModel()
 
     private val MISSING_LETTER : Char = '_'
 
-    private val END_GAME_FRAGMENT_START_DELAY_MILLISECONDS : Long = 3000
-
-
     private var isGameOver : Boolean = false
 
     private lateinit var hangmanApiCommunication : HangmanApiCommunication
@@ -43,9 +40,10 @@ class HangmanGameViewModel()
 
     private lateinit var activityContext : Context  // Used to debug with Toast()
 
-    private lateinit var onDisablePausingCallback : () -> Unit
-    private lateinit var onVictoryCallback : (String, Int, Long) -> Unit
-    private lateinit var onGameOverCallback : (String, Int, Long) -> Unit
+    public val isPausingDisabled = MutableLiveData<Boolean>()
+    public val hasVictoryHappened = MutableLiveData<Boolean>()
+    public val hasGameOverHappened = MutableLiveData<Boolean>()
+
 
 
     public fun createGame(context: Context, binding: ActivityHangmanGameBinding)
@@ -82,15 +80,15 @@ class HangmanGameViewModel()
         createNewHangmanGame()
     }
 
-    public fun initCallbacks(onDisablePausingCallback : () -> Unit,
-                             onVictoryCallback : (String, Int, Long) -> Unit,
-                             onGameOverCallback : (String, Int, Long) -> Unit)
-    {
-        this.onDisablePausingCallback = onDisablePausingCallback
-        this.onVictoryCallback = onVictoryCallback
-        this.onGameOverCallback = onGameOverCallback
-    }
 
+    public fun getScore() : Int
+    {
+        return score
+    }
+    public fun getHangmanWord() : String
+    {
+        return hangmanWord.value ?: ""
+    }
 
     private fun createNewHangmanGame()
     {
@@ -227,8 +225,9 @@ class HangmanGameViewModel()
         gameKeyboardMap.disableRemainingLetterButtons()
         countDownTimer?.cancel()
 
-        onDisablePausingCallback()
-        onVictoryCallback(hangmanWord.value ?: "", score, END_GAME_FRAGMENT_START_DELAY_MILLISECONDS)
+        isPausingDisabled.value = true
+        hasVictoryHappened.value = true
+        //onDisablePausingCallback()
     }
 
     private fun doGameOver()
@@ -238,14 +237,16 @@ class HangmanGameViewModel()
         countDownTimer?.cancel()
 
         getSolution() // this is async.... wait until solution received to do real GameOver
-        onDisablePausingCallback()
+
+        isPausingDisabled.value = true
+        //onDisablePausingCallback()
     }
 
     private fun onGameOverSolutionObtained()
     {
         score = max(0, score) // Make score not negative
 
-        onGameOverCallback(hangmanWord.value ?: "", score, END_GAME_FRAGMENT_START_DELAY_MILLISECONDS)
+        hasGameOverHappened.value = true
     }
 
 
