@@ -1,18 +1,23 @@
 package com.example.hangmanapp.abductmania
 
+import android.view.View
 import android.widget.ImageView
+import kotlin.random.Random
 
-class HangmanDrawingPart(private val image : ImageView,
-                         private val startVisibility : Int,
-                         private val endVisibility : Int)
+
+abstract class HangmanDrawingPart(protected val image : ImageView,
+                                  protected val startVisibility : Int,
+                                  protected val endVisibility : Int)
 {
     public fun setStartVisibility()
     {
         image.visibility = startVisibility
     }
 
-    public fun setEndVisibility()
+    public open fun setEndVisibility()
     {
         image.visibility = endVisibility
     }
+
+
 }

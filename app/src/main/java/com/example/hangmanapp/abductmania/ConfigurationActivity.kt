@@ -6,147 +6,81 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.widget.Toast
+import androidx.activity.viewModels
 import com.example.hangmanapp.R
 import com.example.hangmanapp.databinding.ActivityConfigurationBinding
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 
 
-class ConfigurationActivity : AppCompatActivity() {
-    private val USERS_COLLECTION = "users"
-    private val LANGUAGE = "language"
-    private val MUSIC = "music"
-    private val SOUND = "sound"
-    private val EMAIL = "email"
-
+class ConfigurationActivity : AppCompatActivity()
+{
     private lateinit var binding: ActivityConfigurationBinding
-    private lateinit var firestore: FirebaseFirestore
-    private lateinit var email: String
-    private lateinit var currentUser : User
 
-    private val languages = arrayOf<String>("English", "Catalan", "Spanish")
-    private var currentLang = 0
-    private var music = true
-    private var sound = true
-    private var users = arrayListOf<User>()
-    private lateinit var usersCollection : CollectionReference
+    private val configurationViewModel : ConfigurationViewModel by viewModels()
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
 
         binding = ActivityConfigurationBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
 
-        firestore = FirebaseFirestore.getInstance()
-        usersCollection = firestore.collection(USERS_COLLECTION)
+        configurationViewModel.loadData(this)
 
-        // Shared prefs
-        val shared = PreferenceManager.getDefaultSharedPreferences(this)
-        email = shared.getString(EMAIL, null)?: ""
+        configurationViewModel.currentLang.observe(this) {
+            binding.languageButton.text =
+                "Language: " + configurationViewModel.languages[it ?: 0]
+        }
 
-        updateValues(shared.getInt(LANGUAGE, 0), shared.getBoolean(MUSIC, true), shared.getBoolean(SOUND, true))
-        updateButtons()
-
-        // Firestore
-        usersCollection.get()
-            .addOnSuccessListener {
-                users = it?.documents?.mapNotNull { dbUser ->
-                    dbUser.toObject(User::class.java)
-                } as ArrayList<User>
-
-                val currentUser = users.find {
-                    isUserCurrentUser(it)
-                }
-
-                if (currentUser != null)
-                {
-                    updateValues(currentUser.language, currentUser.music, currentUser.sound)
-                    this.currentUser = currentUser
-                }
-                updateButtons()
+        configurationViewModel.isMusicOn.observe(this) {
+            it?.apply {
+                if (this) binding.musicButton.text = "Music: ON"
+                else binding.musicButton.text = "Music: OFF"
             }
-            .addOnFailureListener {
-                Toast.makeText(this@ConfigurationActivity, getString(R.string.somethingWentWrong), Toast.LENGTH_LONG).show()
-            }
+        }
 
-        binding.backButtonImage.setOnClickListener() {
+        configurationViewModel.isSoundOn.observe(this) {
+            it?.apply {
+                if (this) binding.soundButton.text = "Sound: ON"
+                else binding.soundButton.text = "Sound: OFF"
+            }
+        }
+
+
+
+        binding.backButtonImage.setOnClickListener {
             // Go To Main Menu
             val intent = Intent(this, MainMenuActivity::class.java)
             startActivity(intent)
         }
 
-        binding.languageButton.setOnClickListener() {
+        binding.languageButton.setOnClickListener {
             // Change Current Language
-            currentLang = ++currentLang % languages.size
-
-            updateButtons()
+            configurationViewModel.iterateCurrentLanguage()
         }
 
-        binding.musicButton.setOnClickListener() {
+        binding.musicButton.setOnClickListener {
             // Turn On/Off Music
-            music = !music
-
-            updateButtons()
+            configurationViewModel.toggleMusic()
         }
 
-        binding.soundButton.setOnClickListener() {
+        binding.soundButton.setOnClickListener {
             // Turn On/Off Sound
-            sound = !sound
-
-            updateButtons()
+            configurationViewModel.toggleSound()
         }
     }
 
 
-    override fun onPause() {
+    override fun onPause()
+    {
         super.onPause()
 
-        // Shared Prefs
-        val shared = PreferenceManager.getDefaultSharedPreferences(this)
-        val editor = shared.edit()
-
-        editor.putInt(LANGUAGE, currentLang)
-        editor.putBoolean(MUSIC, music)
-        editor.putBoolean(SOUND, sound)
-        editor.apply()
-
-        // Firestore
-        /*
-        users.forEach { it ->
-            usersCollection.document(it.username).set(it)
-                .addOnFailureListener { exception ->
-                    Toast.makeText(this, exception.message, Toast.LENGTH_SHORT).show()
-                }
-        }
-         */
-        currentUser.language = currentLang
-        currentUser.music = music
-        currentUser.sound = sound
-
-        usersCollection.document(currentUser.username).set(currentUser)
+        configurationViewModel.saveData(this)
     }
 
-    private fun isUserCurrentUser(user : User) : Boolean
-    {
-        return user.email == email
-    }
 
-    private fun updateValues(_lang: Int, _music: Boolean, _sound: Boolean) {
-        currentLang = _lang
-        music = _music
-        sound = _sound
-    }
-
-    @SuppressLint("SetTextI18n")
-    private fun updateButtons() {
-        binding.languageButton.text = "Language: " + languages[currentLang]
-
-        if (music) { binding.musicButton.text = "Music: ON" }
-        else { binding.musicButton.text = "Music: OFF" }
-
-        if (sound) { binding.soundButton.text = "Sound: ON" }
-        else { binding.soundButton.text = "Sound: OFF" }
-    }
 }

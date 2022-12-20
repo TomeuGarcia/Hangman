@@ -29,6 +29,7 @@ class HangmanGamePauseFragment(private val backToPlayCallback : () -> Unit)
             startActivity(intent)
         }
 
+        binding.pauseBackgroundImage.setOnClickListener {  }
 
         return binding.root
     }
