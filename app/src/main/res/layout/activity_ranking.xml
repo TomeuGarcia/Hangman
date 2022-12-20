@@ -19,14 +19,17 @@
 
     <ImageView
         android:id="@+id/leaderboardTitle"
-        android:layout_width="238dp"
-        android:layout_height="117dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="fitStart"
+        android:scaleX=".5"
+        android:scaleY=".5"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.072"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/abductmania_leaderboard_title" />
 
     <ImageView
@@ -43,14 +46,13 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rankingRecyclerView"
-        android:layout_width="390dp"
-        android:layout_height="506dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/leaderboardBackground"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/leaderboardTitle"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/leaderboardTopLine" />
 
     <ImageView
         android:id="@+id/leaderboardTopLine"
@@ -59,8 +61,22 @@
         app:layout_constraintBottom_toTopOf="@+id/rankingRecyclerView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/leaderboardTitle"
-        app:layout_constraintVertical_bias="0.842"
+        app:layout_constraintTop_toBottomOf="@+id/layoutHelperImage"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_chainStyle="packed"
         app:srcCompat="@drawable/abductmania_leaderboard_top_line" />
+
+    <ImageView
+        android:id="@+id/layoutHelperImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:alpha="0"
+        android:background="#00FFFFFF"
+        app:layout_constraintBottom_toBottomOf="@+id/leaderboardTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/leaderboardTitle"
+        app:layout_constraintTop_toTopOf="@+id/leaderboardBackground"
+        app:layout_constraintVertical_bias="0.7"
+        tools:srcCompat="@tools:sample/avatars" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

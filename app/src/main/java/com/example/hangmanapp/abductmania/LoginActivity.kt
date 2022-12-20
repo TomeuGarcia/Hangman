@@ -1,21 +1,21 @@
 package com.example.hangmanapp.abductmania
 
 import android.content.Intent
-import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Patterns
 import android.view.View
 import android.widget.Toast
-import com.example.hangmanapp.MainActivity
+import androidx.activity.viewModels
 import com.example.hangmanapp.R
 import com.example.hangmanapp.databinding.ActivityLoginBinding
-import com.google.firebase.auth.FirebaseAuth
 
 class LoginActivity : AppCompatActivity()
 {
     private lateinit var binding: ActivityLoginBinding
-    private lateinit var firebaseAuth: FirebaseAuth
+
+    private val loginViewModel : LoginViewModel by viewModels()
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,13 +23,11 @@ class LoginActivity : AppCompatActivity()
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        firebaseAuth = FirebaseAuth.getInstance()
+        supportActionBar?.hide()
 
-        if (firebaseAuth.currentUser != null)
+        if (loginViewModel.hasLoggedUserAlready())
         {
-            val intent = Intent(this, MainMenuActivity::class.java)
-            startActivity(intent)
-            finish()
+            startMainMenuActivity()
         }
 
 
@@ -39,53 +37,57 @@ class LoginActivity : AppCompatActivity()
             if (!hasFocus)
             {
                 val username = binding.emailInputEditText.text.toString()
-                if (!Patterns.EMAIL_ADDRESS.matcher(username).matches())
+                if (loginViewModel.isValidUsername(username))
                 {
-                    binding.emailInputEditText.error = "Invalid username"
+                    binding.emailInputEditText.error = null
                 }
                 else
                 {
-                    binding.emailInputEditText.error = null
+                    binding.emailInputEditText.error = "Invalid username"
                 }
             }
         }
 
         binding.loginButton.setOnClickListener {
-            val username = binding.emailInputEditText.text.toString()
+            val email = binding.emailInputEditText.text.toString()
             val password = binding.passwordInputEditText.text.toString()
-            println(username)
-            println(password)
 
             binding.loginButton.setTextColor(getColor(R.color.purple_dark)) // Show darker color when held
 
-            firebaseAuth.signInWithEmailAndPassword(username, password)
-                .addOnSuccessListener {
-                    val intent = Intent(this@LoginActivity, MainMenuActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                }.addOnFailureListener {
-                    Toast.makeText(this, getString(R.string.errorUsernameOrPassword), Toast.LENGTH_LONG).show()
-                }
+            loginViewModel.signIn(this, email, password,
+                                   this::startMainMenuActivity, this::displayErrorUsernameOrPassword)
 
             binding.loginButton.setTextColor(getColor(R.color.green_soft)) // Return color to normal
         }
 
         binding.registerButton.setOnClickListener {
-            val intent = Intent(this, RegisterActivity::class.java)
-            startActivity(intent)
+            startRegisterActivity()
         }
 
         binding.guestButton.setOnClickListener {
-            firebaseAuth.signInAnonymously()
-                .addOnSuccessListener {
-                    val user = firebaseAuth.currentUser
-                    val intent = Intent(this, MainMenuActivity::class.java)
-                    startActivity(intent)
-                }
-                .addOnFailureListener {
-                    Toast.makeText(baseContext, "Authentication failed.",
-                        Toast.LENGTH_SHORT).show()
-                }
+            loginViewModel.signInAsGuest(this::startMainMenuActivity, this::displayErrorUsernameOrPassword)
         }
     }
+
+
+    private fun startMainMenuActivity()
+    {
+        val intent = Intent(this, MainMenuActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    private fun startRegisterActivity()
+    {
+        val intent = Intent(this, RegisterActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    private fun displayErrorUsernameOrPassword()
+    {
+        Toast.makeText(this, getString(R.string.errorUsernameOrPassword),
+            Toast.LENGTH_LONG).show()
+    }
+
 }

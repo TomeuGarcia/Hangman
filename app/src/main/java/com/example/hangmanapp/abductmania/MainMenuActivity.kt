@@ -4,11 +4,13 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.hangmanapp.databinding.ActivityMainMenuBinding
+import com.google.firebase.auth.FirebaseAuth
 import kotlin.system.exitProcess
 
 class MainMenuActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainMenuBinding
+    private lateinit var firebaseAuth: FirebaseAuth
 
 
     override fun onCreate(savedInstanceState: Bundle?)
@@ -19,24 +21,29 @@ class MainMenuActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportActionBar?.hide()
 
+        firebaseAuth = FirebaseAuth.getInstance()
 
         binding.mainMenuPlay.setOnClickListener{
             val intent = Intent(this, HangmanGameActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
         binding.mainMenuSettings.setOnClickListener{
             val intent = Intent(this, ConfigurationActivity::class.java)
             startActivity(intent)
+            finish()
         }
         binding.mainMenuLeaderboard.setOnClickListener{
             val intent = Intent(this, RankingActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
         binding.mainMenuExit.setOnClickListener{
-            finish()
-            exitProcess(0)
+            firebaseAuth.signOut()
+            moveTaskToBack(true)
+            exitProcess(-1)
         }
     }
 

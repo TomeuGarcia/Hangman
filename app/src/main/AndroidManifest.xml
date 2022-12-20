@@ -29,6 +29,7 @@
         </activity>
         <activity
             android:name=".abductmania.LoginActivity"
+            android:windowSoftInputMode="stateUnchanged|adjustResize"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -36,6 +37,7 @@
         </activity>
         <activity
             android:name=".abductmania.RegisterActivity"
+            android:windowSoftInputMode="stateUnchanged|adjustResize"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -69,31 +71,6 @@
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="false" />
-        </activity>
-        <activity
-            android:name=".fragments.BottomNavigationActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="false" />
-        </activity>
-        <activity
-            android:name=".quotes.QuotesActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
-            android:exported="false" />
-        <activity
-            android:name=".nasa.NasaActivity"
-            android:exported="false" />
-        <activity
-            android:name=".particles.ParticlesActivity"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 
