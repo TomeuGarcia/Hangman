@@ -12,6 +12,9 @@ interface ApiHangman
     @POST("hangman")
     fun createNewHangmanGame() : Call<HangmanNewGame>
 
+    @GET("new")
+    fun createNewLangHangmanGame(@Query("lang") lang : String) : Call<HangmanNewGame>
+
     @GET("hangman")
     fun getSolution(@Query("token") token : String) : Call<HangmanGameSolution>
 

@@ -1,5 +1,12 @@
 package com.example.hangmanapp.abductmania.Game.Api
 
+import android.content.Context
+import android.preference.PreferenceManager
+import android.widget.Toast
+import com.example.hangmanapp.R
+import com.example.hangmanapp.abductmania.DatabaseUtils.User
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -18,7 +25,10 @@ class HangmanApiCommunication(private val createNewHangmanGameResponseCallback :
 
     //private val HANGMAN_API_URL : String = "https://hangman-api.herokuapp.com/"
     private val HANGMAN_API_URL : String = "http://hangman.enti.cat:5002/"
-
+    private val LANGUAGES : List<String> = listOf("en", "cat", "es")
+    private val USERS_COLLECTION = "users"
+    private val LANGUAGE = "language"
+    private val EMAIL = "email"
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(HANGMAN_API_URL)
@@ -27,12 +37,54 @@ class HangmanApiCommunication(private val createNewHangmanGameResponseCallback :
 
     private val retrofitApiHangman = retrofit.create(ApiHangman::class.java)
 
+    private lateinit var firestore: FirebaseFirestore
+    private lateinit var email: String
+    private lateinit var usersCollection : CollectionReference
+    private var currentUser : User? = null
+    private var users = arrayListOf<User>()
 
+    private var languageIndex = 0
 
+    public fun loadData(context : Context)
+    {
+        firestore = FirebaseFirestore.getInstance()
+        usersCollection = firestore.collection(USERS_COLLECTION)
+
+        // Shared prefs
+        val shared = PreferenceManager.getDefaultSharedPreferences(context)
+        email = shared.getString(EMAIL, null)?: ""
+
+        languageIndex = shared.getInt(LANGUAGE, 0)
+
+        // Firestore
+        usersCollection.get()
+            .addOnSuccessListener {
+                users = it?.documents?.mapNotNull { dbUser ->
+                    dbUser.toObject(User::class.java)
+                } as ArrayList<User>
+
+                currentUser = users.find { itUser ->
+                    isUserCurrentUser(itUser)
+                }
+
+                currentUser?.apply{
+                    languageIndex = language
+                }
+            }
+            .addOnFailureListener { exception ->
+                Toast.makeText(context, context.getString(R.string.somethingWentWrong),
+                    Toast.LENGTH_LONG).show()
+            }
+    }
+
+    private fun isUserCurrentUser(user : User) : Boolean
+    {
+        return user.email == email
+    }
 
     public fun createNewHangmanGame()
     {
-        retrofitApiHangman.createNewHangmanGame().enqueue(object : Callback<HangmanNewGame> {
+        retrofitApiHangman.createNewLangHangmanGame(LANGUAGES[languageIndex]).enqueue(object : Callback<HangmanNewGame> {
 
             override fun onResponse(call: Call<HangmanNewGame>,
                                     response: Response<HangmanNewGame>)

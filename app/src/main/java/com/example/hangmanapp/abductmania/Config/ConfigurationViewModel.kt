@@ -72,8 +72,6 @@ class ConfigurationViewModel : ViewModel()
             }
     }
 
-
-
     public fun saveData(context : Context)
     {
         // Shared Prefs
