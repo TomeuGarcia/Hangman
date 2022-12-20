@@ -29,7 +29,7 @@ class RegisterActivity : AppCompatActivity()
         binding.emailInputEditText.setOnFocusChangeListener { view, focused ->
             if (!focused) {
                 binding.emailInputLayout.helperText =
-                    registerViewModel.validateEmail(binding.passwordInputEditText.text.toString())
+                    registerViewModel.validateEmail(binding.emailInputEditText.text.toString())
             }
         }
 
@@ -51,6 +51,8 @@ class RegisterActivity : AppCompatActivity()
             if (registerViewModel.canRegisterUser())
             {
                 binding.progressBar.visibility = View.VISIBLE
+
+                binding.backLoginButton.isEnabled = false
 
                 val email = binding.emailInputEditText.text.toString()
                 val username = binding.userInputEditText.text.toString()
@@ -76,6 +78,7 @@ class RegisterActivity : AppCompatActivity()
     {
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
+        finish()
     }
 
     private fun startMainMenuActivity()
@@ -84,11 +87,14 @@ class RegisterActivity : AppCompatActivity()
 
         val intent = Intent(this, MainMenuActivity::class.java)
         startActivity(intent)
+        finish()
     }
 
     private fun displayRegisterError()
     {
         binding.progressBar.visibility = View.INVISIBLE
+
+        binding.backLoginButton.isEnabled = true
 
         Toast.makeText(this, getString(R.string.somethingWentWrong),
             Toast.LENGTH_SHORT).show()
