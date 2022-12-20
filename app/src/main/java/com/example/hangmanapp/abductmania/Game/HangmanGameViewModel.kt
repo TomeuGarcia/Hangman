@@ -65,6 +65,7 @@ class HangmanGameViewModel()
             this::onGetHintResponse,              this::onGetHintFailure,
             this::onGuessLetterResponse,          this::onGuessLetterFailure
         )
+        hangmanApiCommunication.loadData(activityContext)
 
         gameKeyboardMap = GameKeyboardMap(binding)
         gameKeyboardMap.initButtonsClickCallback(this::guessLetter)
