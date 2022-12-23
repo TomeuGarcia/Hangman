@@ -9,8 +9,8 @@ import com.example.hangmanapp.abductmania.Game.Drawings.HangmanDrawingUFO
 import com.example.hangmanapp.abductmania.MainMenu.MainMenuActivity
 import com.example.hangmanapp.databinding.FragmentHangmanYouWinBinding
 
-open class HangmanYouWinFragment(hangmanWord: String, score: Int)
-    : HangmanEndGameFragment(hangmanWord, score)
+open class HangmanYouWinFragment()
+    : HangmanEndGameFragment()
 {
     private lateinit var binding: FragmentHangmanYouWinBinding
 
@@ -47,6 +47,7 @@ open class HangmanYouWinFragment(hangmanWord: String, score: Int)
         binding.ywHangmanWordText.text = hangmanWord
         binding.ywScoreText.text = score.toString()
     }
+
 
 
 
