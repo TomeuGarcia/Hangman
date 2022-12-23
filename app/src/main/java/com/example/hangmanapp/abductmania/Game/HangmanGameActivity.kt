@@ -3,6 +3,7 @@ package com.example.hangmanapp.abductmania.Game
 import android.animation.ObjectAnimator
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import com.example.hangmanapp.R
 import com.example.hangmanapp.abductmania.Game.Fragments.*
@@ -97,12 +98,14 @@ class HangmanGameActivity : AppCompatActivity()
         CoroutineScope(Dispatchers.Default).launch {
             delay(END_GAME_FRAGMENT_START_DELAY_MILLISECONDS)
 
-            youLoseFragment.setWordAndScore(hangmanGameViewModel.getHangmanWord(),
-                                            hangmanGameViewModel.getScore())
-            if (hangmanGameViewModel.hasRetriesLeft())
+            if (hangmanGameViewModel.hasRetriesLeft()){
                 setRetryGameFragment()
-            else
+            }
+            else {
+                youLoseFragment.setWordAndScore(hangmanGameViewModel.getHangmanWord(),
+                                                hangmanGameViewModel.getScore())
                 setEndGameFragment(youLoseFragment)
+            }
         }
     }
 
@@ -177,15 +180,21 @@ class HangmanGameActivity : AppCompatActivity()
 
     private fun onRetryGiveUp()
     {
+        hangmanGameViewModel.disableRetries()
+
+        /*
         supportFragmentManager.beginTransaction().apply {
             hide(retryFragment)
             commit()
         }
+
+         */
         startGameOverFragment()
     }
 
     private fun setRetryGameFragment()
     {
+        //Toast.makeText(this, "RETRY", Toast.LENGTH_SHORT).show()
         /*
         binding.pauseIcon.isEnabled = false
         hangmanGameViewModel.pauseCountDownTimer()

@@ -317,4 +317,9 @@ class HangmanGameViewModel()
         return numRetries >= 0
     }
 
+    public fun disableRetries()
+    {
+        numRetries = -1
+    }
+
 }
