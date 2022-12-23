@@ -46,6 +46,8 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    implementation 'com.google.firebase:firebase-core:21.1.1'
+    implementation 'com.google.firebase:firebase-messaging:23.1.1'
 
     // Retrofit
     implementation "com.squareup.retrofit2:retrofit:2.9.0" // base retrofit
@@ -69,4 +71,6 @@ dependencies {
     // MVVM
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
+
+    apply plugin: 'com.google.gms.google-services'
 }
