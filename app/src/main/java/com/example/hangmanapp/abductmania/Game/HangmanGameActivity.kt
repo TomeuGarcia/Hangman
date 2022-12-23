@@ -5,10 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import com.example.hangmanapp.R
-import com.example.hangmanapp.abductmania.Game.Fragments.HangmanEndGameFragment
-import com.example.hangmanapp.abductmania.Game.Fragments.HangmanGamePauseFragment
-import com.example.hangmanapp.abductmania.Game.Fragments.HangmanYouLoseFragment
-import com.example.hangmanapp.abductmania.Game.Fragments.HangmanYouWinFragment
+import com.example.hangmanapp.abductmania.Game.Fragments.*
 import com.example.hangmanapp.databinding.ActivityHangmanGameBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,6 +22,7 @@ class HangmanGameActivity : AppCompatActivity()
     private val END_GAME_FRAGMENT_START_DELAY_MILLISECONDS : Long = 3000
 
     private lateinit var pauseFragment : HangmanGamePauseFragment
+    private lateinit var retryFragment : HangmanRetryGameFragment
     private lateinit var youWinFragment : HangmanYouWinFragment
     private lateinit var youLoseFragment : HangmanYouLoseFragment
 
@@ -41,8 +39,9 @@ class HangmanGameActivity : AppCompatActivity()
 
 
         pauseFragment = HangmanGamePauseFragment(this::resumeGame)
+        retryFragment = HangmanRetryGameFragment(this::onRetryWatchAd, this::onRetryGiveUp)
         youWinFragment = HangmanYouWinFragment()
-        youLoseFragment = HangmanYouLoseFragment(this::retryGame)
+        youLoseFragment = HangmanYouLoseFragment()
 
 
         binding.guesswordText.text = ""
@@ -101,11 +100,9 @@ class HangmanGameActivity : AppCompatActivity()
             youLoseFragment.setWordAndScore(hangmanGameViewModel.getHangmanWord(),
                                             hangmanGameViewModel.getScore())
             if (hangmanGameViewModel.hasRetriesLeft())
-                youLoseFragment.enableRetries()
+                setRetryGameFragment()
             else
-                youLoseFragment.disableRetries()
-
-            setEndGameFragment(youLoseFragment)
+                setEndGameFragment(youLoseFragment)
         }
     }
 
@@ -165,10 +162,48 @@ class HangmanGameActivity : AppCompatActivity()
         hangmanGameViewModel.retryGameReset()
 
         supportFragmentManager.beginTransaction().apply {
-            hide(youLoseFragment)
+            //hide(youLoseFragment)
+            hide(retryFragment)
             commit()
         }
     }
+
+    private fun onRetryWatchAd()
+    {
+        // TODO make ad here
+
+        retryGame() // TODO call this after watching ad
+    }
+
+    private fun onRetryGiveUp()
+    {
+        supportFragmentManager.beginTransaction().apply {
+            hide(retryFragment)
+            commit()
+        }
+        startGameOverFragment()
+    }
+
+    private fun setRetryGameFragment()
+    {
+        /*
+        binding.pauseIcon.isEnabled = false
+        hangmanGameViewModel.pauseCountDownTimer()
+         */
+
+        supportFragmentManager.beginTransaction().apply {
+            if (retryFragment.isAdded)
+            {
+                show(retryFragment)
+            }
+            else
+            {
+                replace(binding.fragmentFrameLayout.id, retryFragment)
+            }
+            commit()
+        }
+    }
+
 
 
     private fun updateCountDownText(currentTime: Long)

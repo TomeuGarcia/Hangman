@@ -5,19 +5,33 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.hangmanapp.databinding.FragmentHangmanRetryGameBinding
 
 
-class HangmanRetryGameFragment
+class HangmanRetryGameFragment(private val onWatchAdCallback : () -> Unit,
+                               private val onGiveUpCallback : () -> Unit)
     : Fragment()
 {
 
-    // private lateinit var binding :
+    private lateinit var binding : FragmentHangmanRetryGameBinding
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+    override fun onCreateView(inflater: LayoutInflater,
+                              container: ViewGroup?,
+                              savedInstanceState: Bundle?
     ): View? {
-        return super.onCreateView(inflater, container, savedInstanceState)
+
+        binding = FragmentHangmanRetryGameBinding.inflate(inflater, container, false)
+
+        binding.rgBackgroundImage.setOnClickListener {  }
+
+        binding.rgWatchAdIcon.setOnClickListener {
+            onWatchAdCallback()
+        }
+
+        binding.rgGiveUpButton.setOnClickListener {
+            onGiveUpCallback()
+        }
+
+        return binding.root
     }
 }
