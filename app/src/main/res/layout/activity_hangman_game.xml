@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".abductmania.HangmanGameActivity">
+    tools:context=".abductmania.Game.HangmanGameActivity">
 
     <ImageView
         android:id="@+id/backgroundImage"
@@ -143,6 +143,7 @@
         android:text="_______"
         android:textColor="#5CD61A"
         android:textSize="34sp"
+        android:fontFamily="@font/simpy_rounded"
         app:layout_constraintBottom_toBottomOf="@+id/buildingGroundImage"
         app:layout_constraintEnd_toEndOf="@+id/buildingGroundImage"
         app:layout_constraintHorizontal_bias="0.49"
@@ -159,6 +160,7 @@
         android:textAlignment="textStart"
         android:textColor="#8BC34A"
         android:textSize="34sp"
+        android:fontFamily="@font/simpy_rounded"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.059"
