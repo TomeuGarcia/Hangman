@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace 'com.example.hangmanapp'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.example.hangmanapp"
         minSdk 26
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -59,9 +59,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore-ktx'
 
     // Realtime database
-    //implementation 'com.google.firebase:firebase-database-ktx'
-    //implementation "androidx.activity:activity-ktx:1.6.1"
-    //implementation "androidx.fragment:fragment-ktx:1.5.5"
+    implementation 'com.google.firebase:firebase-database-ktx'
+    implementation "androidx.activity:activity-ktx:1.6.1"
+    implementation "androidx.fragment:fragment-ktx:1.5.5"
 
     // Ads
     //implementation 'com.google.android.gms:play-services-ads:21.3.0'
