@@ -1,5 +1,6 @@
 package com.example.hangmanapp.abductmania.Game.Drawings
 
+import android.graphics.Matrix
 import android.view.View
 import android.widget.ImageView
 import kotlin.random.Random
@@ -9,6 +10,8 @@ abstract class HangmanDrawingPart(protected val image : ImageView,
                                   protected val startVisibility : Int,
                                   protected val endVisibility : Int)
 {
+
+
     public fun setStartVisibility()
     {
         image.visibility = startVisibility
@@ -19,5 +22,9 @@ abstract class HangmanDrawingPart(protected val image : ImageView,
         image.visibility = endVisibility
     }
 
+    public open fun resetStartVisibility()
+    {
+        image.visibility = startVisibility
+    }
 
 }

@@ -12,4 +12,12 @@ class HangmanDrawer(private val hangmanDrawParts : List<HangmanDrawingPart>)
     {
         hangmanDrawParts[index].setEndVisibility()
     }
+
+    public fun undrawParts(startIndex : Int)
+    {
+        for(i in startIndex..hangmanDrawParts.size-1)
+        {
+            hangmanDrawParts[i].resetStartVisibility()
+        }
+    }
 }

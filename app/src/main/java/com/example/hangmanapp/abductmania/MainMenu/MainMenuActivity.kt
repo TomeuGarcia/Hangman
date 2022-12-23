@@ -26,23 +26,50 @@ class MainMenuActivity : AppCompatActivity() {
         firebaseAuth = FirebaseAuth.getInstance()
 
         binding.mainMenuPlay.setOnClickListener{
+            disableButtons()
             val intent = Intent(this, HangmanGameActivity::class.java)
             startActivity(intent)
         }
 
         binding.mainMenuSettings.setOnClickListener{
+            disableButtons()
             val intent = Intent(this, ConfigurationActivity::class.java)
             startActivity(intent)
         }
         binding.mainMenuLeaderboard.setOnClickListener{
+            disableButtons()
             val intent = Intent(this, RankingActivity::class.java)
             startActivity(intent)
         }
 
         binding.mainMenuExit.setOnClickListener{
+            disableButtons()
             firebaseAuth.signOut()
             finish()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        enableButtons()
+    }
+
+
+    private fun enableButtons()
+    {
+        binding.mainMenuPlay.isEnabled = true
+        binding.mainMenuSettings.isEnabled = true
+        binding.mainMenuLeaderboard.isEnabled = true
+        binding.mainMenuExit.isEnabled = true
+    }
+
+    private fun disableButtons()
+    {
+        binding.mainMenuPlay.isEnabled = false
+        binding.mainMenuSettings.isEnabled = false
+        binding.mainMenuLeaderboard.isEnabled = false
+        binding.mainMenuExit.isEnabled = false
     }
 
 }

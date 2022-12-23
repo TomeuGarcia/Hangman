@@ -25,6 +25,8 @@ class HangmanGameActivity : AppCompatActivity()
     private val END_GAME_FRAGMENT_START_DELAY_MILLISECONDS : Long = 3000
 
     private lateinit var pauseFragment : HangmanGamePauseFragment
+    private lateinit var youWinFragment : HangmanYouWinFragment
+    private lateinit var youLoseFragment : HangmanYouLoseFragment
 
     private val hangmanGameViewModel: HangmanGameViewModel by viewModels()
 
@@ -38,16 +40,16 @@ class HangmanGameActivity : AppCompatActivity()
         supportActionBar?.hide()
 
 
+        pauseFragment = HangmanGamePauseFragment(this::resumeGame)
+        youWinFragment = HangmanYouWinFragment()
+        youLoseFragment = HangmanYouLoseFragment(this::retryGame)
+
+
         binding.guesswordText.text = ""
 
         binding.pauseIcon.setOnClickListener {
             pauseGame()
         }
-
-
-
-        pauseFragment = HangmanGamePauseFragment(this::resumeGame)
-
 
         hangmanGameViewModel.isPausingDisabled.observe(this) {
             if (it) disablePausing()
@@ -66,10 +68,7 @@ class HangmanGameActivity : AppCompatActivity()
         }
         hangmanGameViewModel.createGame(this, binding)
 
-
     }
-
-
 
 
     private fun updateGuessWord(hangmanWord : String)
@@ -87,10 +86,10 @@ class HangmanGameActivity : AppCompatActivity()
     {
         CoroutineScope(Dispatchers.Default).launch {
             delay(END_GAME_FRAGMENT_START_DELAY_MILLISECONDS)
-            setEndGameFragment(
-                HangmanYouWinFragment(hangmanGameViewModel.getHangmanWord(),
-                                                     hangmanGameViewModel.getScore())
-            )
+
+            youWinFragment.setWordAndScore(hangmanGameViewModel.getHangmanWord(),
+                                           hangmanGameViewModel.getScore())
+            setEndGameFragment(youWinFragment)
         }
     }
 
@@ -98,10 +97,15 @@ class HangmanGameActivity : AppCompatActivity()
     {
         CoroutineScope(Dispatchers.Default).launch {
             delay(END_GAME_FRAGMENT_START_DELAY_MILLISECONDS)
-            setEndGameFragment(
-                HangmanYouLoseFragment(hangmanGameViewModel.getHangmanWord(),
-                                                      hangmanGameViewModel.getScore())
-            )
+
+            youLoseFragment.setWordAndScore(hangmanGameViewModel.getHangmanWord(),
+                                            hangmanGameViewModel.getScore())
+            if (hangmanGameViewModel.hasRetriesLeft())
+                youLoseFragment.enableRetries()
+            else
+                youLoseFragment.disableRetries()
+
+            setEndGameFragment(youLoseFragment)
         }
     }
 
@@ -151,6 +155,17 @@ class HangmanGameActivity : AppCompatActivity()
 
         supportFragmentManager.beginTransaction().apply {
             hide(pauseFragment)
+            commit()
+        }
+    }
+
+    private fun retryGame()
+    {
+        binding.pauseIcon.isEnabled = true
+        hangmanGameViewModel.retryGameReset()
+
+        supportFragmentManager.beginTransaction().apply {
+            hide(youLoseFragment)
             commit()
         }
     }

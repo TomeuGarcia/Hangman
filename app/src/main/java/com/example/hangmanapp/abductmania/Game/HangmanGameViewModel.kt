@@ -19,19 +19,24 @@ class HangmanGameViewModel()
     : ViewModel()
 {
     public val hangmanWord = MutableLiveData<String>()
+    public var hangmanWordPlaceholder : String = ""
     private var gameToken : String = ""
     private var hint : Char = ' '
 
-    private val CORRECT_LETTER_POINTS : Int = 50
-    private val WRONG_LETTER_POINTS : Int = 30
-    private val ALL_LETTERS_GUESSED_POINTS : Int = 200
+    private val CORRECT_LETTER_POINTS : Int = 80
+    private val WRONG_LETTER_POINTS : Int = 40
+    private val ALL_LETTERS_GUESSED_POINTS : Int = 300
+    private val RETRY_POINTS : Int = 100
     private var score : Int = 0
 
     private val MAX_WRONG_GUESSES : Int = 8
+    private val RESET_GUESS_CHANCES : Int = 3
     private var wrongGuessesCount : Int = 0
 
     private val MISSING_LETTER : Char = '_'
 
+    private val MAX_RETRIES = 1
+    private var numRetries = MAX_RETRIES
     private var isGameOver : Boolean = false
 
     private lateinit var hangmanApiCommunication : HangmanApiCommunication
@@ -42,6 +47,7 @@ class HangmanGameViewModel()
     private var countDownTimer: CountDownTimer? = null
     private val COUNTDOWN_TOTAL_TIME_MILLISECONDS : Long = 60000
     private val COUNTDOWN_INTERVAL_TIME_MILLISECONDS : Long = 1000
+    private val COUNTDOWN_RETRY_TIME_MILLISECONDS : Long = COUNTDOWN_TOTAL_TIME_MILLISECONDS / 2
     public var countDownCurrentTimeSeconds = MutableLiveData<Long>()
 
     private lateinit var activityContext : Context  // Used to debug with Toast()
@@ -127,6 +133,7 @@ class HangmanGameViewModel()
     }
     private fun onGetSolutionResponse(hangmanGameSolution : HangmanGameSolution)
     {
+        hangmanWordPlaceholder = hangmanWord.value ?: ""
         hangmanWord.value = hangmanGameSolution.solution
         gameToken = hangmanGameSolution.token
 
@@ -167,15 +174,14 @@ class HangmanGameViewModel()
     private fun onGuessLetterResponse(hangmanLetterGuessResponse : HangmanLetterGuessResponse,
                                       letter : Char)
     {
-        if (!isGameOver)
-        {
-            val isCorrect : Boolean = hangmanLetterGuessResponse.correct
-            hangmanWord.value = hangmanLetterGuessResponse.hangman
-            gameToken = hangmanLetterGuessResponse.token
+        if (isGameOver) return
 
-            if (isCorrect) { onGuessedLetterCorrectly(letter) }
-            else { onGuessedLetterIncorrectly(letter) }
-        }
+        val isCorrect : Boolean = hangmanLetterGuessResponse.correct
+        hangmanWord.value = hangmanLetterGuessResponse.hangman
+        gameToken = hangmanLetterGuessResponse.token
+
+        if (isCorrect) { onGuessedLetterCorrectly(letter) }
+        else { onGuessedLetterIncorrectly(letter) }
     }
     private fun onGuessLetterFailure()
     {
@@ -234,19 +240,25 @@ class HangmanGameViewModel()
 
         isPausingDisabled.value = true
         hasVictoryHappened.value = true
-        //onDisablePausingCallback()
     }
 
     private fun doGameOver()
     {
         isGameOver = true
+        --numRetries
         gameKeyboardMap.disableRemainingLetterButtons()
         countDownTimer?.cancel()
 
-        getSolution() // this is async.... wait until solution received to do real GameOver
+        if (hasRetriesLeft())
+        {
+            onGameOverSolutionObtained()
+        }
+        else
+        {
+            getSolution() // this is async.... wait until solution received to do real GameOver
+        }
 
         isPausingDisabled.value = true
-        //onDisablePausingCallback()
     }
 
     private fun onGameOverSolutionObtained()
@@ -283,6 +295,26 @@ class HangmanGameViewModel()
     public fun resumeCountDownTimer()
     {
         startCountDownTimer((countDownCurrentTimeSeconds.value ?: 0) * 1000)
+    }
+
+    public fun retryGameReset()
+    {
+        isGameOver = false
+        score -= RETRY_POINTS
+
+        hangmanWord.value = hangmanWordPlaceholder
+
+        wrongGuessesCount -= RESET_GUESS_CHANCES
+        gameKeyboardMap.reenableRemainingLetterButtons()
+        hangmanDrawer.undrawParts(wrongGuessesCount)
+
+        countDownCurrentTimeSeconds.value = COUNTDOWN_RETRY_TIME_MILLISECONDS / 1000
+        resumeCountDownTimer()
+    }
+
+    public fun hasRetriesLeft() : Boolean
+    {
+        return numRetries >= 0
     }
 
 }
