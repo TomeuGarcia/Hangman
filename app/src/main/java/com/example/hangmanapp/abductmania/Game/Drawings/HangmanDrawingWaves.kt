@@ -8,6 +8,8 @@ class HangmanDrawingWaves(image : ImageView, duration : Long, yDisplacement : Fl
 {
     public override fun setEndVisibility()
     {
+        hasBeenDrawn = true
+
         image.pivotY = 0f
         image.visibility = endVisibility
         image.scaleY = 0f

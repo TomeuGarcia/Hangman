@@ -15,6 +15,8 @@ class HangmanDrawingBuilding(image : ImageView,
 
     public override fun setEndVisibility()
     {
+        hasBeenDrawn = true
+
         imageStartX = image.x
         imageStartY = image.y
         rotation = getRandomRotationValue()
