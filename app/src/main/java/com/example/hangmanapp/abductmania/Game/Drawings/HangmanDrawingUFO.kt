@@ -10,6 +10,8 @@ class HangmanDrawingUFO(image : ImageView, duration : Long, yDisplacement : Floa
 {
     public override fun setEndVisibility()
     {
+        hasBeenDrawn = true
+
         image.visibility = endVisibility
         image.scaleX = 0f
         image.scaleY = 0f
