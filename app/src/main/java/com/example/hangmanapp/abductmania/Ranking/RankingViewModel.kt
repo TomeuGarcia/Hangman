@@ -6,7 +6,9 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.GenericTypeIndicator
+import com.google.firebase.database.IgnoreExtraProperties
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.database.ktx.database
@@ -14,9 +16,13 @@ import java.lang.Error
 
 class RankingViewModel : ViewModel()
 {
+    private val RANKING_DATABASE_ID = "ranking"
+
     public val rankingUsersData = MutableLiveData<ArrayList<RankingUserData>>()
     val db = Firebase.database("https://abductmania-default-rtdb.europe-west1.firebasedatabase.app/")
         .getReference("ranking") // collection name
+
+    private lateinit var database: DatabaseReference
 
     private val currentUser: String
         get() = FirebaseAuth.getInstance().currentUser?.email ?: throw IllegalStateException("Not logged in")
@@ -24,14 +30,22 @@ class RankingViewModel : ViewModel()
     init
     {
         rankingUsersData.value = ArrayList<RankingUserData>()
+        database = Firebase.database.reference
     }
 
-
-    data class RankingUserData(public val username : String,
-                               public var score : Int)
+    @IgnoreExtraProperties
+    data class RankingUserData(public val username : String? = null,
+                               public var score : Int? = null)
     {
     }
 
+    public fun addNewUser(userId: String, userScore: Int = 0)
+    {
+        val rankingUsersData = RankingUserData(userId, userScore)
+
+        database.child(RANKING_DATABASE_ID).child(userId).setValue(rankingUsersData)
+        // Looking at --> https://firebase.google.com/docs/database/android/read-and-write#kotlin+ktx_1
+    }
 
     public fun loadRanking()
     {
@@ -63,7 +77,7 @@ class RankingViewModel : ViewModel()
 
     private fun subscribe(rankingList: List<RankingUserData>) {
         rankingList.forEach {
-            db.child(it.username).addValueEventListener(object : ValueEventListener {
+            db.child(it.username ?: "").addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val typeIndicator = object : GenericTypeIndicator<RankingUserData>() {}
                     val rud = snapshot.getValue(typeIndicator)
