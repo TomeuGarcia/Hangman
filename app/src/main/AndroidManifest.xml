@@ -15,6 +15,11 @@
         android:theme="@style/Theme.HangmanApp"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-7847710980451886~7925495047" />
+
         <activity
             android:name=".abductmania.SplashScreen.SplashScreenActivity"
             android:exported="true">
