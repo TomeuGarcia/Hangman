@@ -2,6 +2,8 @@ package com.example.hangmanapp.abductmania.Game.Drawings
 
 class HangmanDrawer(private val hangmanDrawParts : List<HangmanDrawingPart>)
 {
+    private var lastDrawnIndex = -1
+
     init {
         hangmanDrawParts.forEach {
             it.setStartVisibility()
@@ -10,6 +12,7 @@ class HangmanDrawer(private val hangmanDrawParts : List<HangmanDrawingPart>)
 
     public fun drawPart(index : Int)
     {
+        lastDrawnIndex = index
         hangmanDrawParts[index].setEndVisibility()
     }
 
@@ -17,7 +20,21 @@ class HangmanDrawer(private val hangmanDrawParts : List<HangmanDrawingPart>)
     {
         for(i in startIndex..hangmanDrawParts.size-1)
         {
-            hangmanDrawParts[i].resetStartVisibility()
+            if (hangmanDrawParts[i].hasBeenDrawn())
+            {
+                hangmanDrawParts[i].resetStartVisibility()
+            }
+        }
+
+        lastDrawnIndex = startIndex - 1
+    }
+
+    public fun drawRemainingParts()
+    {
+        for(i in lastDrawnIndex+1..hangmanDrawParts.size-1)
+        {
+            drawPart(i)
         }
     }
+
 }

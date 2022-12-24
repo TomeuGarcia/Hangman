@@ -19,7 +19,6 @@ class HangmanGameViewModel()
     : ViewModel()
 {
     public val hangmanWord = MutableLiveData<String>()
-    public var hangmanWordPlaceholder : String = ""
     private var gameToken : String = ""
     private var hint : Char = ' '
 
@@ -133,7 +132,6 @@ class HangmanGameViewModel()
     }
     private fun onGetSolutionResponse(hangmanGameSolution : HangmanGameSolution)
     {
-        hangmanWordPlaceholder = hangmanWord.value ?: ""
         hangmanWord.value = hangmanGameSolution.solution
         gameToken = hangmanGameSolution.token
 
@@ -242,7 +240,7 @@ class HangmanGameViewModel()
         hasVictoryHappened.value = true
     }
 
-    private fun doGameOver()
+    public fun doGameOver()
     {
         isGameOver = true
         --numRetries
@@ -255,6 +253,7 @@ class HangmanGameViewModel()
         }
         else
         {
+            hangmanDrawer.drawRemainingParts()
             getSolution() // this is async.... wait until solution received to do real GameOver
         }
 
@@ -281,6 +280,8 @@ class HangmanGameViewModel()
             {
                 if(countDownCurrentTimeSeconds.value as Long <= 0)
                 {
+                    hangmanDrawer.drawRemainingParts()
+                    wrongGuessesCount = MAX_WRONG_GUESSES
                     doGameOver()
                 }
             }
@@ -302,9 +303,8 @@ class HangmanGameViewModel()
         isGameOver = false
         score -= RETRY_POINTS
 
-        hangmanWord.value = hangmanWordPlaceholder
+        if (wrongGuessesCount >= RESET_GUESS_CHANCES) wrongGuessesCount -= RESET_GUESS_CHANCES
 
-        wrongGuessesCount -= RESET_GUESS_CHANCES
         gameKeyboardMap.reenableRemainingLetterButtons()
         hangmanDrawer.undrawParts(wrongGuessesCount)
 

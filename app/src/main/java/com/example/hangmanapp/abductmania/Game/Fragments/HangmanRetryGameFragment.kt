@@ -26,12 +26,43 @@ class HangmanRetryGameFragment(private val onWatchAdCallback : () -> Unit,
 
         binding.rgWatchAdIcon.setOnClickListener {
             onWatchAdCallback()
+            disableButtons()
+            showProgress()
         }
 
         binding.rgGiveUpButton.setOnClickListener {
             onGiveUpCallback()
+            disableButtons()
+            showProgress()
         }
+
+        hideProgress()
+        enableButtons()
 
         return binding.root
     }
+
+    private fun showProgress()
+    {
+        binding.rgProgressBar.visibility = View.VISIBLE
+    }
+
+    public fun hideProgress()
+    {
+        binding.rgProgressBar.visibility = View.INVISIBLE
+    }
+
+    public fun enableButtons()
+    {
+        binding.rgWatchAdIcon.isEnabled = true
+        binding.rgGiveUpButton.isEnabled = true
+    }
+
+    private fun disableButtons()
+    {
+        binding.rgWatchAdIcon.isEnabled = false
+        binding.rgGiveUpButton.isEnabled = false
+    }
+
+
 }

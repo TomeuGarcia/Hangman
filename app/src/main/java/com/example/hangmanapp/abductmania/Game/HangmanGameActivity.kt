@@ -159,18 +159,6 @@ class HangmanGameActivity : AppCompatActivity()
         }
     }
 
-    private fun retryGame()
-    {
-        binding.pauseIcon.isEnabled = true
-        hangmanGameViewModel.retryGameReset()
-
-        supportFragmentManager.beginTransaction().apply {
-            //hide(youLoseFragment)
-            hide(retryFragment)
-            commit()
-        }
-    }
-
     private fun onRetryWatchAd()
     {
         // TODO make ad here
@@ -178,27 +166,27 @@ class HangmanGameActivity : AppCompatActivity()
         retryGame() // TODO call this after watching ad
     }
 
-    private fun onRetryGiveUp()
+    private fun retryGame()
     {
-        hangmanGameViewModel.disableRetries()
+        binding.pauseIcon.isEnabled = true
+        hangmanGameViewModel.retryGameReset()
 
-        /*
+        //retryFragment.hideProgress()
         supportFragmentManager.beginTransaction().apply {
             hide(retryFragment)
             commit()
         }
+    }
 
-         */
-        startGameOverFragment()
+    private fun onRetryGiveUp()
+    {
+        hangmanGameViewModel.doGameOver()
+        hangmanGameViewModel.disableRetries()
     }
 
     private fun setRetryGameFragment()
     {
-        //Toast.makeText(this, "RETRY", Toast.LENGTH_SHORT).show()
-        /*
-        binding.pauseIcon.isEnabled = false
         hangmanGameViewModel.pauseCountDownTimer()
-         */
 
         supportFragmentManager.beginTransaction().apply {
             if (retryFragment.isAdded)
