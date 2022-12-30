@@ -18,8 +18,8 @@ class MainMenuActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainMenuBinding
     private lateinit var firebaseAuth: FirebaseAuth
-    private var musicPlayer : MediaPlayer? = null
-    private var audioPlayer : MediaPlayer? = null
+    var musicPlayer : MediaPlayer? = null
+    var audioPlayer : MediaPlayer? = null
 
     companion object {
         const val CHANNEL_ID = "NOTIFICATIONS_CHANNEL_CONTACTS"
@@ -45,16 +45,13 @@ class MainMenuActivity : AppCompatActivity() {
             audioPlayer = MediaPlayer.create(this, R.raw.button_click)
             audioPlayer?.start()
 
+            musicPlayer?.stop()
+            musicPlayer?.release()
+            musicPlayer = null
 
             val intent = Intent(this, HangmanGameActivity::class.java)
             startActivity(intent)
 
-
-            musicPlayer?.stop()
-            musicPlayer?.release()
-            musicPlayer = null
-            musicPlayer = MediaPlayer.create(this, R.raw.game_song)
-            musicPlayer?.start()
         }
 
         binding.mainMenuSettings.setOnClickListener{
@@ -96,12 +93,6 @@ class MainMenuActivity : AppCompatActivity() {
         enableButtons()
     }
 
-    override fun onPause() {
-        super.onPause()
-
-        musicPlayer?.pause()
-        audioPlayer?.pause()
-    }
 
     private fun enableButtons()
     {

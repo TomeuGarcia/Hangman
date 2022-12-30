@@ -1,6 +1,7 @@
 package com.example.hangmanapp.abductmania.Game
 
 import android.animation.ObjectAnimator
+import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -8,6 +9,7 @@ import androidx.activity.viewModels
 import androidx.core.os.bundleOf
 import com.example.hangmanapp.R
 import com.example.hangmanapp.abductmania.Game.Fragments.*
+import com.example.hangmanapp.abductmania.MainMenu.MainMenuActivity
 import com.example.hangmanapp.databinding.ActivityHangmanGameBinding
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.rewarded.RewardItem
@@ -40,6 +42,8 @@ class HangmanGameActivity : AppCompatActivity()
 
     private val hangmanGameViewModel: HangmanGameViewModel by viewModels()
 
+    var musicPlayer = MainMenuActivity().musicPlayer
+    var audioPlayer = MainMenuActivity().audioPlayer
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -49,6 +53,9 @@ class HangmanGameActivity : AppCompatActivity()
         setContentView(binding.root)
         supportActionBar?.hide()
 
+
+        musicPlayer = MediaPlayer.create(this, R.raw.game_song)
+        musicPlayer?.start()
 
         pauseFragment = HangmanGamePauseFragment(this::resumeGame)
         retryFragment = HangmanRetryGameFragment(this::onRetryWatchAd, this::onRetryGiveUp)
@@ -172,6 +179,14 @@ class HangmanGameActivity : AppCompatActivity()
             }
             commit()
         }
+        musicPlayer?.pause()
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        musicPlayer?.pause()
+        audioPlayer?.pause()
     }
 
     private fun resumeGame()
@@ -183,6 +198,8 @@ class HangmanGameActivity : AppCompatActivity()
             hide(pauseFragment)
             commit()
         }
+
+        musicPlayer?.start()
     }
 
     private fun onRetryWatchAd()
