@@ -5,9 +5,15 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.os.bundleOf
 import com.example.hangmanapp.R
 import com.example.hangmanapp.abductmania.Game.Fragments.*
 import com.example.hangmanapp.databinding.ActivityHangmanGameBinding
+import com.google.android.gms.ads.*
+import com.google.android.gms.ads.rewarded.RewardItem
+import com.google.android.gms.ads.rewarded.RewardedAd
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
+import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -21,6 +27,11 @@ class HangmanGameActivity : AppCompatActivity()
     private val COUNTDOWN_ANIM_START_TIME_SECONDS : Long = 30
     private val COUNTDOWN_ANIM_TICK_TIME_MILLISECONDS : Long = 1000
     private val END_GAME_FRAGMENT_START_DELAY_MILLISECONDS : Long = 3000
+
+    //private val RETRY_AD_ID = "ca-app-pub-7847710980451886/1215117009"
+    private val RETRY_AD_ID = "ca-app-pub-3940256099942544/5224354917" // TEST
+    private var retryAd : RewardedAd? = null
+    private var canRetry : Boolean = false
 
     private lateinit var pauseFragment : HangmanGamePauseFragment
     private lateinit var retryFragment : HangmanRetryGameFragment
@@ -44,6 +55,8 @@ class HangmanGameActivity : AppCompatActivity()
         youWinFragment = HangmanYouWinFragment()
         youLoseFragment = HangmanYouLoseFragment()
 
+        MobileAds.initialize(this)
+        loadRetryAd()
 
         binding.guesswordText.text = ""
 
@@ -68,6 +81,19 @@ class HangmanGameActivity : AppCompatActivity()
         }
         hangmanGameViewModel.createGame(this, binding)
 
+    }
+
+    override fun onResume()
+    {
+        super.onResume()
+
+        val request = AdRequest.Builder().build()
+        binding.adView.loadAd(request)
+
+        if (canRetry) {
+            canRetry = false
+            retryGame()
+        }
     }
 
 
@@ -162,8 +188,10 @@ class HangmanGameActivity : AppCompatActivity()
     private fun onRetryWatchAd()
     {
         // TODO make ad here
+        hangmanGameViewModel.pauseCountDownTimer()
+        showRetryAd()
 
-        retryGame() // TODO call this after watching ad
+        //retryGame() // TODO call this after watching ad
     }
 
     private fun retryGame()
@@ -221,6 +249,36 @@ class HangmanGameActivity : AppCompatActivity()
                 duration = COUNTDOWN_ANIM_TICK_TIME_MILLISECONDS
                 start()
             }
+    }
+
+    private fun loadRetryAd()
+    {
+        val adRequest = AdRequest.Builder().build()
+        RewardedAd.load(this,RETRY_AD_ID, adRequest, object : RewardedAdLoadCallback() {
+            override fun onAdFailedToLoad(adError: LoadAdError) {
+                retryAd = null
+            }
+
+            override fun onAdLoaded(rewardedAd: RewardedAd) {
+                retryAd = rewardedAd
+            }
+        })
+    }
+
+    private fun showRetryAd()
+    {
+        if (retryAd == null)
+        {
+            retryGame()
+            return
+        }
+
+        retryAd?.show(this,
+            OnUserEarnedRewardListener() {
+                canRetry = true
+        })
+
+
     }
 
 }
