@@ -267,6 +267,8 @@ class HangmanGameActivity : AppCompatActivity()
 
     private fun showRetryAd()
     {
+        hangmanGameViewModel.analyticsLogAd(retryAd)
+
         if (retryAd == null)
         {
             retryGame()
@@ -277,8 +279,6 @@ class HangmanGameActivity : AppCompatActivity()
             OnUserEarnedRewardListener() {
                 canRetry = true
         })
-
-
     }
 
 }
