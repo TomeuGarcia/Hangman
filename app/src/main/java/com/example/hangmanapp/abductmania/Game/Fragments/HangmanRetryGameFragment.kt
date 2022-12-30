@@ -4,8 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.example.hangmanapp.databinding.FragmentHangmanRetryGameBinding
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 
 
 class HangmanRetryGameFragment(private val onWatchAdCallback : () -> Unit,
@@ -14,6 +18,10 @@ class HangmanRetryGameFragment(private val onWatchAdCallback : () -> Unit,
 {
 
     private lateinit var binding : FragmentHangmanRetryGameBinding
+
+    private val NEW_CHANCE = "new_chance"
+    private val NEW_CHANCE_PARAM = "NEW_CHANCE_PARAM"
+    private val firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
@@ -25,12 +33,14 @@ class HangmanRetryGameFragment(private val onWatchAdCallback : () -> Unit,
         binding.rgBackgroundImage.setOnClickListener {  }
 
         binding.rgWatchAdIcon.setOnClickListener {
+            analyticsPlayerChoice(true)
             onWatchAdCallback()
             disableButtons()
             showProgress()
         }
 
         binding.rgGiveUpButton.setOnClickListener {
+            analyticsPlayerChoice(false)
             onGiveUpCallback()
             disableButtons()
             showProgress()
@@ -64,5 +74,13 @@ class HangmanRetryGameFragment(private val onWatchAdCallback : () -> Unit,
         binding.rgGiveUpButton.isEnabled = false
     }
 
-
+    private fun analyticsPlayerChoice(showAd : Boolean)
+    {
+        firebaseAnalytics.logEvent(
+            NEW_CHANCE,
+            bundleOf(
+                NEW_CHANCE_PARAM to showAd
+            )
+        )
+    }
 }
