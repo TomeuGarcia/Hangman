@@ -54,8 +54,6 @@ class HangmanGameActivity : AppCompatActivity()
         supportActionBar?.hide()
 
 
-        musicPlayer = MediaPlayer.create(this, R.raw.game_song)
-        musicPlayer?.start()
 
         pauseFragment = HangmanGamePauseFragment(this::resumeGame)
         retryFragment = HangmanRetryGameFragment(this::onRetryWatchAd, this::onRetryGiveUp)
@@ -101,6 +99,9 @@ class HangmanGameActivity : AppCompatActivity()
             canRetry = false
             retryGame()
         }
+
+        musicPlayer = MediaPlayer.create(this, R.raw.game_song)
+        musicPlayer?.start()
     }
 
 

@@ -2,11 +2,15 @@ package com.example.hangmanapp.abductmania.Game
 
 
 import android.content.Context
+import android.media.MediaPlayer
 import android.os.CountDownTimer
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.core.os.bundleOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.hangmanapp.R
+import com.example.hangmanapp.abductmania.Config.ConfigurationViewModel
 import com.example.hangmanapp.abductmania.Game.Api.*
 import com.example.hangmanapp.abductmania.Game.Drawings.HangmanDrawer
 import com.example.hangmanapp.abductmania.Game.Drawings.HangmanDrawingBuilding
@@ -55,6 +59,8 @@ class HangmanGameViewModel()
     public var countDownCurrentTimeSeconds = MutableLiveData<Long>()
 
     private lateinit var activityContext : Context  // Used to debug with Toast()
+
+    private val configurationViewModel : ConfigurationViewModel = ConfigurationViewModel()
 
     public val isPausingDisabled = MutableLiveData<Boolean>()
     public val hasVictoryHappened = MutableLiveData<Boolean>()
@@ -184,6 +190,9 @@ class HangmanGameViewModel()
     {
         gameKeyboardMap.disableRemainingLetterButtons()
         hangmanApiCommunication.guessLetter(gameToken, letter)
+
+        configurationViewModel.audioPlayer = MediaPlayer.create(activityContext, R.raw.button_click)
+        configurationViewModel.audioPlayer?.start()
     }
     private fun onGuessLetterResponse(hangmanLetterGuessResponse : HangmanLetterGuessResponse,
                                       letter : Char)
@@ -196,6 +205,8 @@ class HangmanGameViewModel()
 
         if (isCorrect) { onGuessedLetterCorrectly(letter) }
         else { onGuessedLetterIncorrectly(letter) }
+
+
     }
     private fun onGuessLetterFailure()
     {
