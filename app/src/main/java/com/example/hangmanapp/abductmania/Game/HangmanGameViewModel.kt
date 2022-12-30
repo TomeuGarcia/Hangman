@@ -4,6 +4,7 @@ package com.example.hangmanapp.abductmania.Game
 import android.content.Context
 import android.os.CountDownTimer
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.hangmanapp.abductmania.Game.Api.*
@@ -13,6 +14,10 @@ import com.example.hangmanapp.abductmania.Game.Drawings.HangmanDrawingUFO
 import com.example.hangmanapp.abductmania.Game.Drawings.HangmanDrawingWaves
 import com.example.hangmanapp.abductmania.Game.Keyboard.GameKeyboardMap
 import com.example.hangmanapp.databinding.ActivityHangmanGameBinding
+import com.google.android.gms.ads.rewarded.RewardedAd
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import kotlin.math.max
 
 class HangmanGameViewModel()
@@ -55,10 +60,21 @@ class HangmanGameViewModel()
     public val hasVictoryHappened = MutableLiveData<Boolean>()
     public val hasGameOverHappened = MutableLiveData<Boolean>()
 
-
+    private val LOADED_AD_PARAM = "LOADED_AD_PARAM"
+    private val SHOW_AD = "show_ad"
+    private val LEVEL_START_PARAM = "LEVEL_START_PARAM"
+    private val LEVEL_START = "level_start"
+    private val firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
 
     public fun createGame(context: Context, binding: ActivityHangmanGameBinding)
     {
+        firebaseAnalytics.logEvent(
+            LEVEL_START,
+            bundleOf(
+                LEVEL_START_PARAM to true
+            )
+        )
+
         activityContext = context
 
         hangmanWord.value = ""
@@ -322,4 +338,13 @@ class HangmanGameViewModel()
         numRetries = -1
     }
 
+    public fun analyticsLogAd(ad : RewardedAd?)
+    {
+        firebaseAnalytics.logEvent(
+            SHOW_AD,
+            bundleOf(
+                LOADED_AD_PARAM to (ad != null)
+            )
+        )
+    }
 }
