@@ -16,10 +16,12 @@ class ConfigurationViewModel : ViewModel()
     private val LANGUAGE = "language"
     private val MUSIC = "music"
     private val SOUND = "sound"
+    private val NOTIFICATIONS = "notifications"
     private val EMAIL = "email"
 
     public val languages = arrayOf<String>("English", "Catalan", "Spanish")
     public var currentLang = MutableLiveData<Int>()
+    public var areNotificationsOn = MutableLiveData<Boolean>()
     public var isMusicOn = MutableLiveData<Boolean>()
     public var isSoundOn = MutableLiveData<Boolean>()
 
@@ -34,6 +36,7 @@ class ConfigurationViewModel : ViewModel()
     init
     {
         currentLang.value = 0
+        areNotificationsOn.value = true
         isMusicOn.value = true
         isSoundOn.value = true
     }
@@ -48,6 +51,7 @@ class ConfigurationViewModel : ViewModel()
         email = shared.getString(EMAIL, null)?: ""
 
         updateValues(shared.getInt(LANGUAGE, 0),
+                     shared.getBoolean(NOTIFICATIONS, true),
                      shared.getBoolean(MUSIC, true),
                      shared.getBoolean(SOUND, true))
 
@@ -63,7 +67,7 @@ class ConfigurationViewModel : ViewModel()
                 }
 
                 currentUser?.apply{
-                    updateValues(language, music, sound)
+                    updateValues(language, notifications, music, sound)
                 }
             }
             .addOnFailureListener { exception ->
@@ -79,10 +83,12 @@ class ConfigurationViewModel : ViewModel()
         val editor = shared.edit()
 
         val currentLangValue =  currentLang.value ?: 0
+        val areNotisOnValue = areNotificationsOn.value ?: false
         val isMusicOnValue = isMusicOn.value ?: false
         val isSoundOnValue = isSoundOn.value ?: false
 
         editor.putInt(LANGUAGE, currentLangValue)
+        editor.putBoolean(NOTIFICATIONS, areNotisOnValue)
         editor.putBoolean(MUSIC, isMusicOnValue)
         editor.putBoolean(SOUND, isSoundOnValue)
         editor.apply()
@@ -99,6 +105,7 @@ class ConfigurationViewModel : ViewModel()
 
         currentUser?.let {
             it.language = currentLangValue
+            it.notifications = areNotisOnValue
             it.music = isMusicOnValue
             it.sound = isSoundOnValue
 
@@ -112,8 +119,9 @@ class ConfigurationViewModel : ViewModel()
         return user.email == email
     }
 
-    private fun updateValues(_lang: Int, _music: Boolean, _sound: Boolean) {
+    private fun updateValues(_lang: Int, _notifications: Boolean, _music: Boolean, _sound: Boolean) {
         currentLang.value = _lang
+        areNotificationsOn.value = _notifications
         isMusicOn.value = _music
         isSoundOn.value = _sound
     }
@@ -122,6 +130,11 @@ class ConfigurationViewModel : ViewModel()
     public fun iterateCurrentLanguage()
     {
         currentLang.value = (currentLang.value?.inc() ?: 0) % languages.size
+    }
+
+    public fun toggleNotifications()
+    {
+        areNotificationsOn.value = areNotificationsOn.value?.not() ?: false
     }
 
     public fun toggleMusic()

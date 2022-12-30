@@ -31,6 +31,13 @@ class ConfigurationActivity : AppCompatActivity()
                 "Language: " + configurationViewModel.languages[it ?: 0]
         }
 
+        configurationViewModel.areNotificationsOn.observe(this) {
+            it?.apply {
+                if (this) binding.notificationsButton.text = "Notifications: ON"
+                else binding.notificationsButton.text = "Notifications: OFF"
+            }
+        }
+
         configurationViewModel.isMusicOn.observe(this) {
             it?.apply {
                 if (this) binding.musicButton.text = "Music: ON"
@@ -55,6 +62,11 @@ class ConfigurationActivity : AppCompatActivity()
         binding.languageButton.setOnClickListener {
             // Change Current Language
             configurationViewModel.iterateCurrentLanguage()
+        }
+
+        binding.notificationsButton.setOnClickListener {
+            // Turn On/Off Notifications
+            configurationViewModel.toggleNotifications()
         }
 
         binding.musicButton.setOnClickListener {
