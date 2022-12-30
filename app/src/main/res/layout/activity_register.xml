@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".abductmania.RegisterActivity">
+    tools:context=".abductmania.Register.RegisterActivity">
 
     <ImageView
         android:id="@+id/background"
@@ -21,12 +21,17 @@
 
     <ImageView
         android:id="@+id/title"
-        android:layout_width="238dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="64dp"
+        android:layout_marginBottom="64dp"
+        app:layout_constraintBottom_toTopOf="@+id/emailInputLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.04000002"
         app:srcCompat="@drawable/abductmania_title" />
 
     <com.google.android.material.textfield.TextInputLayout
@@ -36,29 +41,31 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:fontFamily="@font/simpy_rounded"
         android:hint="Email"
         android:paddingLeft="128px"
         android:paddingRight="128px"
         android:textColorHint="@color/green_soft"
+        app:boxStrokeColor="@color/green_strong"
+        app:errorEnabled="true"
         app:helperText="Required"
         app:helperTextTextColor="@color/error_red"
-        app:boxStrokeColor="@color/green_strong"
         app:hintTextColor="@color/green_strong"
-        app:layout_constraintBottom_toTopOf="@+id/usernameInputLayout"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.41000003"
         app:passwordToggleTint="@color/green_strong"
         app:startIconDrawable="@drawable/ic_baseline_email_24"
-        app:startIconTint="@color/green_strong"
-        app:errorEnabled="true">
+        app:startIconTint="@color/green_strong">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/emailInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/simpy_rounded"
             android:paddingLeft="32px"
             android:paddingRight="32px"
             android:textColor="@color/green_strong"
@@ -72,28 +79,31 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:fontFamily="@font/simpy_rounded"
         android:hint="Username"
         android:paddingLeft="128px"
         android:paddingRight="128px"
         android:textColorHint="@color/green_soft"
+        app:boxStrokeColor="@color/green_strong"
+        app:errorEnabled="true"
         app:helperText="Required"
         app:helperTextTextColor="@color/error_red"
-        app:boxStrokeColor="@color/green_strong"
         app:hintTextColor="@color/green_strong"
-        app:layout_constraintBottom_toTopOf="@+id/passwordInputLayout"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.466"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/emailInputLayout"
+        app:layout_constraintVertical_bias="0.01999998"
         app:passwordToggleTint="@color/green_strong"
         app:startIconDrawable="@drawable/ic_baseline_person_24"
-        app:startIconTint="@color/green_strong"
-        app:errorEnabled="true">
+        app:startIconTint="@color/green_strong">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/userInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/simpy_rounded"
             android:paddingLeft="32px"
             android:paddingRight="32px"
             android:textColor="@color/green_strong"
@@ -107,30 +117,33 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:fontFamily="@font/simpy_rounded"
         android:hint="Password"
         android:paddingLeft="128px"
         android:paddingRight="128px"
         android:textColorHint="@color/green_soft"
-        app:helperText="Required"
-        app:helperTextTextColor="@color/error_red"
         app:boxStrokeColor="@color/green_strong"
         app:endIconMode="password_toggle"
         app:endIconTint="@color/green_strong"
+        app:errorEnabled="true"
+        app:helperText="Required"
+        app:helperTextTextColor="@color/error_red"
         app:hintTextColor="@color/green_strong"
-        app:layout_constraintBottom_toTopOf="@+id/doRegisterButton"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/usernameInputLayout"
+        app:layout_constraintVertical_bias="0.029999971"
         app:passwordToggleTint="@color/green_strong"
         app:startIconDrawable="@drawable/ic_baseline_lock_24"
-        app:startIconTint="@color/green_strong"
-        app:errorEnabled="true">
+        app:startIconTint="@color/green_strong">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/passwordInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/simpy_rounded"
             android:inputType="textPassword"
             android:paddingLeft="32px"
             android:paddingRight="32px"
@@ -143,31 +156,17 @@
         style="?attr/materialButtonOutlinedStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="48dp"
+        android:fontFamily="@font/simpy_rounded"
         android:text="Register"
         android:textColor="@color/green_soft"
         app:iconTint="@color/green_strong"
-        app:layout_constraintBottom_toTopOf="@+id/backLoginButton"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/passwordInputLayout"
-        app:rippleColor="@color/green_strong"
-        app:strokeColor="@color/green_strong" />
-
-    <Button
-        android:id="@+id/backLoginButton"
-        style="?attr/materialButtonOutlinedStyle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Login"
-        android:textColor="@color/green_soft"
-        app:iconTint="@color/green_strong"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/doRegisterButton"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="@+id/doRegisterButton"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.85"
+        app:layout_constraintVertical_bias="0.0"
         app:rippleColor="@color/green_strong"
         app:strokeColor="@color/green_strong" />
 
@@ -177,9 +176,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@+id/background"
-        app:layout_constraintEnd_toEndOf="@+id/backLoginButton"
-        app:layout_constraintStart_toStartOf="@+id/backLoginButton"
-        app:layout_constraintTop_toBottomOf="@+id/backLoginButton" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passwordInputLayout" />
+
+    <ImageView
+        android:id="@+id/backArrow"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.06"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/back_arrow" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
