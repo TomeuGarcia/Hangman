@@ -1,14 +1,10 @@
 package com.example.hangmanapp.abductmania.MainMenu
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.content.Context
 import android.content.Intent
+import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import com.example.hangmanapp.R
 import com.example.hangmanapp.abductmania.Config.ConfigurationActivity
 import com.example.hangmanapp.abductmania.Game.HangmanGameActivity
@@ -17,12 +13,13 @@ import com.example.hangmanapp.databinding.ActivityMainMenuBinding
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.messaging.FirebaseMessaging
-import org.checkerframework.common.returnsreceiver.qual.This
 
 class MainMenuActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainMenuBinding
     private lateinit var firebaseAuth: FirebaseAuth
+    private var musicPlayer : MediaPlayer? = null
+    private var audioPlayer : MediaPlayer? = null
 
     companion object {
         const val CHANNEL_ID = "NOTIFICATIONS_CHANNEL_CONTACTS"
@@ -38,39 +35,73 @@ class MainMenuActivity : AppCompatActivity() {
 
         firebaseAuth = FirebaseAuth.getInstance()
 
+        musicPlayer = MediaPlayer.create(this, R.raw.menus_song)
+        musicPlayer?.start()
+
+
         binding.mainMenuPlay.setOnClickListener{
             disableButtons()
+
+            audioPlayer = MediaPlayer.create(this, R.raw.button_click)
+            audioPlayer?.start()
+
+
             val intent = Intent(this, HangmanGameActivity::class.java)
             startActivity(intent)
+
+
+            musicPlayer?.stop()
+            musicPlayer?.release()
+            musicPlayer = null
+            musicPlayer = MediaPlayer.create(this, R.raw.game_song)
+            musicPlayer?.start()
         }
 
         binding.mainMenuSettings.setOnClickListener{
             disableButtons()
+
+            audioPlayer = MediaPlayer.create(this, R.raw.button_click)
+            audioPlayer?.start()
+
             val intent = Intent(this, ConfigurationActivity::class.java)
             startActivity(intent)
         }
         binding.mainMenuLeaderboard.setOnClickListener{
             disableButtons()
+
+            audioPlayer = MediaPlayer.create(this, R.raw.button_click)
+            audioPlayer?.start()
+
             val intent = Intent(this, RankingActivity::class.java)
             startActivity(intent)
         }
 
         binding.mainMenuExit.setOnClickListener{
             disableButtons()
+
+            audioPlayer = MediaPlayer.create(this, R.raw.button_click)
+            audioPlayer?.start()
+
             firebaseAuth.signOut()
             finish()
         }
 
         fireBaseNotification()
-
     }
 
     override fun onResume() {
         super.onResume()
 
+        musicPlayer?.start()
         enableButtons()
     }
 
+    override fun onPause() {
+        super.onPause()
+
+        musicPlayer?.pause()
+        audioPlayer?.pause()
+    }
 
     private fun enableButtons()
     {
