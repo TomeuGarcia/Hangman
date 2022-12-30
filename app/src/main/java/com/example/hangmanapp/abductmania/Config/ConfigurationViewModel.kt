@@ -1,12 +1,14 @@
 package com.example.hangmanapp.abductmania.Config
 
 import android.content.Context
+import android.media.MediaPlayer
 import android.preference.PreferenceManager
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.hangmanapp.R
 import com.example.hangmanapp.abductmania.DatabaseUtils.User
+import com.example.hangmanapp.abductmania.MainMenu.MainMenuActivity
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -18,6 +20,8 @@ class ConfigurationViewModel : ViewModel()
     private val SOUND = "sound"
     private val NOTIFICATIONS = "notifications"
     private val EMAIL = "email"
+    private val MAX_VOLUME = 100.0f;
+
 
     public val languages = arrayOf<String>("English", "Catalan", "Spanish")
     public var currentLang = MutableLiveData<Int>()
@@ -32,6 +36,10 @@ class ConfigurationViewModel : ViewModel()
     private var users = arrayListOf<User>()
     private lateinit var usersCollection : CollectionReference
 
+    private var musicPlayer = MainMenuActivity().musicPlayer
+    private var audioPlayer = MainMenuActivity().audioPlayer
+    var soundVolume = 90.0f
+    var volume = (1 - (Math.log((MAX_VOLUME - soundVolume).toDouble()) / Math.log(MAX_VOLUME.toDouble())));
 
     init
     {
@@ -137,14 +145,35 @@ class ConfigurationViewModel : ViewModel()
         areNotificationsOn.value = areNotificationsOn.value?.not() ?: false
     }
 
-    public fun toggleMusic()
+    public fun toggleMusic(context : Context)
     {
         isMusicOn.value = isMusicOn.value?.not() ?: false
+
+        if (isMusicOn.value == true)
+        {
+            musicPlayer?.setVolume(volume.toFloat(), volume.toFloat())
+        }
+        else
+        {
+            volume = 0.0
+            musicPlayer?.setVolume(volume.toFloat(), volume.toFloat())
+        }
     }
 
-    public fun toggleSound()
+    public fun toggleSound(context: Context)
     {
         isSoundOn.value = isSoundOn.value?.not() ?: false
+
+        if (isSoundOn.value == true)
+        {
+            audioPlayer?.setVolume(volume.toFloat(), volume.toFloat())
+
+        }
+        else
+        {
+            volume = 0.0
+            audioPlayer?.setVolume(volume.toFloat(), volume.toFloat())
+        }
     }
 
 }

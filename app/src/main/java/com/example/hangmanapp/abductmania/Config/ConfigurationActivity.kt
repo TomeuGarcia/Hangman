@@ -1,9 +1,11 @@
 package com.example.hangmanapp.abductmania.Config
 
 import android.content.Intent
+import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+import com.example.hangmanapp.R
 import com.example.hangmanapp.abductmania.MainMenu.MainMenuActivity
 import com.example.hangmanapp.databinding.ActivityConfigurationBinding
 
@@ -14,8 +16,6 @@ class ConfigurationActivity : AppCompatActivity()
 
     private val configurationViewModel : ConfigurationViewModel by viewModels()
 
-
-
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
@@ -25,6 +25,7 @@ class ConfigurationActivity : AppCompatActivity()
         supportActionBar?.hide()
 
         configurationViewModel.loadData(this)
+
 
         configurationViewModel.currentLang.observe(this) {
             binding.languageButton.text =
@@ -42,6 +43,7 @@ class ConfigurationActivity : AppCompatActivity()
             it?.apply {
                 if (this) binding.musicButton.text = "Music: ON"
                 else binding.musicButton.text = "Music: OFF"
+
             }
         }
 
@@ -71,12 +73,13 @@ class ConfigurationActivity : AppCompatActivity()
 
         binding.musicButton.setOnClickListener {
             // Turn On/Off Music
-            configurationViewModel.toggleMusic()
+            configurationViewModel.toggleMusic(this)
         }
 
         binding.soundButton.setOnClickListener {
             // Turn On/Off Sound
-            configurationViewModel.toggleSound()
+            configurationViewModel.toggleSound(this)
+
         }
     }
 
