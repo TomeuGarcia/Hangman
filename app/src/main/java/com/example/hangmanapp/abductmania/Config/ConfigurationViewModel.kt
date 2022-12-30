@@ -20,7 +20,6 @@ class ConfigurationViewModel : ViewModel()
     private val SOUND = "sound"
     private val NOTIFICATIONS = "notifications"
     private val EMAIL = "email"
-    private val MAX_VOLUME = 100.0f;
 
 
     public val languages = arrayOf<String>("English", "Catalan", "Spanish")
@@ -36,10 +35,8 @@ class ConfigurationViewModel : ViewModel()
     private var users = arrayListOf<User>()
     private lateinit var usersCollection : CollectionReference
 
-    private var musicPlayer = MainMenuActivity().musicPlayer
-    private var audioPlayer = MainMenuActivity().audioPlayer
-    var soundVolume = 90.0f
-    var volume = (1 - (Math.log((MAX_VOLUME - soundVolume).toDouble()) / Math.log(MAX_VOLUME.toDouble())));
+    var musicPlayer : MediaPlayer? = null
+    var audioPlayer : MediaPlayer? = null
 
     init
     {
@@ -149,14 +146,14 @@ class ConfigurationViewModel : ViewModel()
     {
         isMusicOn.value = isMusicOn.value?.not() ?: false
 
-        if (isMusicOn.value == true)
+        if (isMusicOn.value == false)
         {
-            musicPlayer?.setVolume(volume.toFloat(), volume.toFloat())
+            musicPlayer?.pause()
+
         }
         else
         {
-            volume = 0.0
-            musicPlayer?.setVolume(volume.toFloat(), volume.toFloat())
+            musicPlayer?.start()
         }
     }
 
@@ -166,13 +163,11 @@ class ConfigurationViewModel : ViewModel()
 
         if (isSoundOn.value == true)
         {
-            audioPlayer?.setVolume(volume.toFloat(), volume.toFloat())
-
+            audioPlayer?.start()
         }
         else
         {
-            volume = 0.0
-            audioPlayer?.setVolume(volume.toFloat(), volume.toFloat())
+            audioPlayer?.pause()
         }
     }
 

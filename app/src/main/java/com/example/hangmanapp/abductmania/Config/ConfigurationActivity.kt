@@ -16,6 +16,8 @@ class ConfigurationActivity : AppCompatActivity()
 
     private val configurationViewModel : ConfigurationViewModel by viewModels()
 
+
+
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
@@ -23,6 +25,15 @@ class ConfigurationActivity : AppCompatActivity()
         binding = ActivityConfigurationBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
+
+        if (configurationViewModel.isMusicOn.value == true)
+        {
+            configurationViewModel.musicPlayer = MediaPlayer.create(this, R.raw.menus_song)
+            configurationViewModel.musicPlayer?.start()
+            configurationViewModel.audioPlayer = MediaPlayer.create(this, R.raw.button_click)
+        }
+        else
+            configurationViewModel.musicPlayer?.pause()
 
         configurationViewModel.loadData(this)
 
@@ -37,6 +48,13 @@ class ConfigurationActivity : AppCompatActivity()
                 if (this) binding.notificationsButton.text = "Notifications: ON"
                 else binding.notificationsButton.text = "Notifications: OFF"
             }
+
+            if (configurationViewModel.isSoundOn.value == true)
+            {
+                configurationViewModel.audioPlayer?.start()
+            }
+            else
+                configurationViewModel.audioPlayer?.pause()
         }
 
         configurationViewModel.isMusicOn.observe(this) {
@@ -45,6 +63,12 @@ class ConfigurationActivity : AppCompatActivity()
                 else binding.musicButton.text = "Music: OFF"
 
             }
+            if (configurationViewModel.isSoundOn.value == true)
+            {
+                configurationViewModel.audioPlayer?.start()
+            }
+            else
+                configurationViewModel.audioPlayer?.pause()
         }
 
         configurationViewModel.isSoundOn.observe(this) {
@@ -52,6 +76,12 @@ class ConfigurationActivity : AppCompatActivity()
                 if (this) binding.soundButton.text = "Sound: ON"
                 else binding.soundButton.text = "Sound: OFF"
             }
+            if (configurationViewModel.isSoundOn.value == true)
+            {
+                configurationViewModel.audioPlayer?.start()
+            }
+            else
+                configurationViewModel.audioPlayer?.pause()
         }
 
 
@@ -59,26 +89,56 @@ class ConfigurationActivity : AppCompatActivity()
         binding.backButtonImage.setOnClickListener {
             // Go To Main Menu
             finish()
+            if (configurationViewModel.isSoundOn.value == true)
+            {
+                configurationViewModel.audioPlayer?.start()
+            }
+            else
+                configurationViewModel.audioPlayer?.pause()
         }
 
         binding.languageButton.setOnClickListener {
             // Change Current Language
             configurationViewModel.iterateCurrentLanguage()
+            if (configurationViewModel.isSoundOn.value == true)
+            {
+                configurationViewModel.audioPlayer?.start()
+            }
+            else
+                configurationViewModel.audioPlayer?.pause()
         }
 
         binding.notificationsButton.setOnClickListener {
             // Turn On/Off Notifications
             configurationViewModel.toggleNotifications()
+            if (configurationViewModel.isSoundOn.value == true)
+            {
+                configurationViewModel.audioPlayer?.start()
+            }
+            else
+                configurationViewModel.audioPlayer?.pause()
         }
 
         binding.musicButton.setOnClickListener {
             // Turn On/Off Music
             configurationViewModel.toggleMusic(this)
+            if (configurationViewModel.isSoundOn.value == true)
+            {
+                configurationViewModel.audioPlayer?.start()
+            }
+            else
+                configurationViewModel.audioPlayer?.pause()
         }
 
         binding.soundButton.setOnClickListener {
             // Turn On/Off Sound
             configurationViewModel.toggleSound(this)
+            if (configurationViewModel.isSoundOn.value == true)
+            {
+                configurationViewModel.audioPlayer?.start()
+            }
+            else
+                configurationViewModel.audioPlayer?.pause()
 
         }
     }
@@ -89,6 +149,7 @@ class ConfigurationActivity : AppCompatActivity()
         super.onPause()
 
         configurationViewModel.saveData(this)
+        configurationViewModel.musicPlayer?.pause()
     }
 
 

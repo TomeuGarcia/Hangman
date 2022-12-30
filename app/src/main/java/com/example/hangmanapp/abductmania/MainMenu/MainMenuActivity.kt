@@ -5,8 +5,10 @@ import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import com.example.hangmanapp.R
 import com.example.hangmanapp.abductmania.Config.ConfigurationActivity
+import com.example.hangmanapp.abductmania.Config.ConfigurationViewModel
 import com.example.hangmanapp.abductmania.Game.HangmanGameActivity
 import com.example.hangmanapp.abductmania.Ranking.RankingActivity
 import com.example.hangmanapp.databinding.ActivityMainMenuBinding
@@ -18,6 +20,9 @@ class MainMenuActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainMenuBinding
     private lateinit var firebaseAuth: FirebaseAuth
+
+    private val configurationViewModel : ConfigurationViewModel by viewModels()
+
     var musicPlayer : MediaPlayer? = null
     var audioPlayer : MediaPlayer? = null
 
@@ -35,19 +40,21 @@ class MainMenuActivity : AppCompatActivity() {
 
         firebaseAuth = FirebaseAuth.getInstance()
 
-        musicPlayer = MediaPlayer.create(this, R.raw.menus_song)
-        musicPlayer?.start()
+        //musicPlayer = MediaPlayer.create(this, R.raw.menus_song)
+        //musicPlayer?.start()
 
 
         binding.mainMenuPlay.setOnClickListener{
             disableButtons()
 
-            audioPlayer = MediaPlayer.create(this, R.raw.button_click)
-            audioPlayer?.start()
-
-            musicPlayer?.stop()
-            musicPlayer?.release()
-            musicPlayer = null
+            if (configurationViewModel.isSoundOn.value == true)
+            {
+                configurationViewModel.audioPlayer = MediaPlayer.create(this, R.raw.button_click)
+                configurationViewModel.audioPlayer?.start()
+                configurationViewModel.musicPlayer?.stop()
+            }
+            else
+                configurationViewModel.musicPlayer?.pause()
 
             val intent = Intent(this, HangmanGameActivity::class.java)
             startActivity(intent)
@@ -57,8 +64,14 @@ class MainMenuActivity : AppCompatActivity() {
         binding.mainMenuSettings.setOnClickListener{
             disableButtons()
 
-            audioPlayer = MediaPlayer.create(this, R.raw.button_click)
-            audioPlayer?.start()
+            if (configurationViewModel.isSoundOn.value == true)
+            {
+                configurationViewModel.audioPlayer = MediaPlayer.create(this, R.raw.button_click)
+                configurationViewModel.audioPlayer?.start()
+                configurationViewModel.musicPlayer?.start()
+            }
+            else
+                configurationViewModel.musicPlayer?.pause()
 
             val intent = Intent(this, ConfigurationActivity::class.java)
             startActivity(intent)
@@ -66,8 +79,14 @@ class MainMenuActivity : AppCompatActivity() {
         binding.mainMenuLeaderboard.setOnClickListener{
             disableButtons()
 
-            audioPlayer = MediaPlayer.create(this, R.raw.button_click)
-            audioPlayer?.start()
+            if (configurationViewModel.isSoundOn.value == true)
+            {
+                configurationViewModel.audioPlayer = MediaPlayer.create(this, R.raw.button_click)
+                configurationViewModel.audioPlayer?.start()
+                configurationViewModel.musicPlayer?.start()
+            }
+            else
+                configurationViewModel.musicPlayer?.pause()
 
             val intent = Intent(this, RankingActivity::class.java)
             startActivity(intent)
@@ -76,8 +95,8 @@ class MainMenuActivity : AppCompatActivity() {
         binding.mainMenuExit.setOnClickListener{
             disableButtons()
 
-            audioPlayer = MediaPlayer.create(this, R.raw.button_click)
-            audioPlayer?.start()
+            configurationViewModel.audioPlayer = MediaPlayer.create(this, R.raw.button_click)
+            configurationViewModel.audioPlayer?.start()
 
             firebaseAuth.signOut()
             finish()
@@ -89,10 +108,22 @@ class MainMenuActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        musicPlayer?.start()
+        if (configurationViewModel.isMusicOn.value == true)
+        {
+            configurationViewModel.musicPlayer = MediaPlayer.create(this, R.raw.menus_song)
+            configurationViewModel.musicPlayer?.start()
+        }
+        else
+            configurationViewModel.musicPlayer?.pause()
+
         enableButtons()
     }
 
+    override fun onPause() {
+        super.onPause()
+
+        configurationViewModel.musicPlayer?.pause()
+    }
 
     private fun enableButtons()
     {
