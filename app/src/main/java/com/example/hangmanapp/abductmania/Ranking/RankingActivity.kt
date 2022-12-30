@@ -34,7 +34,7 @@ class RankingActivity : AppCompatActivity() {
             updateRanking(it)
         }
 
-        rankingViewModel.loadRanking()
+        rankingViewModel.loadRanking(this)
     }
 
     private fun updateRanking(rankingUsersData : List<RankingViewModel.RankingUserData>)
@@ -42,7 +42,7 @@ class RankingActivity : AppCompatActivity() {
         val rankingImages = arrayListOf<RankingItem>()
 
         rankingUsersData.forEachIndexed { index, e ->
-            rankingImages.add(RankingItem(e.username, e.score, index+1))
+            rankingImages.add(RankingItem(e.username ?: "", e.score ?: 0, index+1))
         }
 
         adapter.submitList(rankingImages)

@@ -1,5 +1,6 @@
 package com.example.hangmanapp.abductmania.Ranking
 
+import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,20 +13,23 @@ import com.google.firebase.database.IgnoreExtraProperties
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.database.ktx.database
-import java.lang.Error
 
 class RankingViewModel : ViewModel()
 {
-    private val RANKING_DATABASE_ID = "ranking"
+    private val DB_URL = "https://abductmania-default-rtdb.europe-west1.firebasedatabase.app/"
+    private val RANKING_DB_ID = "ranking"
+    private val PLAYERSCORES_DB_ID = "playerScores"
+    private val USERNAME_DB_ID = "username"
+    private val SCORE_DB_ID = "score"
 
-    public val rankingUsersData = MutableLiveData<ArrayList<RankingUserData>>()
-    val db = Firebase.database("https://abductmania-default-rtdb.europe-west1.firebasedatabase.app/")
-        .getReference("ranking") // collection name
-
+    val rankingRef = Firebase.database(DB_URL).getReference(RANKING_DB_ID)
     private lateinit var database: DatabaseReference
 
-    private val currentUser: String
-        get() = FirebaseAuth.getInstance().currentUser?.email ?: throw IllegalStateException("Not logged in")
+    public val rankingUsersData = MutableLiveData<ArrayList<RankingUserData>>()
+
+    private val currentUserId: String
+        get() = FirebaseAuth.getInstance().currentUser?.uid.toString()
+
 
     init
     {
@@ -43,18 +47,24 @@ class RankingViewModel : ViewModel()
     {
         val rankingUsersData = RankingUserData(userId, userScore)
 
-        database.child(RANKING_DATABASE_ID).child(userId).setValue(rankingUsersData)
+        database.child(RANKING_DB_ID).child(userId).setValue(rankingUsersData)
         // Looking at --> https://firebase.google.com/docs/database/android/read-and-write#kotlin+ktx_1
     }
 
-    public fun loadRanking()
-    {
-        val request = db.get()
-        request.addOnSuccessListener {
-            val rank = it.value
 
-            if (rank != null && rank is List<*>) {
-                val r = rank.filterIsInstance<RankingUserData>()
+    public fun loadRanking(context : Context)
+    {
+        val rankingPlayerScores = rankingRef.child(PLAYERSCORES_DB_ID)
+        rankingPlayerScores.child(currentUserId).child(USERNAME_DB_ID).setValue("Joanet")
+        rankingPlayerScores.child(currentUserId).child(SCORE_DB_ID).setValue("100")
+
+        val request = rankingRef.child(PLAYERSCORES_DB_ID).get()
+
+        request.addOnSuccessListener {
+            val ranking = it.value
+
+            if (ranking != null && ranking is List<*>) {
+                val r = ranking.filterIsInstance<RankingUserData>()
                 r.forEach { rud ->
                     rankingUsersData.value?.add(RankingUserData(rud.username, rud.score))
                 }
@@ -62,10 +72,12 @@ class RankingViewModel : ViewModel()
             }
             else {
                 // ERROR
+                Toast.makeText(context, "ranking request ERROR", Toast.LENGTH_SHORT).show()
             }
         }
         request.addOnFailureListener {
             // ERROR
+            Toast.makeText(context, "ranking request FAILURE", Toast.LENGTH_SHORT).show()
         }
 
         rankingUsersData.value?.sortByDescending {
@@ -77,7 +89,7 @@ class RankingViewModel : ViewModel()
 
     private fun subscribe(rankingList: List<RankingUserData>) {
         rankingList.forEach {
-            db.child(it.username ?: "").addValueEventListener(object : ValueEventListener {
+            rankingRef.child(it.username ?: "").addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val typeIndicator = object : GenericTypeIndicator<RankingUserData>() {}
                     val rud = snapshot.getValue(typeIndicator)
@@ -92,4 +104,7 @@ class RankingViewModel : ViewModel()
             })
         }
     }
+
+
+
 }
