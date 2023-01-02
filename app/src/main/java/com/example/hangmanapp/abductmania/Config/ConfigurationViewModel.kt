@@ -35,8 +35,11 @@ class ConfigurationViewModel : ViewModel()
     private var users = arrayListOf<User>()
     private lateinit var usersCollection : CollectionReference
 
-    var musicPlayer : MediaPlayer? = null
-    var audioPlayer : MediaPlayer? = null
+    companion object
+    {
+        var musicPlayer : MediaPlayer? = null
+        var audioPlayer : MediaPlayer? = null
+    }
 
     init
     {
@@ -146,14 +149,14 @@ class ConfigurationViewModel : ViewModel()
     {
         isMusicOn.value = isMusicOn.value?.not() ?: false
 
-        if (isMusicOn.value == false)
+        if (isMusicOn.value == true)
         {
-            musicPlayer?.pause()
+            musicPlayer?.start()
 
         }
         else
         {
-            musicPlayer?.start()
+            musicPlayer?.pause()
         }
     }
 

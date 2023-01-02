@@ -16,7 +16,11 @@ class ConfigurationActivity : AppCompatActivity()
 
     private val configurationViewModel : ConfigurationViewModel by viewModels()
 
-
+    companion object
+    {
+        var musicPlayer : MediaPlayer? = null
+        var audioPlayer : MediaPlayer? = null
+    }
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -28,12 +32,10 @@ class ConfigurationActivity : AppCompatActivity()
 
         if (configurationViewModel.isMusicOn.value == true)
         {
-            configurationViewModel.musicPlayer = MediaPlayer.create(this, R.raw.menus_song)
-            configurationViewModel.musicPlayer?.start()
-            configurationViewModel.audioPlayer = MediaPlayer.create(this, R.raw.button_click)
+            musicPlayer?.start()
         }
         else
-            configurationViewModel.musicPlayer?.pause()
+            musicPlayer?.pause()
 
         configurationViewModel.loadData(this)
 
@@ -51,10 +53,10 @@ class ConfigurationActivity : AppCompatActivity()
 
             if (configurationViewModel.isSoundOn.value == true)
             {
-                configurationViewModel.audioPlayer?.start()
+                audioPlayer?.start()
             }
             else
-                configurationViewModel.audioPlayer?.pause()
+                audioPlayer?.pause()
         }
 
         configurationViewModel.isMusicOn.observe(this) {
@@ -65,10 +67,10 @@ class ConfigurationActivity : AppCompatActivity()
             }
             if (configurationViewModel.isSoundOn.value == true)
             {
-                configurationViewModel.audioPlayer?.start()
+                audioPlayer?.start()
             }
             else
-                configurationViewModel.audioPlayer?.pause()
+                audioPlayer?.pause()
         }
 
         configurationViewModel.isSoundOn.observe(this) {
@@ -78,10 +80,10 @@ class ConfigurationActivity : AppCompatActivity()
             }
             if (configurationViewModel.isSoundOn.value == true)
             {
-                configurationViewModel.audioPlayer?.start()
+                audioPlayer?.start()
             }
             else
-                configurationViewModel.audioPlayer?.pause()
+                audioPlayer?.pause()
         }
 
 
@@ -91,10 +93,10 @@ class ConfigurationActivity : AppCompatActivity()
             finish()
             if (configurationViewModel.isSoundOn.value == true)
             {
-                configurationViewModel.audioPlayer?.start()
+                audioPlayer?.start()
             }
             else
-                configurationViewModel.audioPlayer?.pause()
+                audioPlayer?.pause()
         }
 
         binding.languageButton.setOnClickListener {
@@ -102,10 +104,10 @@ class ConfigurationActivity : AppCompatActivity()
             configurationViewModel.iterateCurrentLanguage()
             if (configurationViewModel.isSoundOn.value == true)
             {
-                configurationViewModel.audioPlayer?.start()
+                audioPlayer?.start()
             }
             else
-                configurationViewModel.audioPlayer?.pause()
+                audioPlayer?.pause()
         }
 
         binding.notificationsButton.setOnClickListener {
@@ -113,10 +115,10 @@ class ConfigurationActivity : AppCompatActivity()
             configurationViewModel.toggleNotifications()
             if (configurationViewModel.isSoundOn.value == true)
             {
-                configurationViewModel.audioPlayer?.start()
+                audioPlayer?.start()
             }
             else
-                configurationViewModel.audioPlayer?.pause()
+                audioPlayer?.pause()
         }
 
         binding.musicButton.setOnClickListener {
@@ -124,10 +126,10 @@ class ConfigurationActivity : AppCompatActivity()
             configurationViewModel.toggleMusic(this)
             if (configurationViewModel.isSoundOn.value == true)
             {
-                configurationViewModel.audioPlayer?.start()
+                audioPlayer?.start()
             }
             else
-                configurationViewModel.audioPlayer?.pause()
+                audioPlayer?.pause()
         }
 
         binding.soundButton.setOnClickListener {
@@ -135,10 +137,10 @@ class ConfigurationActivity : AppCompatActivity()
             configurationViewModel.toggleSound(this)
             if (configurationViewModel.isSoundOn.value == true)
             {
-                configurationViewModel.audioPlayer?.start()
+                audioPlayer?.start()
             }
             else
-                configurationViewModel.audioPlayer?.pause()
+                audioPlayer?.pause()
 
         }
     }
@@ -149,7 +151,7 @@ class ConfigurationActivity : AppCompatActivity()
         super.onPause()
 
         configurationViewModel.saveData(this)
-        configurationViewModel.musicPlayer?.pause()
+        musicPlayer?.pause()
     }
 
 

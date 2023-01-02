@@ -28,6 +28,7 @@ class MainMenuActivity : AppCompatActivity() {
 
     companion object {
         const val CHANNEL_ID = "NOTIFICATIONS_CHANNEL_CONTACTS"
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?)
@@ -40,8 +41,8 @@ class MainMenuActivity : AppCompatActivity() {
 
         firebaseAuth = FirebaseAuth.getInstance()
 
-        //musicPlayer = MediaPlayer.create(this, R.raw.menus_song)
-        //musicPlayer?.start()
+        musicPlayer = MediaPlayer.create(this, R.raw.menus_song)
+        audioPlayer = MediaPlayer.create(this, R.raw.button_click)
 
 
         binding.mainMenuPlay.setOnClickListener{
@@ -49,12 +50,11 @@ class MainMenuActivity : AppCompatActivity() {
 
             if (configurationViewModel.isSoundOn.value == true)
             {
-                configurationViewModel.audioPlayer = MediaPlayer.create(this, R.raw.button_click)
-                configurationViewModel.audioPlayer?.start()
-                configurationViewModel.musicPlayer?.stop()
+                audioPlayer?.start()
+                musicPlayer?.stop()
             }
             else
-                configurationViewModel.musicPlayer?.pause()
+                musicPlayer?.pause()
 
             val intent = Intent(this, HangmanGameActivity::class.java)
             startActivity(intent)
@@ -66,12 +66,11 @@ class MainMenuActivity : AppCompatActivity() {
 
             if (configurationViewModel.isSoundOn.value == true)
             {
-                configurationViewModel.audioPlayer = MediaPlayer.create(this, R.raw.button_click)
-                configurationViewModel.audioPlayer?.start()
-                configurationViewModel.musicPlayer?.start()
+                audioPlayer?.start()
+                musicPlayer?.start()
             }
             else
-                configurationViewModel.musicPlayer?.pause()
+                musicPlayer?.pause()
 
             val intent = Intent(this, ConfigurationActivity::class.java)
             startActivity(intent)
@@ -81,12 +80,11 @@ class MainMenuActivity : AppCompatActivity() {
 
             if (configurationViewModel.isSoundOn.value == true)
             {
-                configurationViewModel.audioPlayer = MediaPlayer.create(this, R.raw.button_click)
-                configurationViewModel.audioPlayer?.start()
-                configurationViewModel.musicPlayer?.start()
+                audioPlayer?.start()
+                musicPlayer?.start()
             }
             else
-                configurationViewModel.musicPlayer?.pause()
+                musicPlayer?.pause()
 
             val intent = Intent(this, RankingActivity::class.java)
             startActivity(intent)
@@ -95,8 +93,7 @@ class MainMenuActivity : AppCompatActivity() {
         binding.mainMenuExit.setOnClickListener{
             disableButtons()
 
-            configurationViewModel.audioPlayer = MediaPlayer.create(this, R.raw.button_click)
-            configurationViewModel.audioPlayer?.start()
+            audioPlayer?.start()
 
             firebaseAuth.signOut()
             finish()
@@ -110,11 +107,10 @@ class MainMenuActivity : AppCompatActivity() {
 
         if (configurationViewModel.isMusicOn.value == true)
         {
-            configurationViewModel.musicPlayer = MediaPlayer.create(this, R.raw.menus_song)
-            configurationViewModel.musicPlayer?.start()
+            musicPlayer?.start()
         }
         else
-            configurationViewModel.musicPlayer?.pause()
+            musicPlayer?.pause()
 
         enableButtons()
     }
@@ -122,8 +118,10 @@ class MainMenuActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
 
-        configurationViewModel.musicPlayer?.pause()
+        //musicPlayer?.pause()
+
     }
+
 
     private fun enableButtons()
     {
