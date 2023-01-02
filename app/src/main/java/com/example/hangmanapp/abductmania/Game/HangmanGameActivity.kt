@@ -42,9 +42,11 @@ class HangmanGameActivity : AppCompatActivity()
 
     private val hangmanGameViewModel: HangmanGameViewModel by viewModels()
 
-    var musicPlayer = MainMenuActivity().musicPlayer
-    var audioPlayer = MainMenuActivity().audioPlayer
-
+    companion object
+    {
+        var musicPlayer : MediaPlayer? = null
+        var audioPlayer : MediaPlayer? = null
+    }
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
@@ -52,7 +54,6 @@ class HangmanGameActivity : AppCompatActivity()
         binding = ActivityHangmanGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
-
 
 
         pauseFragment = HangmanGamePauseFragment(this::resumeGame)

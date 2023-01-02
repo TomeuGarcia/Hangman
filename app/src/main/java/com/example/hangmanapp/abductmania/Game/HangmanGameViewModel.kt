@@ -60,8 +60,6 @@ class HangmanGameViewModel()
 
     private lateinit var activityContext : Context  // Used to debug with Toast()
 
-    private val configurationViewModel : ConfigurationViewModel = ConfigurationViewModel()
-
     public val isPausingDisabled = MutableLiveData<Boolean>()
     public val hasVictoryHappened = MutableLiveData<Boolean>()
     public val hasGameOverHappened = MutableLiveData<Boolean>()
@@ -71,6 +69,11 @@ class HangmanGameViewModel()
     private val LEVEL_START_PARAM = "LEVEL_START_PARAM"
     private val LEVEL_START = "level_start"
     private val firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
+
+    companion object
+    {
+        var audioPlayer : MediaPlayer? = null
+    }
 
     public fun createGame(context: Context, binding: ActivityHangmanGameBinding)
     {
@@ -191,8 +194,8 @@ class HangmanGameViewModel()
         gameKeyboardMap.disableRemainingLetterButtons()
         hangmanApiCommunication.guessLetter(gameToken, letter)
 
-        configurationViewModel.audioPlayer = MediaPlayer.create(activityContext, R.raw.button_click)
-        configurationViewModel.audioPlayer?.start()
+        audioPlayer = MediaPlayer.create(activityContext, R.raw.button_click)
+        audioPlayer?.start()
     }
     private fun onGuessLetterResponse(hangmanLetterGuessResponse : HangmanLetterGuessResponse,
                                       letter : Char)
