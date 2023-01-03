@@ -19,6 +19,8 @@ class ConfigurationViewModel : ViewModel()
     private val LANGUAGE = "language"
     private val MUSIC = "music"
     private val SOUND = "sound"
+    private val NOTIFICATIONS = "notifications"
+
 
 
     public val languages = arrayOf<String>("English", "Catalan", "Spanish")
