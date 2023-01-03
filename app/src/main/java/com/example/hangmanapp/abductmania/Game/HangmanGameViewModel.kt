@@ -17,6 +17,7 @@ import com.example.hangmanapp.abductmania.Game.Drawings.HangmanDrawingBuilding
 import com.example.hangmanapp.abductmania.Game.Drawings.HangmanDrawingUFO
 import com.example.hangmanapp.abductmania.Game.Drawings.HangmanDrawingWaves
 import com.example.hangmanapp.abductmania.Game.Keyboard.GameKeyboardMap
+import com.example.hangmanapp.abductmania.MainMenu.MainMenuActivity
 import com.example.hangmanapp.databinding.ActivityHangmanGameBinding
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -70,10 +71,6 @@ class HangmanGameViewModel()
     private val LEVEL_START = "level_start"
     private val firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
 
-    companion object
-    {
-        var audioPlayer : MediaPlayer? = null
-    }
 
     public fun createGame(context: Context, binding: ActivityHangmanGameBinding)
     {
@@ -194,8 +191,8 @@ class HangmanGameViewModel()
         gameKeyboardMap.disableRemainingLetterButtons()
         hangmanApiCommunication.guessLetter(gameToken, letter)
 
-        audioPlayer = MediaPlayer.create(activityContext, R.raw.button_click)
-        audioPlayer?.start()
+        MainMenuActivity.audioPlayer = MediaPlayer.create(activityContext, R.raw.button_click)
+        MainMenuActivity.audioPlayer?.start()
     }
     private fun onGuessLetterResponse(hangmanLetterGuessResponse : HangmanLetterGuessResponse,
                                       letter : Char)

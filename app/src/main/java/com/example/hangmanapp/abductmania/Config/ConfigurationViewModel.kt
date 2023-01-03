@@ -25,8 +25,6 @@ class ConfigurationViewModel : ViewModel()
     public val languages = arrayOf<String>("English", "Catalan", "Spanish")
     public var currentLang = MutableLiveData<Int>()
     public var areNotificationsOn = MutableLiveData<Boolean>()
-    public var isMusicOn = MutableLiveData<Boolean>()
-    public var isSoundOn = MutableLiveData<Boolean>()
 
     private lateinit var firestore: FirebaseFirestore
     private lateinit var email: String
@@ -35,10 +33,11 @@ class ConfigurationViewModel : ViewModel()
     private var users = arrayListOf<User>()
     private lateinit var usersCollection : CollectionReference
 
+
     companion object
     {
-        var musicPlayer : MediaPlayer? = null
-        var audioPlayer : MediaPlayer? = null
+        var isMusicOn = MutableLiveData<Boolean>()
+        var isSoundOn = MutableLiveData<Boolean>()
     }
 
     init
@@ -151,12 +150,13 @@ class ConfigurationViewModel : ViewModel()
 
         if (isMusicOn.value == true)
         {
-            musicPlayer?.start()
-
+            MainMenuActivity.musicPlayerMenu?.setVolume(1.0f,1.0f)
+            MainMenuActivity.musicPlayerGame?.setVolume(1.0f,1.0f)
         }
         else
         {
-            musicPlayer?.pause()
+            MainMenuActivity.musicPlayerMenu?.setVolume(0.0f, 0.0f)
+            MainMenuActivity.musicPlayerGame?.setVolume(0.0f, 0.0f)
         }
     }
 
@@ -166,11 +166,11 @@ class ConfigurationViewModel : ViewModel()
 
         if (isSoundOn.value == true)
         {
-            audioPlayer?.start()
+            MainMenuActivity.audioPlayer?.setVolume(1.0f,1.0f)
         }
         else
         {
-            audioPlayer?.pause()
+            MainMenuActivity.audioPlayer?.setVolume(0.0f, 0.0f)
         }
     }
 

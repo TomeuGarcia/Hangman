@@ -5,7 +5,6 @@ import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.viewModels
 import com.example.hangmanapp.R
 import com.example.hangmanapp.abductmania.Config.ConfigurationActivity
 import com.example.hangmanapp.abductmania.Config.ConfigurationViewModel
@@ -21,13 +20,14 @@ class MainMenuActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainMenuBinding
     private lateinit var firebaseAuth: FirebaseAuth
 
-    private val configurationViewModel : ConfigurationViewModel by viewModels()
 
-    var musicPlayer : MediaPlayer? = null
-    var audioPlayer : MediaPlayer? = null
 
     companion object {
         const val CHANNEL_ID = "NOTIFICATIONS_CHANNEL_CONTACTS"
+        var musicPlayerMenu : MediaPlayer? = null
+        var audioPlayer : MediaPlayer? = null
+        var wentToMenuActivity : Boolean = false
+        var musicPlayerGame : MediaPlayer? = null
 
     }
 
@@ -41,57 +41,62 @@ class MainMenuActivity : AppCompatActivity() {
 
         firebaseAuth = FirebaseAuth.getInstance()
 
-        musicPlayer = MediaPlayer.create(this, R.raw.menus_song)
+        musicPlayerMenu = MediaPlayer.create(this, R.raw.menus_song)
         audioPlayer = MediaPlayer.create(this, R.raw.button_click)
 
+        musicPlayerMenu?.start()
 
         binding.mainMenuPlay.setOnClickListener{
             disableButtons()
+            wentToMenuActivity = false
 
-            if (configurationViewModel.isSoundOn.value == true)
-            {
-                audioPlayer?.start()
-                musicPlayer?.stop()
-            }
-            else
-                musicPlayer?.pause()
 
             val intent = Intent(this, HangmanGameActivity::class.java)
             startActivity(intent)
+
+            if (ConfigurationViewModel.isSoundOn.value == true)
+            {
+                audioPlayer?.start()
+                musicPlayerMenu?.stop()
+            }
+            else
+                musicPlayerMenu?.pause()
 
         }
 
         binding.mainMenuSettings.setOnClickListener{
             disableButtons()
-
-            if (configurationViewModel.isSoundOn.value == true)
-            {
-                audioPlayer?.start()
-                musicPlayer?.start()
-            }
-            else
-                musicPlayer?.pause()
+            wentToMenuActivity = true
 
             val intent = Intent(this, ConfigurationActivity::class.java)
             startActivity(intent)
+
+            if (ConfigurationViewModel.isMusicOn.value == true)
+            {
+                musicPlayerMenu?.start()
+            }
+            else
+                musicPlayerMenu?.pause()
         }
         binding.mainMenuLeaderboard.setOnClickListener{
             disableButtons()
-
-            if (configurationViewModel.isSoundOn.value == true)
-            {
-                audioPlayer?.start()
-                musicPlayer?.start()
-            }
-            else
-                musicPlayer?.pause()
+            wentToMenuActivity = true
 
             val intent = Intent(this, RankingActivity::class.java)
             startActivity(intent)
+
+            if (ConfigurationViewModel.isSoundOn.value == true)
+            {
+                audioPlayer?.start()
+                musicPlayerMenu?.start()
+            }
+            else
+                musicPlayerMenu?.pause()
         }
 
         binding.mainMenuExit.setOnClickListener{
             disableButtons()
+            wentToMenuActivity = false
 
             audioPlayer?.start()
 
@@ -105,23 +110,23 @@ class MainMenuActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        if (configurationViewModel.isMusicOn.value == true)
-        {
-            musicPlayer?.start()
-        }
-        else
-            musicPlayer?.pause()
-
         enableButtons()
+
+        musicPlayerMenu?.start()
+
+        wentToMenuActivity = false
+
     }
 
     override fun onPause() {
         super.onPause()
 
-        //musicPlayer?.pause()
+        if (!wentToMenuActivity)
+        {
+            musicPlayerMenu?.pause()
+        }
 
     }
-
 
     private fun enableButtons()
     {
