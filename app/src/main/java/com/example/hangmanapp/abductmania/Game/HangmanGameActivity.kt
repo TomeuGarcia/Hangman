@@ -1,19 +1,17 @@
 package com.example.hangmanapp.abductmania.Game
 
 import android.animation.ObjectAnimator
+import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.core.os.bundleOf
 import com.example.hangmanapp.R
 import com.example.hangmanapp.abductmania.Game.Fragments.*
+import com.example.hangmanapp.abductmania.MainMenu.MainMenuActivity
 import com.example.hangmanapp.databinding.ActivityHangmanGameBinding
 import com.google.android.gms.ads.*
-import com.google.android.gms.ads.rewarded.RewardItem
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
-import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -40,7 +38,6 @@ class HangmanGameActivity : AppCompatActivity()
 
     private val hangmanGameViewModel: HangmanGameViewModel by viewModels()
 
-
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
@@ -53,6 +50,8 @@ class HangmanGameActivity : AppCompatActivity()
         retryFragment = HangmanRetryGameFragment(this::onRetryWatchAd, this::onRetryGiveUp)
         youWinFragment = HangmanYouWinFragment()
         youLoseFragment = HangmanYouLoseFragment()
+
+        MainMenuActivity.musicPlayerGame = MediaPlayer.create(this, R.raw.game_song)
 
         MobileAds.initialize(this)
         loadRetryAd()
@@ -93,6 +92,10 @@ class HangmanGameActivity : AppCompatActivity()
             canRetry = false
             retryGame()
         }
+
+        MainMenuActivity.musicPlayerGame?.start()
+        MainMenuActivity.wentToMenuActivity = false
+
     }
 
 
@@ -171,6 +174,18 @@ class HangmanGameActivity : AppCompatActivity()
             }
             commit()
         }
+        MainMenuActivity.musicPlayerGame?.pause()
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        if (!MainMenuActivity.wentToMenuActivity)
+        {
+            MainMenuActivity.musicPlayerGame?.pause()
+        }
+
+        MainMenuActivity.wentToMenuActivity = false
     }
 
     private fun resumeGame()
@@ -182,6 +197,8 @@ class HangmanGameActivity : AppCompatActivity()
             hide(pauseFragment)
             commit()
         }
+
+        MainMenuActivity.musicPlayerGame?.start()
     }
 
     private fun onRetryWatchAd()
@@ -266,6 +283,8 @@ class HangmanGameActivity : AppCompatActivity()
 
     private fun showRetryAd()
     {
+        hangmanGameViewModel.analyticsLogAd(retryAd)
+
         if (retryAd == null)
         {
             retryGame()
@@ -276,8 +295,6 @@ class HangmanGameActivity : AppCompatActivity()
             OnUserEarnedRewardListener() {
                 canRetry = true
         })
-
-
     }
 
 }
