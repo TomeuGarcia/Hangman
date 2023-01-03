@@ -33,6 +33,9 @@ class RankingActivity : AppCompatActivity() {
         rankingViewModel.rankingUsersData.observe(this) {
             updateRanking(it)
         }
+        rankingViewModel.isRankingDataReady.observe(this) {
+            if (it) updateRanking(rankingViewModel.getArrayRankingData())
+        }
 
         rankingViewModel.loadRanking(this)
     }

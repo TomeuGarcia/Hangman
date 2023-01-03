@@ -49,7 +49,6 @@ class HangmanGameActivity : AppCompatActivity()
         setContentView(binding.root)
         supportActionBar?.hide()
 
-
         pauseFragment = HangmanGamePauseFragment(this::resumeGame)
         retryFragment = HangmanRetryGameFragment(this::onRetryWatchAd, this::onRetryGiveUp)
         youWinFragment = HangmanYouWinFragment()

@@ -6,15 +6,14 @@ import android.preference.PreferenceManager
 import android.util.Patterns
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.hangmanapp.abductmania.DatabaseUtils.DatabaseUtils
 import com.example.hangmanapp.abductmania.DatabaseUtils.User
+import com.example.hangmanapp.abductmania.DatabaseUtils.SharedPrefsUtils
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 class RegisterViewModel : ViewModel()
 {
-    private val USERS_COLLECTION = "users"
-    private val EMAIL = "email"
-
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
 
@@ -42,7 +41,7 @@ class RegisterViewModel : ViewModel()
             .addOnCompleteListener(contextActivity) {
                 if (it.isSuccessful)
                 {
-                    saveSharedPrefsRegisteredUser(contextActivity, email)
+                    saveSharedPrefsRegisteredUser(contextActivity, email, username)
                     fireStoreRegisterUser(username, email)
 
                     hasRegisterSucceeded.value = true
@@ -119,17 +118,18 @@ class RegisterViewModel : ViewModel()
         return null
     }
 
-    private fun saveSharedPrefsRegisteredUser(context : Context, email : String)
+    private fun saveSharedPrefsRegisteredUser(context : Context, email : String, username : String)
     {
         val shared = PreferenceManager.getDefaultSharedPreferences(context)
         val editor = shared.edit()
-        editor.putString(EMAIL, email)
+        editor.putString(SharedPrefsUtils.EMAIL, email)
+        editor.putString(SharedPrefsUtils.USERNAME, username)
         editor.apply()
     }
 
     private fun fireStoreRegisterUser(username : String, email :String)
     {
-        val usersCollection = firestore.collection(USERS_COLLECTION)
+        val usersCollection = firestore.collection(DatabaseUtils.USERS_COLLECTION)
         val user = User(username, email)
 
         usersCollection.document(user.username).set(user)
