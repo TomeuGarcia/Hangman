@@ -7,6 +7,8 @@ import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.hangmanapp.R
+import com.example.hangmanapp.abductmania.DatabaseUtils.DatabaseUtils
+import com.example.hangmanapp.abductmania.DatabaseUtils.SharedPrefsUtils
 import com.example.hangmanapp.abductmania.DatabaseUtils.User
 import com.example.hangmanapp.abductmania.MainMenu.MainMenuActivity
 import com.google.firebase.firestore.CollectionReference
@@ -14,12 +16,11 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class ConfigurationViewModel : ViewModel()
 {
-    private val USERS_COLLECTION = "users"
     private val LANGUAGE = "language"
     private val MUSIC = "music"
     private val SOUND = "sound"
     private val NOTIFICATIONS = "notifications"
-    private val EMAIL = "email"
+
 
 
     public val languages = arrayOf<String>("English", "Catalan", "Spanish")
@@ -48,14 +49,15 @@ class ConfigurationViewModel : ViewModel()
         isSoundOn.value = true
     }
 
+
     public fun loadData(context : Context)
     {
         firestore = FirebaseFirestore.getInstance()
-        usersCollection = firestore.collection(USERS_COLLECTION)
+        usersCollection = firestore.collection(DatabaseUtils.USERS_COLLECTION)
 
         // Shared prefs
         val shared = PreferenceManager.getDefaultSharedPreferences(context)
-        email = shared.getString(EMAIL, null)?: ""
+        email = shared.getString(SharedPrefsUtils.EMAIL, null) ?: ""
 
         updateValues(shared.getInt(LANGUAGE, 0),
                      shared.getBoolean(NOTIFICATIONS, true),

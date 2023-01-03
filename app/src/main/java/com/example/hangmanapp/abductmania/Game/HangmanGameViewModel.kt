@@ -4,11 +4,13 @@ package com.example.hangmanapp.abductmania.Game
 import android.content.Context
 import android.media.MediaPlayer
 import android.os.CountDownTimer
+import android.preference.PreferenceManager
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.os.bundleOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.hangmanapp.abductmania.DatabaseUtils.SharedPrefsUtils
 import com.example.hangmanapp.R
 import com.example.hangmanapp.abductmania.Config.ConfigurationViewModel
 import com.example.hangmanapp.abductmania.Game.Api.*
@@ -17,12 +19,15 @@ import com.example.hangmanapp.abductmania.Game.Drawings.HangmanDrawingBuilding
 import com.example.hangmanapp.abductmania.Game.Drawings.HangmanDrawingUFO
 import com.example.hangmanapp.abductmania.Game.Drawings.HangmanDrawingWaves
 import com.example.hangmanapp.abductmania.Game.Keyboard.GameKeyboardMap
+import com.example.hangmanapp.abductmania.Ranking.RankingDatabaseUtils
+import com.example.hangmanapp.abductmania.Ranking.RankingViewModel
 import com.example.hangmanapp.abductmania.MainMenu.MainMenuActivity
 import com.example.hangmanapp.databinding.ActivityHangmanGameBinding
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.database.ktx.database
 import kotlin.math.max
 
 class HangmanGameViewModel()
@@ -265,6 +270,8 @@ class HangmanGameViewModel()
 
         isPausingDisabled.value = true
         hasVictoryHappened.value = true
+
+        addUserScoreToRanking()
     }
 
     public fun doGameOver()
@@ -282,6 +289,7 @@ class HangmanGameViewModel()
         {
             hangmanDrawer.drawRemainingParts()
             getSolution() // this is async.... wait until solution received to do real GameOver
+            addUserScoreToRanking()
         }
 
         isPausingDisabled.value = true
@@ -358,4 +366,36 @@ class HangmanGameViewModel()
             )
         )
     }
+
+    private fun addUserScoreToRanking()
+    {
+        val rankingDbUtils = RankingDatabaseUtils()
+        val currentUserId = rankingDbUtils.currentUserId
+
+        val shared = PreferenceManager.getDefaultSharedPreferences(activityContext)
+        val currentUserUsername = shared.getString(SharedPrefsUtils.USERNAME, "Guest")
+
+
+        val rankingRef = Firebase.database(rankingDbUtils.DB_URL).getReference(rankingDbUtils.RANKING_DB_ID)
+
+        val request = rankingRef.child(rankingDbUtils.PLAYERSCORES_DB_ID).child(currentUserId).get()
+
+        request.addOnSuccessListener {
+
+            val currentScore = (it.child(rankingDbUtils.SCORE_DB_ID).value as Long?) ?: 0
+            val totalScore = currentScore + score.toLong()
+
+            val rankingPlayerScore = rankingRef.child(rankingDbUtils.PLAYERSCORES_DB_ID).child(currentUserId)
+
+            rankingPlayerScore.child(rankingDbUtils.USERNAME_DB_ID).setValue(currentUserUsername)
+            rankingPlayerScore.child(rankingDbUtils.SCORE_DB_ID).setValue(totalScore)
+        }
+
+        request.addOnFailureListener {
+            // ERROR
+            Toast.makeText(activityContext, "Couldn't add score to ranking", Toast.LENGTH_LONG).show()
+        }
+
+    }
+
 }
