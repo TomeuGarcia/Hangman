@@ -138,7 +138,7 @@ class ConfigurationActivity : AppCompatActivity()
 
         configurationViewModel.saveData(this)
 
-        MainMenuActivity.musicPlayerMenu?.pause()
+
     }
 
     override fun onResume() {

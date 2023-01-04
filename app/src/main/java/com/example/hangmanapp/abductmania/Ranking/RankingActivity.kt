@@ -28,6 +28,7 @@ class RankingActivity : AppCompatActivity() {
 
         binding.leaderboardBack.setOnClickListener{
             finish()
+            MainMenuActivity.audioPlayer?.start()
         }
 
         rankingViewModel.rankingUsersData.observe(this) {
@@ -49,5 +50,18 @@ class RankingActivity : AppCompatActivity() {
         }
 
         adapter.submitList(rankingImages)
+    }
+
+    override fun onPause()
+    {
+        super.onPause()
+
+        MainMenuActivity.musicPlayerMenu?.pause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        MainMenuActivity.musicPlayerMenu?.start()
     }
 }
