@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.example.hangmanapp.abductmania.Config.ConfigurationViewModel
 import com.example.hangmanapp.abductmania.Game.Drawings.HangmanDrawingUFO
 import com.example.hangmanapp.abductmania.MainMenu.MainMenuActivity
 import com.example.hangmanapp.databinding.FragmentHangmanYouLoseBinding
@@ -27,6 +28,9 @@ open class HangmanYouLoseFragment()
 
 
         binding.ylHomeIcon.setOnClickListener {
+            MainMenuActivity.audioPlayer?.start()
+            MainMenuActivity.musicPlayerMenu?.start()
+
             activity?.finish()
         }
 

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import com.example.hangmanapp.R
+import com.example.hangmanapp.abductmania.Config.ConfigurationViewModel
 import com.example.hangmanapp.abductmania.Game.Fragments.*
 import com.example.hangmanapp.abductmania.MainMenu.MainMenuActivity
 import com.example.hangmanapp.databinding.ActivityHangmanGameBinding
@@ -175,6 +176,7 @@ class HangmanGameActivity : AppCompatActivity()
             commit()
         }
         MainMenuActivity.musicPlayerGame?.pause()
+        MainMenuActivity.audioPlayer?.start()
     }
 
     override fun onPause() {
@@ -183,6 +185,8 @@ class HangmanGameActivity : AppCompatActivity()
         if (!MainMenuActivity.wentToMenuActivity)
         {
             MainMenuActivity.musicPlayerGame?.pause()
+            MainMenuActivity.musicPlayerMenu?.start()
+
         }
 
         MainMenuActivity.wentToMenuActivity = false
@@ -296,5 +300,4 @@ class HangmanGameActivity : AppCompatActivity()
                 canRetry = true
         })
     }
-
 }

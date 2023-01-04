@@ -196,8 +196,13 @@ class HangmanGameViewModel()
         gameKeyboardMap.disableRemainingLetterButtons()
         hangmanApiCommunication.guessLetter(gameToken, letter)
 
-        MainMenuActivity.audioPlayer = MediaPlayer.create(activityContext, R.raw.button_click)
-        MainMenuActivity.audioPlayer?.start()
+        if (ConfigurationViewModel.isSoundOn.value == true)
+        {
+            MainMenuActivity.audioPlayer?.start()
+        }
+        else
+            MainMenuActivity.audioPlayer?.pause()
+
     }
     private fun onGuessLetterResponse(hangmanLetterGuessResponse : HangmanLetterGuessResponse,
                                       letter : Char)

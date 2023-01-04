@@ -53,10 +53,10 @@ class MainMenuActivity : AppCompatActivity() {
 
             val intent = Intent(this, HangmanGameActivity::class.java)
             startActivity(intent)
+            audioPlayer?.start()
 
             if (ConfigurationViewModel.isSoundOn.value == true)
             {
-                audioPlayer?.start()
                 musicPlayerMenu?.stop()
             }
             else
@@ -88,6 +88,13 @@ class MainMenuActivity : AppCompatActivity() {
             if (ConfigurationViewModel.isSoundOn.value == true)
             {
                 audioPlayer?.start()
+            }
+            else
+                audioPlayer?.pause()
+
+
+            if (ConfigurationViewModel.isMusicOn.value == true)
+            {
                 musicPlayerMenu?.start()
             }
             else
@@ -156,8 +163,8 @@ class MainMenuActivity : AppCompatActivity() {
             val token = task.result
             println(token)
             // Log and toast
-            val msg = "SOMETHING"
-            Toast.makeText(this,msg, Toast.LENGTH_SHORT).show()
+            //val msg = "Token Recived!"
+            //Toast.makeText(this,msg, Toast.LENGTH_SHORT).show()
         })
     }
 
