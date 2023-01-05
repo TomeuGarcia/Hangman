@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.hangmanapp.abductmania.Config.ConfigurationViewModel
 import com.example.hangmanapp.abductmania.Game.Drawings.HangmanDrawingUFO
 import com.example.hangmanapp.abductmania.MainMenu.MainMenuActivity
 import com.example.hangmanapp.databinding.FragmentHangmanYouWinBinding
@@ -25,6 +26,9 @@ open class HangmanYouWinFragment()
 
 
         binding.ywHomeIcon.setOnClickListener {
+            MainMenuActivity.audioPlayer?.start()
+            MainMenuActivity.musicPlayerMenu?.start()
+
             activity?.finish()
         }
 

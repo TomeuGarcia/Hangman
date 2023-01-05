@@ -1,6 +1,5 @@
 package com.example.hangmanapp.abductmania.Config
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
@@ -15,7 +14,6 @@ class ConfigurationActivity : AppCompatActivity()
     private val configurationViewModel : ConfigurationViewModel by viewModels()
 
 
-
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
@@ -26,23 +24,47 @@ class ConfigurationActivity : AppCompatActivity()
 
         configurationViewModel.loadData(this)
 
+
         configurationViewModel.currentLang.observe(this) {
             binding.languageButton.text =
                 "Language: " + configurationViewModel.languages[it ?: 0]
         }
 
-        configurationViewModel.isMusicOn.observe(this) {
+        configurationViewModel.areNotificationsOn.observe(this) {
+            it?.apply {
+                if (this) binding.notificationsButton.text = "Notifications: ON"
+                else binding.notificationsButton.text = "Notifications: OFF"
+            }
+
+        }
+
+        ConfigurationViewModel.isMusicOn.observe(this) {
             it?.apply {
                 if (this) binding.musicButton.text = "Music: ON"
                 else binding.musicButton.text = "Music: OFF"
+
             }
+
+            if (ConfigurationViewModel.isSoundOn.value == true)
+            {
+                MainMenuActivity.audioPlayer?.start()
+            }
+            else
+                MainMenuActivity.audioPlayer?.pause()
         }
 
-        configurationViewModel.isSoundOn.observe(this) {
+        ConfigurationViewModel.isSoundOn.observe(this) {
             it?.apply {
                 if (this) binding.soundButton.text = "Sound: ON"
                 else binding.soundButton.text = "Sound: OFF"
             }
+
+            if (ConfigurationViewModel.isSoundOn.value == true)
+            {
+                MainMenuActivity.audioPlayer?.start()
+            }
+            else
+                MainMenuActivity.audioPlayer?.pause()
         }
 
 
@@ -50,21 +72,62 @@ class ConfigurationActivity : AppCompatActivity()
         binding.backButtonImage.setOnClickListener {
             // Go To Main Menu
             finish()
+
+            if (ConfigurationViewModel.isSoundOn.value == true)
+            {
+                MainMenuActivity.audioPlayer?.start()
+            }
+            else
+                MainMenuActivity.audioPlayer?.pause()
         }
 
         binding.languageButton.setOnClickListener {
             // Change Current Language
             configurationViewModel.iterateCurrentLanguage()
+
+            if (ConfigurationViewModel.isSoundOn.value == true)
+            {
+                MainMenuActivity.audioPlayer?.start()
+            }
+            else
+                MainMenuActivity.audioPlayer?.pause()
+        }
+
+        binding.notificationsButton.setOnClickListener {
+            // Turn On/Off Notifications
+            configurationViewModel.toggleNotifications()
+
+            if (ConfigurationViewModel.isSoundOn.value == true)
+            {
+                MainMenuActivity.audioPlayer?.start()
+            }
+            else
+                MainMenuActivity.audioPlayer?.pause()
         }
 
         binding.musicButton.setOnClickListener {
             // Turn On/Off Music
-            configurationViewModel.toggleMusic()
+            configurationViewModel.toggleMusic(this)
+
+            if (ConfigurationViewModel.isSoundOn.value == true)
+            {
+                MainMenuActivity.audioPlayer?.start()
+            }
+            else
+                MainMenuActivity.audioPlayer?.pause()
         }
 
         binding.soundButton.setOnClickListener {
             // Turn On/Off Sound
-            configurationViewModel.toggleSound()
+            configurationViewModel.toggleSound(this)
+
+            if (ConfigurationViewModel.isSoundOn.value == true)
+            {
+                MainMenuActivity.audioPlayer?.start()
+            }
+            else
+                MainMenuActivity.audioPlayer?.pause()
+
         }
     }
 
@@ -74,7 +137,13 @@ class ConfigurationActivity : AppCompatActivity()
         super.onPause()
 
         configurationViewModel.saveData(this)
+
+
     }
 
+    override fun onResume() {
+        super.onResume()
 
+        MainMenuActivity.musicPlayerMenu?.start()
+    }
 }

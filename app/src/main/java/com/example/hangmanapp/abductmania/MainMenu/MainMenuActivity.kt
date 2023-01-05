@@ -1,31 +1,34 @@
 package com.example.hangmanapp.abductmania.MainMenu
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.content.Context
 import android.content.Intent
+import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import com.example.hangmanapp.R
 import com.example.hangmanapp.abductmania.Config.ConfigurationActivity
+import com.example.hangmanapp.abductmania.Config.ConfigurationViewModel
 import com.example.hangmanapp.abductmania.Game.HangmanGameActivity
 import com.example.hangmanapp.abductmania.Ranking.RankingActivity
 import com.example.hangmanapp.databinding.ActivityMainMenuBinding
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.messaging.FirebaseMessaging
-import org.checkerframework.common.returnsreceiver.qual.This
 
 class MainMenuActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainMenuBinding
     private lateinit var firebaseAuth: FirebaseAuth
 
+
+
     companion object {
         const val CHANNEL_ID = "NOTIFICATIONS_CHANNEL_CONTACTS"
+        var musicPlayerMenu : MediaPlayer? = null
+        var audioPlayer : MediaPlayer? = null
+        var wentToMenuActivity : Boolean = false
+        var musicPlayerGame : MediaPlayer? = null
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?)
@@ -38,39 +41,99 @@ class MainMenuActivity : AppCompatActivity() {
 
         firebaseAuth = FirebaseAuth.getInstance()
 
+        musicPlayerMenu = MediaPlayer.create(this, R.raw.menus_song)
+        audioPlayer = MediaPlayer.create(this, R.raw.button_click)
+
+        musicPlayerMenu?.start()
+
         binding.mainMenuPlay.setOnClickListener{
             disableButtons()
+            wentToMenuActivity = false
+
+
             val intent = Intent(this, HangmanGameActivity::class.java)
             startActivity(intent)
+            audioPlayer?.start()
+
+            if (ConfigurationViewModel.isSoundOn.value == true)
+            {
+                musicPlayerMenu?.stop()
+            }
+            else
+                musicPlayerMenu?.pause()
+
         }
 
         binding.mainMenuSettings.setOnClickListener{
             disableButtons()
+            wentToMenuActivity = true
+
             val intent = Intent(this, ConfigurationActivity::class.java)
             startActivity(intent)
+
+            if (ConfigurationViewModel.isMusicOn.value == true)
+            {
+                musicPlayerMenu?.start()
+            }
+            else
+                musicPlayerMenu?.pause()
         }
         binding.mainMenuLeaderboard.setOnClickListener{
             disableButtons()
+            wentToMenuActivity = true
+
             val intent = Intent(this, RankingActivity::class.java)
             startActivity(intent)
+
+            if (ConfigurationViewModel.isSoundOn.value == true)
+            {
+                audioPlayer?.start()
+            }
+            else
+                audioPlayer?.pause()
+
+
+            if (ConfigurationViewModel.isMusicOn.value == true)
+            {
+                musicPlayerMenu?.start()
+            }
+            else
+                musicPlayerMenu?.pause()
         }
 
         binding.mainMenuExit.setOnClickListener{
             disableButtons()
+            wentToMenuActivity = false
+
+            audioPlayer?.start()
+
             firebaseAuth.signOut()
             finish()
         }
 
         fireBaseNotification()
-
     }
 
     override fun onResume() {
         super.onResume()
 
         enableButtons()
+
+        musicPlayerMenu?.start()
+
+        wentToMenuActivity = false
+
     }
 
+    override fun onPause() {
+        super.onPause()
+
+        if (!wentToMenuActivity)
+        {
+            musicPlayerMenu?.pause()
+        }
+
+    }
 
     private fun enableButtons()
     {
@@ -100,8 +163,8 @@ class MainMenuActivity : AppCompatActivity() {
             val token = task.result
             println(token)
             // Log and toast
-            val msg = "SOMETHING"
-            Toast.makeText(this,msg, Toast.LENGTH_SHORT).show()
+            //val msg = "Token Recived!"
+            //Toast.makeText(this,msg, Toast.LENGTH_SHORT).show()
         })
     }
 

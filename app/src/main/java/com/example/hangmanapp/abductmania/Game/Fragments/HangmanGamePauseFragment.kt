@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.hangmanapp.abductmania.Config.ConfigurationViewModel
 import com.example.hangmanapp.abductmania.MainMenu.MainMenuActivity
 import com.example.hangmanapp.databinding.FragmentHangmanGamePauseBinding
 
@@ -22,11 +23,17 @@ class HangmanGamePauseFragment(private val backToPlayCallback : () -> Unit)
         binding = FragmentHangmanGamePauseBinding.inflate(inflater, container, false)
 
         binding.pPlayIcon.setOnClickListener {
+            MainMenuActivity.audioPlayer?.start()
+
             backToPlayCallback()
         }
 
         binding.pHomeIcon.setOnClickListener {
+
             activity?.finish()
+
+            MainMenuActivity.audioPlayer?.start()
+            MainMenuActivity.musicPlayerMenu?.start()
         }
 
         binding.pauseBackgroundImage.setOnClickListener {  }
