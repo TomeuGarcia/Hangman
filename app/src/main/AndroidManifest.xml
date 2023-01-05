@@ -22,7 +22,9 @@
 
         <activity
             android:name=".abductmania.SplashScreen.SplashScreenActivity"
-            android:exported="true">
+            android:exported="true"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -35,7 +37,9 @@
         <activity
             android:name=".abductmania.Login.LoginActivity"
             android:windowSoftInputMode="stateUnchanged|adjustResize"
-            android:exported="false">
+            android:exported="false"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="false" />
@@ -43,35 +47,45 @@
         <activity
             android:name=".abductmania.Register.RegisterActivity"
             android:windowSoftInputMode="stateUnchanged|adjustResize"
-            android:exported="false">
+            android:exported="false"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".abductmania.MainMenu.MainMenuActivity"
-            android:exported="false">
+            android:exported="false"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="false" />
         </activity>
         <activity
             android:name=".abductmania.Config.ConfigurationActivity"
-            android:exported="false">
+            android:exported="false"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="false" />
         </activity>
         <activity
             android:name=".abductmania.Ranking.RankingActivity"
-            android:exported="false">
+            android:exported="false"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="false" />
         </activity>
         <activity
             android:name=".abductmania.Game.HangmanGameActivity"
-            android:exported="false">
+            android:exported="false"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
 
             <meta-data
                 android:name="android.app.lib_name"
