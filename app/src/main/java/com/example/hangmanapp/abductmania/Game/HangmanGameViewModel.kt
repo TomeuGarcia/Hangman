@@ -2,16 +2,13 @@ package com.example.hangmanapp.abductmania.Game
 
 
 import android.content.Context
-import android.media.MediaPlayer
 import android.os.CountDownTimer
 import android.preference.PreferenceManager
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.core.os.bundleOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.hangmanapp.abductmania.DatabaseUtils.SharedPrefsUtils
-import com.example.hangmanapp.R
 import com.example.hangmanapp.abductmania.Config.ConfigurationViewModel
 import com.example.hangmanapp.abductmania.Game.Api.*
 import com.example.hangmanapp.abductmania.Game.Drawings.HangmanDrawer
@@ -20,7 +17,6 @@ import com.example.hangmanapp.abductmania.Game.Drawings.HangmanDrawingUFO
 import com.example.hangmanapp.abductmania.Game.Drawings.HangmanDrawingWaves
 import com.example.hangmanapp.abductmania.Game.Keyboard.GameKeyboardMap
 import com.example.hangmanapp.abductmania.Ranking.RankingDatabaseUtils
-import com.example.hangmanapp.abductmania.Ranking.RankingViewModel
 import com.example.hangmanapp.abductmania.MainMenu.MainMenuActivity
 import com.example.hangmanapp.databinding.ActivityHangmanGameBinding
 import com.google.android.gms.ads.rewarded.RewardedAd
@@ -198,10 +194,10 @@ class HangmanGameViewModel()
 
         if (ConfigurationViewModel.isSoundOn.value == true)
         {
-            MainMenuActivity.audioPlayer?.start()
+            MainMenuActivity.buttonSfxMP?.start()
         }
         else
-            MainMenuActivity.audioPlayer?.pause()
+            MainMenuActivity.buttonSfxMP?.pause()
 
     }
     private fun onGuessLetterResponse(hangmanLetterGuessResponse : HangmanLetterGuessResponse,
@@ -378,7 +374,7 @@ class HangmanGameViewModel()
         val currentUserId = rankingDbUtils.currentUserId
 
         val shared = PreferenceManager.getDefaultSharedPreferences(activityContext)
-        val currentUserUsername = shared.getString(SharedPrefsUtils.USERNAME, "Guest")
+        val currentUserUsername = shared.getString(SharedPrefsUtils.USERNAME, rankingDbUtils.getGuestUsername())
 
 
         val rankingRef = Firebase.database(rankingDbUtils.DB_URL).getReference(rankingDbUtils.RANKING_DB_ID)

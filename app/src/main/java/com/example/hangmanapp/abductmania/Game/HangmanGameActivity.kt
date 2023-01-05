@@ -4,9 +4,9 @@ import android.animation.ObjectAnimator
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import com.example.hangmanapp.R
-import com.example.hangmanapp.abductmania.Config.ConfigurationViewModel
 import com.example.hangmanapp.abductmania.Game.Fragments.*
 import com.example.hangmanapp.abductmania.MainMenu.MainMenuActivity
 import com.example.hangmanapp.databinding.ActivityHangmanGameBinding
@@ -52,7 +52,7 @@ class HangmanGameActivity : AppCompatActivity()
         youWinFragment = HangmanYouWinFragment()
         youLoseFragment = HangmanYouLoseFragment()
 
-        MainMenuActivity.musicPlayerGame = MediaPlayer.create(this, R.raw.game_song)
+        MainMenuActivity.gameMusicMP = MediaPlayer.create(this, R.raw.game_song)
 
         MobileAds.initialize(this)
         loadRetryAd()
@@ -94,9 +94,14 @@ class HangmanGameActivity : AppCompatActivity()
             retryGame()
         }
 
-        MainMenuActivity.musicPlayerGame?.start()
-        MainMenuActivity.wentToMenuActivity = false
+        MainMenuActivity.gameMusicMP?.start()
+        MainMenuActivity.menuMusicMP?.pause()
+    }
 
+    override fun onPause() {
+        super.onPause()
+
+        MainMenuActivity.gameMusicMP?.pause()
     }
 
 
@@ -175,21 +180,8 @@ class HangmanGameActivity : AppCompatActivity()
             }
             commit()
         }
-        MainMenuActivity.musicPlayerGame?.pause()
-        MainMenuActivity.audioPlayer?.start()
-    }
-
-    override fun onPause() {
-        super.onPause()
-
-        if (!MainMenuActivity.wentToMenuActivity)
-        {
-            MainMenuActivity.musicPlayerGame?.pause()
-            MainMenuActivity.musicPlayerMenu?.start()
-
-        }
-
-        MainMenuActivity.wentToMenuActivity = false
+        MainMenuActivity.gameMusicMP?.pause()
+        MainMenuActivity.buttonSfxMP?.start()
     }
 
     private fun resumeGame()
@@ -202,16 +194,13 @@ class HangmanGameActivity : AppCompatActivity()
             commit()
         }
 
-        MainMenuActivity.musicPlayerGame?.start()
+        MainMenuActivity.gameMusicMP?.start()
     }
 
     private fun onRetryWatchAd()
     {
-        // TODO make ad here
         hangmanGameViewModel.pauseCountDownTimer()
         showRetryAd()
-
-        //retryGame() // TODO call this after watching ad
     }
 
     private fun retryGame()

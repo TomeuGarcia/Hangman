@@ -46,9 +46,6 @@ class HangmanRetryGameFragment(private val onWatchAdCallback : () -> Unit,
             onGiveUpCallback()
             disableButtons()
             showProgress()
-
-            MainMenuActivity.audioPlayer?.start()
-            MainMenuActivity.musicPlayerMenu?.start()
         }
 
         hideProgress()
