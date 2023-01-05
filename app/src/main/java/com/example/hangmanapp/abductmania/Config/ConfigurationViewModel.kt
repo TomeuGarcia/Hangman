@@ -1,7 +1,6 @@
 package com.example.hangmanapp.abductmania.Config
 
 import android.content.Context
-import android.media.MediaPlayer
 import android.preference.PreferenceManager
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
@@ -152,13 +151,13 @@ class ConfigurationViewModel : ViewModel()
 
         if (isMusicOn.value == true)
         {
-            MainMenuActivity.musicPlayerMenu?.setVolume(1.0f,1.0f)
-            MainMenuActivity.musicPlayerGame?.setVolume(1.0f,1.0f)
+            MainMenuActivity.menuMusicMP?.setVolume(1.0f,1.0f)
+            MainMenuActivity.gameMusicMP?.setVolume(1.0f,1.0f)
         }
         else
         {
-            MainMenuActivity.musicPlayerMenu?.setVolume(0.0f, 0.0f)
-            MainMenuActivity.musicPlayerGame?.setVolume(0.0f, 0.0f)
+            MainMenuActivity.menuMusicMP?.setVolume(0.0f, 0.0f)
+            MainMenuActivity.gameMusicMP?.setVolume(0.0f, 0.0f)
         }
     }
 
@@ -168,11 +167,11 @@ class ConfigurationViewModel : ViewModel()
 
         if (isSoundOn.value == true)
         {
-            MainMenuActivity.audioPlayer?.setVolume(1.0f,1.0f)
+            MainMenuActivity.buttonSfxMP?.setVolume(1.0f,1.0f)
         }
         else
         {
-            MainMenuActivity.audioPlayer?.setVolume(0.0f, 0.0f)
+            MainMenuActivity.buttonSfxMP?.setVolume(0.0f, 0.0f)
         }
     }
 

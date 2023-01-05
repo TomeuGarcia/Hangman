@@ -9,6 +9,7 @@ import com.example.hangmanapp.R
 import com.example.hangmanapp.abductmania.DatabaseUtils.DatabaseUtils
 import com.example.hangmanapp.abductmania.DatabaseUtils.SharedPrefsUtils
 import com.example.hangmanapp.abductmania.DatabaseUtils.User
+import com.example.hangmanapp.abductmania.Ranking.RankingDatabaseUtils
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -108,9 +109,11 @@ class LoginViewModel : ViewModel()
 
     public fun saveSharedPrefsGuestUser(context : Context)
     {
+        val rankingDbUtils = RankingDatabaseUtils()
+
         val shared = PreferenceManager.getDefaultSharedPreferences(context)
         val editor = shared.edit()
-        editor.putString(SharedPrefsUtils.USERNAME, "Guest")
+        editor.putString(SharedPrefsUtils.USERNAME, rankingDbUtils.getGuestUsername())
         editor.apply()
     }
 

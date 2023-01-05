@@ -13,6 +13,9 @@ class RankingDatabaseUtils
     public val currentUserId: String
         get() = FirebaseAuth.getInstance().currentUser?.uid.toString()
 
-
+    public fun getGuestUsername() : String
+    {
+        return "Guest-"+currentUserId.substring(0, 8)
+    }
 
 }

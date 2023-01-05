@@ -47,10 +47,10 @@ class ConfigurationActivity : AppCompatActivity()
 
             if (ConfigurationViewModel.isSoundOn.value == true)
             {
-                MainMenuActivity.audioPlayer?.start()
+                MainMenuActivity.buttonSfxMP?.start()
             }
             else
-                MainMenuActivity.audioPlayer?.pause()
+                MainMenuActivity.buttonSfxMP?.pause()
         }
 
         ConfigurationViewModel.isSoundOn.observe(this) {
@@ -61,10 +61,10 @@ class ConfigurationActivity : AppCompatActivity()
 
             if (ConfigurationViewModel.isSoundOn.value == true)
             {
-                MainMenuActivity.audioPlayer?.start()
+                MainMenuActivity.buttonSfxMP?.start()
             }
             else
-                MainMenuActivity.audioPlayer?.pause()
+                MainMenuActivity.buttonSfxMP?.pause()
         }
 
 
@@ -75,10 +75,10 @@ class ConfigurationActivity : AppCompatActivity()
 
             if (ConfigurationViewModel.isSoundOn.value == true)
             {
-                MainMenuActivity.audioPlayer?.start()
+                MainMenuActivity.buttonSfxMP?.start()
             }
             else
-                MainMenuActivity.audioPlayer?.pause()
+                MainMenuActivity.buttonSfxMP?.pause()
         }
 
         binding.languageButton.setOnClickListener {
@@ -87,10 +87,10 @@ class ConfigurationActivity : AppCompatActivity()
 
             if (ConfigurationViewModel.isSoundOn.value == true)
             {
-                MainMenuActivity.audioPlayer?.start()
+                MainMenuActivity.buttonSfxMP?.start()
             }
             else
-                MainMenuActivity.audioPlayer?.pause()
+                MainMenuActivity.buttonSfxMP?.pause()
         }
 
         binding.notificationsButton.setOnClickListener {
@@ -99,10 +99,10 @@ class ConfigurationActivity : AppCompatActivity()
 
             if (ConfigurationViewModel.isSoundOn.value == true)
             {
-                MainMenuActivity.audioPlayer?.start()
+                MainMenuActivity.buttonSfxMP?.start()
             }
             else
-                MainMenuActivity.audioPlayer?.pause()
+                MainMenuActivity.buttonSfxMP?.pause()
         }
 
         binding.musicButton.setOnClickListener {
@@ -111,10 +111,10 @@ class ConfigurationActivity : AppCompatActivity()
 
             if (ConfigurationViewModel.isSoundOn.value == true)
             {
-                MainMenuActivity.audioPlayer?.start()
+                MainMenuActivity.buttonSfxMP?.start()
             }
             else
-                MainMenuActivity.audioPlayer?.pause()
+                MainMenuActivity.buttonSfxMP?.pause()
         }
 
         binding.soundButton.setOnClickListener {
@@ -123,10 +123,10 @@ class ConfigurationActivity : AppCompatActivity()
 
             if (ConfigurationViewModel.isSoundOn.value == true)
             {
-                MainMenuActivity.audioPlayer?.start()
+                MainMenuActivity.buttonSfxMP?.start()
             }
             else
-                MainMenuActivity.audioPlayer?.pause()
+                MainMenuActivity.buttonSfxMP?.pause()
 
         }
     }
@@ -144,6 +144,6 @@ class ConfigurationActivity : AppCompatActivity()
     override fun onResume() {
         super.onResume()
 
-        MainMenuActivity.musicPlayerMenu?.start()
+        MainMenuActivity.menuMusicMP?.start()
     }
 }
