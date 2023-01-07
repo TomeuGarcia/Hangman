@@ -2,6 +2,8 @@ package com.example.hangmanapp.abductmania.Game.Drawings
 
 import android.view.View
 import android.widget.ImageView
+import com.example.hangmanapp.abductmania.Game.HangmanGameViewModel
+import com.example.hangmanapp.abductmania.MainMenu.MainMenuActivity
 import kotlin.random.Random
 
 class HangmanDrawingBuilding(image : ImageView,
@@ -30,6 +32,7 @@ class HangmanDrawingBuilding(image : ImageView,
             .setDuration(300).withEndAction {
                 image.visibility = endVisibility
             }
+        HangmanGameViewModel.buildingSfxMP?.start()
     }
 
     private fun getRandomRotationValue() : Float
