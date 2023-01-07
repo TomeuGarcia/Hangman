@@ -139,7 +139,7 @@ class LoginActivity : AppCompatActivity()
         binding.guestText.setTextColor(getColor(R.color.green_strong_selected))
         binding.loadingBar.visibility = View.VISIBLE
 
-        loginViewModel.signInAsGuest(this::startMainMenuActivity, this::displayErrorUsernameOrPassword)
+        loginViewModel.signInAsGuest(this, this::startMainMenuActivity, this::displayErrorUsernameOrPassword)
     }
 
 }

@@ -1,6 +1,5 @@
 package com.example.hangmanapp.abductmania.Game.Fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -25,12 +24,18 @@ open class HangmanYouWinFragment()
 
 
         binding.ywHomeIcon.setOnClickListener {
+            MainMenuActivity.buttonSfxMP?.start()
+            //MainMenuActivity.menuMusicMP?.start()
+            MainMenuActivity.gameMusicMP?.pause()
+
             activity?.finish()
         }
 
         binding.ywReplayIcon.setOnClickListener {
-            startActivity(activity?.intent)
+            MainMenuActivity.buttonSfxMP?.start()
+
             activity?.finish()
+            startActivity(activity?.intent)
         }
 
         drawingUFOs = HangmanDrawingUFO(binding.ywUfosImage, 3000, 30f)

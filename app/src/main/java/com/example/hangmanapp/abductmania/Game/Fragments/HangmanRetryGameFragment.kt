@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import com.example.hangmanapp.abductmania.Config.ConfigurationViewModel
+import com.example.hangmanapp.abductmania.MainMenu.MainMenuActivity
 import com.example.hangmanapp.databinding.FragmentHangmanRetryGameBinding
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
