@@ -9,6 +9,7 @@ import com.example.hangmanapp.R
 import com.example.hangmanapp.abductmania.DatabaseUtils.DatabaseUtils
 import com.example.hangmanapp.abductmania.DatabaseUtils.SharedPrefsUtils
 import com.example.hangmanapp.abductmania.DatabaseUtils.User
+import com.example.hangmanapp.abductmania.Game.HangmanGameViewModel
 import com.example.hangmanapp.abductmania.MainMenu.MainMenuActivity
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -168,10 +169,22 @@ class ConfigurationViewModel : ViewModel()
         if (isSoundOn.value == true)
         {
             MainMenuActivity.buttonSfxMP?.setVolume(1.0f,1.0f)
+            HangmanGameViewModel.victorySfxMP?.setVolume(1.0f,1.0f)
+            HangmanGameViewModel.abductorSfxMP?.setVolume(1.0f,1.0f)
+            HangmanGameViewModel.appearSfxMP?.setVolume(1.0f,1.0f)
+            HangmanGameViewModel.gameOverSfxMP?.setVolume(1.0f,1.0f)
+            HangmanGameViewModel.buildingSfxMP?.setVolume(1.0f,1.0f)
+            HangmanGameViewModel.correctLetterSfxMP?.setVolume(1.0f,1.0f)
         }
         else
         {
             MainMenuActivity.buttonSfxMP?.setVolume(0.0f, 0.0f)
+            HangmanGameViewModel.victorySfxMP?.setVolume(0.0f,0.0f)
+            HangmanGameViewModel.abductorSfxMP?.setVolume(0.0f,0.0f)
+            HangmanGameViewModel.appearSfxMP?.setVolume(0.0f,0.0f)
+            HangmanGameViewModel.gameOverSfxMP?.setVolume(0.0f,0.0f)
+            HangmanGameViewModel.buildingSfxMP?.setVolume(0.0f,0.0f)
+            HangmanGameViewModel.correctLetterSfxMP?.setVolume(0.0f,0.0f)
         }
     }
 

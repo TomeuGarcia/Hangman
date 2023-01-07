@@ -2,12 +2,14 @@ package com.example.hangmanapp.abductmania.Game
 
 
 import android.content.Context
+import android.media.MediaPlayer
 import android.os.CountDownTimer
 import android.preference.PreferenceManager
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.hangmanapp.R
 import com.example.hangmanapp.abductmania.DatabaseUtils.SharedPrefsUtils
 import com.example.hangmanapp.abductmania.Config.ConfigurationViewModel
 import com.example.hangmanapp.abductmania.Game.Api.*
@@ -73,6 +75,14 @@ class HangmanGameViewModel()
     private val LEVEL_START = "level_start"
     private val firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
 
+    companion object {
+        var victorySfxMP : MediaPlayer? = null
+        var gameOverSfxMP : MediaPlayer? = null
+        var correctLetterSfxMP : MediaPlayer? = null
+        var abductorSfxMP : MediaPlayer? = null
+        var appearSfxMP : MediaPlayer? = null
+        var buildingSfxMP : MediaPlayer? = null
+    }
 
     public fun createGame(context: Context, binding: ActivityHangmanGameBinding)
     {
@@ -87,6 +97,13 @@ class HangmanGameViewModel()
         }
 
         activityContext = context
+
+        victorySfxMP = MediaPlayer.create(activityContext, R.raw.victory)
+        gameOverSfxMP = MediaPlayer.create(activityContext, R.raw.game_over)
+        correctLetterSfxMP = MediaPlayer.create(activityContext, R.raw.correct_letter)
+        abductorSfxMP = MediaPlayer.create(activityContext, R.raw.ufo_abductor)
+        appearSfxMP = MediaPlayer.create(activityContext, R.raw.ufo_appear)
+        buildingSfxMP = MediaPlayer.create(activityContext, R.raw.ufo_building)
 
         hangmanWord.value = ""
         countDownCurrentTimeSeconds.value = COUNTDOWN_TOTAL_TIME_MILLISECONDS / 1000
@@ -195,14 +212,6 @@ class HangmanGameViewModel()
     {
         gameKeyboardMap.disableRemainingLetterButtons()
         hangmanApiCommunication.guessLetter(gameToken, letter)
-
-        if (ConfigurationViewModel.isSoundOn.value == true)
-        {
-            MainMenuActivity.buttonSfxMP?.start()
-        }
-        else
-            MainMenuActivity.buttonSfxMP?.pause()
-
     }
     private fun onGuessLetterResponse(hangmanLetterGuessResponse : HangmanLetterGuessResponse,
                                       letter : Char)
@@ -232,17 +241,21 @@ class HangmanGameViewModel()
         gameKeyboardMap.setLetterCorrect(letter)
         score += CORRECT_LETTER_POINTS
 
+        correctLetterSfxMP?.start()
+
+
         if (hasGuessedAllLetters())
             doVictory()
         else
             gameKeyboardMap.reenableRemainingLetterButtons()
-
     }
 
     private fun onGuessedLetterIncorrectly(letter : Char)
     {
         gameKeyboardMap.setLetterWrong(letter)
         score -= WRONG_LETTER_POINTS
+
+        MainMenuActivity.buttonSfxMP?.start()
 
         hangmanDrawer.drawPart(wrongGuessesCount)
 
@@ -276,6 +289,8 @@ class HangmanGameViewModel()
         isPausingDisabled.value = true
         hasVictoryHappened.value = true
 
+        victorySfxMP?.start()
+
         addUserScoreToRanking()
     }
 
@@ -296,6 +311,9 @@ class HangmanGameViewModel()
             getSolution() // this is async.... wait until solution received to do real GameOver
             addUserScoreToRanking()
         }
+
+        gameOverSfxMP?.start()
+
 
         isPausingDisabled.value = true
     }
