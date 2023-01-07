@@ -11,6 +11,7 @@ import com.example.hangmanapp.abductmania.MainMenu.MainMenuActivity
 import com.example.hangmanapp.databinding.FragmentHangmanRetryGameBinding
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.ktx.Firebase
 
 
@@ -78,11 +79,14 @@ class HangmanRetryGameFragment(private val onWatchAdCallback : () -> Unit,
 
     private fun analyticsPlayerChoice(showAd : Boolean)
     {
-        firebaseAnalytics.logEvent(
+        /*firebaseAnalytics.logEvent(
             NEW_CHANCE,
             bundleOf(
                 NEW_CHANCE_PARAM to showAd
             )
-        )
+        )*/
+        firebaseAnalytics.logEvent(NEW_CHANCE) {
+            param(NEW_CHANCE_PARAM, if (showAd) "Watch ad" else "Give up")
+        }
     }
 }

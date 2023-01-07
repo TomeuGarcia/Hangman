@@ -22,6 +22,7 @@ import com.example.hangmanapp.databinding.ActivityHangmanGameBinding
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.database.ktx.database
 import kotlin.math.max
@@ -75,12 +76,15 @@ class HangmanGameViewModel()
 
     public fun createGame(context: Context, binding: ActivityHangmanGameBinding)
     {
-        firebaseAnalytics.logEvent(
+        /*firebaseAnalytics.logEvent(
             LEVEL_START,
             bundleOf(
                 LEVEL_START_PARAM to true
             )
-        )
+        )*/
+        firebaseAnalytics.logEvent(LEVEL_START) {
+            param(LEVEL_START_PARAM, "true")
+        }
 
         activityContext = context
 
@@ -360,12 +364,15 @@ class HangmanGameViewModel()
 
     public fun analyticsLogAd(ad : RewardedAd?)
     {
-        firebaseAnalytics.logEvent(
+        /*firebaseAnalytics.logEvent(
             SHOW_AD,
             bundleOf(
                 LOADED_AD_PARAM to (ad != null)
             )
-        )
+        )*/
+        firebaseAnalytics.logEvent(SHOW_AD) {
+            param(LOADED_AD_PARAM, bundleOf("Did ad load? " to (ad != null)))
+        }
     }
 
     private fun addUserScoreToRanking()
