@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModel
 import com.example.hangmanapp.R
 import com.example.hangmanapp.abductmania.Config.ConfigurationViewModel
 import com.example.hangmanapp.abductmania.Game.HangmanGameViewModel
+import com.example.hangmanapp.abductmania.Notifications.NotificationCreator
+import com.example.hangmanapp.abductmania.Notifications.NotificationReceiver
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.messaging.FirebaseMessaging
@@ -15,6 +17,8 @@ import com.google.firebase.messaging.FirebaseMessaging
 class MainMenuViewModel : ViewModel()
 {
     private lateinit var firebaseAuth: FirebaseAuth
+    private val notificationCreator : NotificationCreator = NotificationCreator()
+
 
     companion object {
         const val CHANNEL_ID = "NOTIFICATIONS_CHANNEL_CONTACTS"
@@ -30,6 +34,9 @@ class MainMenuViewModel : ViewModel()
         firebaseAuth = FirebaseAuth.getInstance()
 
         initAudios(context, configurationViewModel)
+
+        notificationCreator.createNotificationChannel(context)
+        notificationCreator.createNotificationAlarm(context)
 
         menuMusicMP?.start()
     }
