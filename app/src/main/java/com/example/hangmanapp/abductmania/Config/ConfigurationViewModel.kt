@@ -11,6 +11,7 @@ import com.example.hangmanapp.abductmania.DatabaseUtils.SharedPrefsUtils
 import com.example.hangmanapp.abductmania.DatabaseUtils.User
 import com.example.hangmanapp.abductmania.Game.HangmanGameViewModel
 import com.example.hangmanapp.abductmania.MainMenu.MainMenuActivity
+import com.example.hangmanapp.abductmania.MainMenu.MainMenuViewModel
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -146,29 +147,29 @@ class ConfigurationViewModel : ViewModel()
         areNotificationsOn.value = areNotificationsOn.value?.not() ?: false
     }
 
-    public fun toggleMusic(context : Context)
+    public fun toggleMusic()
     {
         isMusicOn.value = isMusicOn.value?.not() ?: false
 
         if (isMusicOn.value == true)
         {
-            MainMenuActivity.menuMusicMP?.setVolume(1.0f,1.0f)
-            MainMenuActivity.gameMusicMP?.setVolume(1.0f,1.0f)
+            MainMenuViewModel.menuMusicMP?.setVolume(1.0f,1.0f)
+            MainMenuViewModel.gameMusicMP?.setVolume(1.0f,1.0f)
         }
         else
         {
-            MainMenuActivity.menuMusicMP?.setVolume(0.0f, 0.0f)
-            MainMenuActivity.gameMusicMP?.setVolume(0.0f, 0.0f)
+            MainMenuViewModel.menuMusicMP?.setVolume(0.0f, 0.0f)
+            MainMenuViewModel.gameMusicMP?.setVolume(0.0f, 0.0f)
         }
     }
 
-    public fun toggleSound(context: Context)
+    public fun toggleSound()
     {
         isSoundOn.value = isSoundOn.value?.not() ?: false
 
         if (isSoundOn.value == true)
         {
-            MainMenuActivity.buttonSfxMP?.setVolume(1.0f,1.0f)
+            MainMenuViewModel.buttonSfxMP?.setVolume(1.0f,1.0f)
             HangmanGameViewModel.victorySfxMP?.setVolume(1.0f,1.0f)
             HangmanGameViewModel.abductorSfxMP?.setVolume(1.0f,1.0f)
             HangmanGameViewModel.appearSfxMP?.setVolume(1.0f,1.0f)
@@ -178,7 +179,7 @@ class ConfigurationViewModel : ViewModel()
         }
         else
         {
-            MainMenuActivity.buttonSfxMP?.setVolume(0.0f, 0.0f)
+            MainMenuViewModel.buttonSfxMP?.setVolume(0.0f, 0.0f)
             HangmanGameViewModel.victorySfxMP?.setVolume(0.0f,0.0f)
             HangmanGameViewModel.abductorSfxMP?.setVolume(0.0f,0.0f)
             HangmanGameViewModel.appearSfxMP?.setVolume(0.0f,0.0f)
@@ -186,6 +187,15 @@ class ConfigurationViewModel : ViewModel()
             HangmanGameViewModel.buildingSfxMP?.setVolume(0.0f,0.0f)
             HangmanGameViewModel.correctLetterSfxMP?.setVolume(0.0f,0.0f)
         }
+    }
+
+    public fun reloadAudios(context : Context)
+    {
+        loadData(context)
+        toggleMusic()
+        toggleMusic()
+        toggleSound()
+        toggleSound()
     }
 
 }

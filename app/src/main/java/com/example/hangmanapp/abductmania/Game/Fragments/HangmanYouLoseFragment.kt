@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.hangmanapp.abductmania.Game.Drawings.HangmanDrawingUFO
+import com.example.hangmanapp.abductmania.Game.HangmanGameViewModel
 import com.example.hangmanapp.abductmania.MainMenu.MainMenuActivity
+import com.example.hangmanapp.abductmania.MainMenu.MainMenuViewModel
 import com.example.hangmanapp.databinding.FragmentHangmanYouLoseBinding
 
 open class HangmanYouLoseFragment()
@@ -24,14 +26,14 @@ open class HangmanYouLoseFragment()
 
 
         binding.ylHomeIcon.setOnClickListener {
-            MainMenuActivity.buttonSfxMP?.start()
-            MainMenuActivity.gameMusicMP?.pause()
+            MainMenuViewModel.buttonSfxMP?.start()
+            MainMenuViewModel.gameMusicMP?.pause()
 
             activity?.finish()
         }
 
         binding.ylReplayIcon.setOnClickListener {
-            MainMenuActivity.buttonSfxMP?.start()
+            MainMenuViewModel.buttonSfxMP?.start()
 
             activity?.finish()
             startActivity(activity?.intent)
@@ -42,6 +44,7 @@ open class HangmanYouLoseFragment()
 
 
         initViewComponents()
+        HangmanGameViewModel.gameOverSfxMP?.start()
 
         return binding.root
     }

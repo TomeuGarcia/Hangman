@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.hangmanapp.abductmania.MainMenu.MainMenuActivity
+import com.example.hangmanapp.abductmania.MainMenu.MainMenuViewModel
 import com.example.hangmanapp.databinding.FragmentHangmanGamePauseBinding
 
 class HangmanGamePauseFragment(private val backToPlayCallback : () -> Unit)
@@ -21,16 +22,15 @@ class HangmanGamePauseFragment(private val backToPlayCallback : () -> Unit)
         binding = FragmentHangmanGamePauseBinding.inflate(inflater, container, false)
 
         binding.pPlayIcon.setOnClickListener {
-            MainMenuActivity.buttonSfxMP?.start()
+            MainMenuViewModel.buttonSfxMP?.start()
 
             backToPlayCallback()
         }
 
         binding.pHomeIcon.setOnClickListener {
-
             activity?.finish()
 
-            MainMenuActivity.buttonSfxMP?.start()
+            MainMenuViewModel.buttonSfxMP?.start()
         }
 
         binding.pauseBackgroundImage.setOnClickListener {  }

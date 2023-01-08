@@ -20,6 +20,7 @@ class HangmanDrawingUFO(image : ImageView, duration : Long, yDisplacement : Floa
             .withEndAction{
             startFloatingUp()
         }
+        HangmanGameViewModel.appearSfxMP?.seekTo(0)
         HangmanGameViewModel.appearSfxMP?.start()
 
     }

@@ -18,6 +18,7 @@ class HangmanDrawingWaves(image : ImageView, duration : Long, yDisplacement : Fl
             .withEndAction {
                 startFloatingUp()
             }
+        HangmanGameViewModel.abductorSfxMP?.seekTo(0)
         HangmanGameViewModel.abductorSfxMP?.start()
     }
 }

@@ -32,6 +32,8 @@ class HangmanDrawingBuilding(image : ImageView,
             .setDuration(300).withEndAction {
                 image.visibility = endVisibility
             }
+
+        HangmanGameViewModel.buildingSfxMP?.seekTo(0)
         HangmanGameViewModel.buildingSfxMP?.start()
     }
 
