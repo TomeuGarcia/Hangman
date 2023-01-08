@@ -2,6 +2,7 @@ package com.example.hangmanapp.abductmania.MainMenu
 
 import android.content.Context
 import android.media.MediaPlayer
+import android.preference.PreferenceManager
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.ViewModel
@@ -34,9 +35,7 @@ class MainMenuViewModel : ViewModel()
         firebaseAuth = FirebaseAuth.getInstance()
 
         initAudios(context, configurationViewModel)
-
-        notificationCreator.createNotificationChannel(context)
-        notificationCreator.createNotificationAlarm(context)
+        initNotifications(context)
 
         menuMusicMP?.start()
     }
@@ -62,6 +61,21 @@ class MainMenuViewModel : ViewModel()
         configurationViewModel.reloadAudios(context)
     }
 
+    private fun initNotifications(context : Context)
+    {
+        val shared = PreferenceManager.getDefaultSharedPreferences(context)
+        val notificationsEnabled = shared.getBoolean(ConfigurationViewModel.NOTIFICATIONS, false)
+
+        if (notificationsEnabled)
+        {
+            notificationCreator.createNotificationChannel(context)
+            notificationCreator.createNotificationAlarm(context)
+        }
+        else
+        {
+            notificationCreator.stopNotificationAlarm(context)
+        }
+    }
 
     public fun signOut()
     {
