@@ -9,6 +9,7 @@ import androidx.activity.viewModels
 import com.example.hangmanapp.R
 import com.example.hangmanapp.abductmania.Game.Fragments.*
 import com.example.hangmanapp.abductmania.MainMenu.MainMenuActivity
+import com.example.hangmanapp.abductmania.MainMenu.MainMenuViewModel
 import com.example.hangmanapp.databinding.ActivityHangmanGameBinding
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.rewarded.RewardedAd
@@ -52,8 +53,6 @@ class HangmanGameActivity : AppCompatActivity()
         youWinFragment = HangmanYouWinFragment()
         youLoseFragment = HangmanYouLoseFragment()
 
-        MainMenuActivity.gameMusicMP = MediaPlayer.create(this, R.raw.game_song)
-
         MobileAds.initialize(this)
         loadRetryAd()
 
@@ -94,14 +93,14 @@ class HangmanGameActivity : AppCompatActivity()
             retryGame()
         }
 
-        MainMenuActivity.gameMusicMP?.start()
-        MainMenuActivity.menuMusicMP?.pause()
+        MainMenuViewModel.gameMusicMP?.start()
+        MainMenuViewModel.menuMusicMP?.pause()
     }
 
     override fun onPause() {
         super.onPause()
 
-        MainMenuActivity.gameMusicMP?.pause()
+        MainMenuViewModel.gameMusicMP?.pause()
     }
 
 
@@ -180,8 +179,8 @@ class HangmanGameActivity : AppCompatActivity()
             }
             commit()
         }
-        MainMenuActivity.gameMusicMP?.pause()
-        MainMenuActivity.buttonSfxMP?.start()
+        MainMenuViewModel.gameMusicMP?.pause()
+        MainMenuViewModel.buttonSfxMP?.start()
     }
 
     private fun resumeGame()
@@ -194,7 +193,7 @@ class HangmanGameActivity : AppCompatActivity()
             commit()
         }
 
-        MainMenuActivity.gameMusicMP?.start()
+        MainMenuViewModel.gameMusicMP?.start()
     }
 
     private fun onRetryWatchAd()

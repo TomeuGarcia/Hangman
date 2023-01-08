@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import com.example.hangmanapp.abductmania.MainMenu.MainMenuActivity
+import com.example.hangmanapp.abductmania.MainMenu.MainMenuViewModel
 import com.example.hangmanapp.databinding.ActivityRankingBinding
 
 class RankingActivity : AppCompatActivity() {
@@ -27,7 +28,7 @@ class RankingActivity : AppCompatActivity() {
 
         binding.leaderboardBack.setOnClickListener{
             finish()
-            MainMenuActivity.buttonSfxMP?.start()
+            MainMenuViewModel.buttonSfxMP?.start()
         }
 
         rankingViewModel.rankingUsersData.observe(this) {
@@ -55,12 +56,12 @@ class RankingActivity : AppCompatActivity() {
     {
         super.onPause()
 
-        MainMenuActivity.menuMusicMP?.pause()
+        MainMenuViewModel.menuMusicMP?.pause()
     }
 
     override fun onResume() {
         super.onResume()
 
-        MainMenuActivity.menuMusicMP?.start()
+        MainMenuViewModel.menuMusicMP?.start()
     }
 }

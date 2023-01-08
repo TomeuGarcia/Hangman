@@ -20,6 +20,7 @@ import com.example.hangmanapp.abductmania.Game.Drawings.HangmanDrawingWaves
 import com.example.hangmanapp.abductmania.Game.Keyboard.GameKeyboardMap
 import com.example.hangmanapp.abductmania.Ranking.RankingDatabaseUtils
 import com.example.hangmanapp.abductmania.MainMenu.MainMenuActivity
+import com.example.hangmanapp.abductmania.MainMenu.MainMenuViewModel
 import com.example.hangmanapp.databinding.ActivityHangmanGameBinding
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -97,13 +98,6 @@ class HangmanGameViewModel()
         }
 
         activityContext = context
-
-        victorySfxMP = MediaPlayer.create(activityContext, R.raw.victory)
-        gameOverSfxMP = MediaPlayer.create(activityContext, R.raw.game_over)
-        correctLetterSfxMP = MediaPlayer.create(activityContext, R.raw.correct_letter)
-        abductorSfxMP = MediaPlayer.create(activityContext, R.raw.ufo_abductor)
-        appearSfxMP = MediaPlayer.create(activityContext, R.raw.ufo_appear)
-        buildingSfxMP = MediaPlayer.create(activityContext, R.raw.ufo_building)
 
         hangmanWord.value = ""
         countDownCurrentTimeSeconds.value = COUNTDOWN_TOTAL_TIME_MILLISECONDS / 1000
@@ -241,6 +235,7 @@ class HangmanGameViewModel()
         gameKeyboardMap.setLetterCorrect(letter)
         score += CORRECT_LETTER_POINTS
 
+        correctLetterSfxMP?.seekTo(0)
         correctLetterSfxMP?.start()
 
 
@@ -255,7 +250,7 @@ class HangmanGameViewModel()
         gameKeyboardMap.setLetterWrong(letter)
         score -= WRONG_LETTER_POINTS
 
-        MainMenuActivity.buttonSfxMP?.start()
+        MainMenuViewModel.buttonSfxMP?.start()
 
         hangmanDrawer.drawPart(wrongGuessesCount)
 
@@ -289,8 +284,6 @@ class HangmanGameViewModel()
         isPausingDisabled.value = true
         hasVictoryHappened.value = true
 
-        victorySfxMP?.start()
-
         addUserScoreToRanking()
     }
 
@@ -311,9 +304,6 @@ class HangmanGameViewModel()
             getSolution() // this is async.... wait until solution received to do real GameOver
             addUserScoreToRanking()
         }
-
-        gameOverSfxMP?.start()
-
 
         isPausingDisabled.value = true
     }
