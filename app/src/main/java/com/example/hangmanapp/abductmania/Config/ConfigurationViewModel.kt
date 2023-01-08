@@ -10,8 +10,8 @@ import com.example.hangmanapp.abductmania.DatabaseUtils.DatabaseUtils
 import com.example.hangmanapp.abductmania.DatabaseUtils.SharedPrefsUtils
 import com.example.hangmanapp.abductmania.DatabaseUtils.User
 import com.example.hangmanapp.abductmania.Game.HangmanGameViewModel
-import com.example.hangmanapp.abductmania.MainMenu.MainMenuActivity
 import com.example.hangmanapp.abductmania.MainMenu.MainMenuViewModel
+import com.example.hangmanapp.abductmania.Notifications.NotificationCreator
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -20,7 +20,6 @@ class ConfigurationViewModel : ViewModel()
     private val LANGUAGE = "language"
     private val MUSIC = "music"
     private val SOUND = "sound"
-    private val NOTIFICATIONS = "notifications"
 
 
 
@@ -35,11 +34,17 @@ class ConfigurationViewModel : ViewModel()
     private var users = arrayListOf<User>()
     private lateinit var usersCollection : CollectionReference
 
+    private val notificationCreator : NotificationCreator = NotificationCreator()
+
+    private lateinit var activityContext : Context
+
 
     companion object
     {
         var isMusicOn = MutableLiveData<Boolean>()
         var isSoundOn = MutableLiveData<Boolean>()
+
+        public val NOTIFICATIONS = "notifications"
     }
 
     init
@@ -55,6 +60,8 @@ class ConfigurationViewModel : ViewModel()
     {
         firestore = FirebaseFirestore.getInstance()
         usersCollection = firestore.collection(DatabaseUtils.USERS_COLLECTION)
+
+        activityContext = context
 
         // Shared prefs
         val shared = PreferenceManager.getDefaultSharedPreferences(context)
@@ -145,6 +152,16 @@ class ConfigurationViewModel : ViewModel()
     public fun toggleNotifications()
     {
         areNotificationsOn.value = areNotificationsOn.value?.not() ?: false
+
+        if (areNotificationsOn.value == true)
+        {
+            notificationCreator.createNotificationChannel(activityContext)
+            notificationCreator.createNotificationAlarm(activityContext)
+        }
+        else
+        {
+            notificationCreator.stopNotificationAlarm(activityContext)
+        }
     }
 
     public fun toggleMusic()

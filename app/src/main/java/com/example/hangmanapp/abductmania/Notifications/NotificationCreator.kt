@@ -38,13 +38,13 @@ class NotificationCreator
     public fun createNotificationChannel(context : Context)
     {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "Daily Plant reminder"
-            val descriptionText = "Reminder to Plant every day"
+            val name = "Spam Play Reminder"
+            val descriptionText = "Reminder to play non-stop"
             val importance = NotificationManager.IMPORTANCE_DEFAULT
             val channel = NotificationChannel(NotificationReceiver.DAILY_REMINDER_CHANNEL_ID, name, importance).apply {
                 description = descriptionText
             }
-            // Register the channel with the system
+
             val notificationManager: NotificationManager =
                 context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
@@ -62,5 +62,15 @@ class NotificationCreator
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, 0, 1000, pendingIntent)
     }
 
+    public fun stopNotificationAlarm(context : Context)
+    {
+        alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        val intent = Intent(context, NotificationReceiver::class.java)
+
+        val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+
+        alarmManager.cancel(pendingIntent)
+    }
 
 }
