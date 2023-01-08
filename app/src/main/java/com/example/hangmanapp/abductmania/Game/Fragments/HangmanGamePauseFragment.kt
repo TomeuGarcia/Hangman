@@ -1,6 +1,5 @@
 package com.example.hangmanapp.abductmania.Game.Fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -22,11 +21,16 @@ class HangmanGamePauseFragment(private val backToPlayCallback : () -> Unit)
         binding = FragmentHangmanGamePauseBinding.inflate(inflater, container, false)
 
         binding.pPlayIcon.setOnClickListener {
+            MainMenuActivity.buttonSfxMP?.start()
+
             backToPlayCallback()
         }
 
         binding.pHomeIcon.setOnClickListener {
+
             activity?.finish()
+
+            MainMenuActivity.buttonSfxMP?.start()
         }
 
         binding.pauseBackgroundImage.setOnClickListener {  }

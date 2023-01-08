@@ -1,6 +1,5 @@
 package com.example.hangmanapp.abductmania.Ranking
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
@@ -28,13 +27,17 @@ class RankingActivity : AppCompatActivity() {
 
         binding.leaderboardBack.setOnClickListener{
             finish()
+            MainMenuActivity.buttonSfxMP?.start()
         }
 
         rankingViewModel.rankingUsersData.observe(this) {
             updateRanking(it)
         }
+        rankingViewModel.isRankingDataReady.observe(this) {
+            if (it) updateRanking(rankingViewModel.getArrayRankingData())
+        }
 
-        rankingViewModel.loadRanking()
+        rankingViewModel.loadRanking(this)
     }
 
     private fun updateRanking(rankingUsersData : List<RankingViewModel.RankingUserData>)
@@ -42,9 +45,22 @@ class RankingActivity : AppCompatActivity() {
         val rankingImages = arrayListOf<RankingItem>()
 
         rankingUsersData.forEachIndexed { index, e ->
-            rankingImages.add(RankingItem(e.username, e.score, index+1))
+            rankingImages.add(RankingItem(e.username ?: "", e.score ?: 0, index+1))
         }
 
         adapter.submitList(rankingImages)
+    }
+
+    override fun onPause()
+    {
+        super.onPause()
+
+        MainMenuActivity.menuMusicMP?.pause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        MainMenuActivity.menuMusicMP?.start()
     }
 }

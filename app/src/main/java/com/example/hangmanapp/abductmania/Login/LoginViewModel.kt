@@ -3,14 +3,18 @@ package com.example.hangmanapp.abductmania.Login
 import android.content.Context
 import android.preference.PreferenceManager
 import android.util.Patterns
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
+import com.example.hangmanapp.R
+import com.example.hangmanapp.abductmania.DatabaseUtils.DatabaseUtils
+import com.example.hangmanapp.abductmania.DatabaseUtils.SharedPrefsUtils
+import com.example.hangmanapp.abductmania.DatabaseUtils.User
+import com.example.hangmanapp.abductmania.Ranking.RankingDatabaseUtils
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 class LoginViewModel : ViewModel()
 {
-    private val EMAIL = "email"
-
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
 
@@ -32,12 +36,48 @@ class LoginViewModel : ViewModel()
         return Patterns.EMAIL_ADDRESS.matcher(username).matches()
     }
 
-    public fun saveSharedPrefsLoggedUser(context : Context, email : String)
+    public fun saveSharedPrefsLoggedUser(context : Context, email : String,
+                                         onLoginSuccessCallback : () -> Unit,
+                                         onLoginFailureCallback : () -> Unit)
     {
+        val usersCollection = firestore.collection(DatabaseUtils.USERS_COLLECTION)
+        usersCollection.get()
+            .addOnSuccessListener {
+                val users = it?.documents?.mapNotNull { dbUser ->
+                    dbUser.toObject(User::class.java)
+                } as ArrayList<User>
+
+                val currentUser = users.find { itUser ->
+                    itUser.email == email
+                }
+
+                if (currentUser != null)
+                {
+                    val shared = PreferenceManager.getDefaultSharedPreferences(context)
+                    val editor = shared.edit()
+                    editor.putString(SharedPrefsUtils.EMAIL, email)
+                    editor.putString(SharedPrefsUtils.USERNAME, currentUser.username)
+                    editor.apply()
+
+                    onLoginSuccessCallback()
+                }
+                else
+                {
+                    onLoginFailureCallback()
+                }
+            }
+            .addOnFailureListener { exception ->
+                Toast.makeText(context, context.getString(R.string.somethingWentWrong),
+                    Toast.LENGTH_LONG).show()
+                onLoginFailureCallback()
+            }
+
+        /*
         val shared = PreferenceManager.getDefaultSharedPreferences(context)
         val editor = shared.edit()
-        editor.putString(EMAIL, email)
+        editor.putString(SharedPrefsUtils.EMAIL, email)
         editor.apply()
+         */
     }
 
     public fun signIn(context : Context, email : String, password : String,
@@ -46,23 +86,36 @@ class LoginViewModel : ViewModel()
     {
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnSuccessListener {
-                saveSharedPrefsLoggedUser(context, email)
-                onLoginSuccessCallback()
+                saveSharedPrefsLoggedUser(context, email,
+                                          onLoginSuccessCallback, onLoginFailureCallback)
             }.addOnFailureListener {
                 onLoginFailureCallback()
             }
     }
 
-    public fun signInAsGuest(onLoginSuccessCallback : () -> Unit,
+    public fun signInAsGuest(context : Context,
+                             onLoginSuccessCallback : () -> Unit,
                              onLoginFailureCallback : () -> Unit)
     {
         firebaseAuth.signInAnonymously()
             .addOnSuccessListener {
+                saveSharedPrefsGuestUser(context)
                 onLoginSuccessCallback()
             }
             .addOnFailureListener {
                 onLoginFailureCallback()
             }
     }
+
+    public fun saveSharedPrefsGuestUser(context : Context)
+    {
+        val rankingDbUtils = RankingDatabaseUtils()
+
+        val shared = PreferenceManager.getDefaultSharedPreferences(context)
+        val editor = shared.edit()
+        editor.putString(SharedPrefsUtils.USERNAME, rankingDbUtils.getGuestUsername())
+        editor.apply()
+    }
+
 
 }

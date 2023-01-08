@@ -2,17 +2,31 @@ package com.example.hangmanapp.abductmania.Game
 
 
 import android.content.Context
+import android.media.MediaPlayer
 import android.os.CountDownTimer
+import android.preference.PreferenceManager
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.hangmanapp.R
+import com.example.hangmanapp.abductmania.DatabaseUtils.SharedPrefsUtils
+import com.example.hangmanapp.abductmania.Config.ConfigurationViewModel
 import com.example.hangmanapp.abductmania.Game.Api.*
 import com.example.hangmanapp.abductmania.Game.Drawings.HangmanDrawer
 import com.example.hangmanapp.abductmania.Game.Drawings.HangmanDrawingBuilding
 import com.example.hangmanapp.abductmania.Game.Drawings.HangmanDrawingUFO
 import com.example.hangmanapp.abductmania.Game.Drawings.HangmanDrawingWaves
 import com.example.hangmanapp.abductmania.Game.Keyboard.GameKeyboardMap
+import com.example.hangmanapp.abductmania.Ranking.RankingDatabaseUtils
+import com.example.hangmanapp.abductmania.MainMenu.MainMenuActivity
 import com.example.hangmanapp.databinding.ActivityHangmanGameBinding
+import com.google.android.gms.ads.rewarded.RewardedAd
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.database.ktx.database
 import kotlin.math.max
 
 class HangmanGameViewModel()
@@ -55,11 +69,41 @@ class HangmanGameViewModel()
     public val hasVictoryHappened = MutableLiveData<Boolean>()
     public val hasGameOverHappened = MutableLiveData<Boolean>()
 
+    private val LOADED_AD_PARAM = "LOADED_AD_PARAM"
+    private val SHOW_AD = "show_ad"
+    private val LEVEL_START_PARAM = "LEVEL_START_PARAM"
+    private val LEVEL_START = "level_start"
+    private val firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
 
+    companion object {
+        var victorySfxMP : MediaPlayer? = null
+        var gameOverSfxMP : MediaPlayer? = null
+        var correctLetterSfxMP : MediaPlayer? = null
+        var abductorSfxMP : MediaPlayer? = null
+        var appearSfxMP : MediaPlayer? = null
+        var buildingSfxMP : MediaPlayer? = null
+    }
 
     public fun createGame(context: Context, binding: ActivityHangmanGameBinding)
     {
+        /*firebaseAnalytics.logEvent(
+            LEVEL_START,
+            bundleOf(
+                LEVEL_START_PARAM to true
+            )
+        )*/
+        firebaseAnalytics.logEvent(LEVEL_START) {
+            param(LEVEL_START_PARAM, "true")
+        }
+
         activityContext = context
+
+        victorySfxMP = MediaPlayer.create(activityContext, R.raw.victory)
+        gameOverSfxMP = MediaPlayer.create(activityContext, R.raw.game_over)
+        correctLetterSfxMP = MediaPlayer.create(activityContext, R.raw.correct_letter)
+        abductorSfxMP = MediaPlayer.create(activityContext, R.raw.ufo_abductor)
+        appearSfxMP = MediaPlayer.create(activityContext, R.raw.ufo_appear)
+        buildingSfxMP = MediaPlayer.create(activityContext, R.raw.ufo_building)
 
         hangmanWord.value = ""
         countDownCurrentTimeSeconds.value = COUNTDOWN_TOTAL_TIME_MILLISECONDS / 1000
@@ -180,6 +224,8 @@ class HangmanGameViewModel()
 
         if (isCorrect) { onGuessedLetterCorrectly(letter) }
         else { onGuessedLetterIncorrectly(letter) }
+
+
     }
     private fun onGuessLetterFailure()
     {
@@ -195,17 +241,21 @@ class HangmanGameViewModel()
         gameKeyboardMap.setLetterCorrect(letter)
         score += CORRECT_LETTER_POINTS
 
+        correctLetterSfxMP?.start()
+
+
         if (hasGuessedAllLetters())
             doVictory()
         else
             gameKeyboardMap.reenableRemainingLetterButtons()
-
     }
 
     private fun onGuessedLetterIncorrectly(letter : Char)
     {
         gameKeyboardMap.setLetterWrong(letter)
         score -= WRONG_LETTER_POINTS
+
+        MainMenuActivity.buttonSfxMP?.start()
 
         hangmanDrawer.drawPart(wrongGuessesCount)
 
@@ -238,6 +288,10 @@ class HangmanGameViewModel()
 
         isPausingDisabled.value = true
         hasVictoryHappened.value = true
+
+        victorySfxMP?.start()
+
+        addUserScoreToRanking()
     }
 
     public fun doGameOver()
@@ -255,7 +309,11 @@ class HangmanGameViewModel()
         {
             hangmanDrawer.drawRemainingParts()
             getSolution() // this is async.... wait until solution received to do real GameOver
+            addUserScoreToRanking()
         }
+
+        gameOverSfxMP?.start()
+
 
         isPausingDisabled.value = true
     }
@@ -320,6 +378,50 @@ class HangmanGameViewModel()
     public fun disableRetries()
     {
         numRetries = -1
+    }
+
+    public fun analyticsLogAd(ad : RewardedAd?)
+    {
+        /*firebaseAnalytics.logEvent(
+            SHOW_AD,
+            bundleOf(
+                LOADED_AD_PARAM to (ad != null)
+            )
+        )*/
+        firebaseAnalytics.logEvent(SHOW_AD) {
+            param(LOADED_AD_PARAM, bundleOf("Did ad load? " to (ad != null)))
+        }
+    }
+
+    private fun addUserScoreToRanking()
+    {
+        val rankingDbUtils = RankingDatabaseUtils()
+        val currentUserId = rankingDbUtils.currentUserId
+
+        val shared = PreferenceManager.getDefaultSharedPreferences(activityContext)
+        val currentUserUsername = shared.getString(SharedPrefsUtils.USERNAME, rankingDbUtils.getGuestUsername())
+
+
+        val rankingRef = Firebase.database(rankingDbUtils.DB_URL).getReference(rankingDbUtils.RANKING_DB_ID)
+
+        val request = rankingRef.child(rankingDbUtils.PLAYERSCORES_DB_ID).child(currentUserId).get()
+
+        request.addOnSuccessListener {
+
+            val currentScore = (it.child(rankingDbUtils.SCORE_DB_ID).value as Long?) ?: 0
+            val totalScore = currentScore + score.toLong()
+
+            val rankingPlayerScore = rankingRef.child(rankingDbUtils.PLAYERSCORES_DB_ID).child(currentUserId)
+
+            rankingPlayerScore.child(rankingDbUtils.USERNAME_DB_ID).setValue(currentUserUsername)
+            rankingPlayerScore.child(rankingDbUtils.SCORE_DB_ID).setValue(totalScore)
+        }
+
+        request.addOnFailureListener {
+            // ERROR
+            Toast.makeText(activityContext, "Couldn't add score to ranking", Toast.LENGTH_LONG).show()
+        }
+
     }
 
 }
