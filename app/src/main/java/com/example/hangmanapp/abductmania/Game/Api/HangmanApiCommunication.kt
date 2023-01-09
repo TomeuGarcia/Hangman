@@ -13,15 +13,18 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class HangmanApiCommunication(private val createNewHangmanGameResponseCallback : (HangmanNewGame) -> Unit,
-                              private val createNewHangmanGameFailureCallback : () -> Unit,
-                              private val getSolutionResponseCallback : (HangmanGameSolution) -> Unit,
-                              private val getSolutionFailureCallback : () -> Unit,
-                              private val getHintResponseCallback : (HangmanGameHint) -> Unit,
-                              private val getHintFailureCallback : () -> Unit,
-                              private val guessLetterResponseCallback : (HangmanLetterGuessResponse, Char) -> Unit,
-                              private val guessLetterFailureCallback : () -> Unit)
+class HangmanApiCommunication()
 {
+    // Callbacks
+    private lateinit var createNewHangmanGameResponseCallback : (HangmanNewGame) -> Unit
+    private lateinit var createNewHangmanGameFailureCallback : () -> Unit
+    private lateinit var getSolutionResponseCallback : (HangmanGameSolution) -> Unit
+    private lateinit var getSolutionFailureCallback : () -> Unit
+    private lateinit var getHintResponseCallback : (HangmanGameHint) -> Unit
+    private lateinit var getHintFailureCallback : () -> Unit
+    private lateinit var guessLetterResponseCallback : (HangmanLetterGuessResponse, Char) -> Unit
+    private lateinit var guessLetterFailureCallback : () -> Unit
+
 
     //private val HANGMAN_API_URL : String = "https://hangman-api.herokuapp.com/"
     private val HANGMAN_API_URL : String = "http://hangman.enti.cat:5002/"
@@ -44,6 +47,33 @@ class HangmanApiCommunication(private val createNewHangmanGameResponseCallback :
     private var users = arrayListOf<User>()
 
     private var languageIndex = 0
+
+
+    public fun setCreateNewHangmanGameCallbacks(responseCallback : (HangmanNewGame) -> Unit,
+                                                failureCallback : () -> Unit)
+    {
+        createNewHangmanGameResponseCallback = responseCallback
+        createNewHangmanGameFailureCallback = failureCallback
+    }
+    public fun setSolutionCallbacks(responseCallback : (HangmanGameSolution) -> Unit,
+                                    failureCallback : () -> Unit)
+    {
+        getSolutionResponseCallback = responseCallback
+        getSolutionFailureCallback = failureCallback
+    }
+    public fun setHintCallbacks(responseCallback : (HangmanGameHint) -> Unit,
+                                failureCallback : () -> Unit)
+    {
+        getHintResponseCallback = responseCallback
+        getHintFailureCallback = failureCallback
+    }
+    public fun setGuessLetterCallbacks(responseCallback : (HangmanLetterGuessResponse, Char) -> Unit,
+                                       failureCallback : () -> Unit)
+    {
+        guessLetterResponseCallback = responseCallback
+        guessLetterFailureCallback = failureCallback
+    }
+
 
     public fun loadData(context : Context)
     {

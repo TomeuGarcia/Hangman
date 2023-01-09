@@ -102,12 +102,11 @@ class HangmanGameViewModel()
         hangmanWord.value = ""
         countDownCurrentTimeSeconds.value = COUNTDOWN_TOTAL_TIME_MILLISECONDS / 1000
 
-        hangmanApiCommunication = HangmanApiCommunication(
-            this::onCreateNewHangmanGameResponse, this::onCreateNewHangmanGameFailure,
-            this::onGetSolutionResponse,          this::onGetSolutionFailure,
-            this::onGetHintResponse,              this::onGetHintFailure,
-            this::onGuessLetterResponse,          this::onGuessLetterFailure
-        )
+        hangmanApiCommunication = HangmanApiCommunication()
+        hangmanApiCommunication.setCreateNewHangmanGameCallbacks(this::onCreateNewHangmanGameResponse, this::onCreateNewHangmanGameFailure)
+        hangmanApiCommunication.setSolutionCallbacks(this::onGetSolutionResponse, this::onGetSolutionFailure)
+        hangmanApiCommunication.setHintCallbacks(this::onGetHintResponse, this::onGetHintFailure)
+        hangmanApiCommunication.setGuessLetterCallbacks(this::onGuessLetterResponse, this::onGuessLetterFailure)
         hangmanApiCommunication.loadData(activityContext)
 
         gameKeyboardMap = GameKeyboardMap(binding)
