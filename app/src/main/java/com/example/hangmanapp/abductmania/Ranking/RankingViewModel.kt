@@ -28,10 +28,47 @@ class RankingViewModel : ViewModel()
     public val isRankingDataReady = MutableLiveData<Boolean>()
 
 
-    init
+    public fun startRankingListening(context : Context)
     {
         rankingRef = Firebase.database(rankingDbUtils.DB_URL).getReference(rankingDbUtils.RANKING_DB_ID)
         rankingUsersData.value = ArrayList<RankingUserData>()
+
+        val request = rankingRef.child(rankingDbUtils.PLAYERSCORES_DB_ID).get()
+
+        rankingRef.addValueEventListener( object : ValueEventListener{
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onDataChange(snapshot: DataSnapshot)
+            {
+                isRankingDataReady.value = false
+
+                val request = rankingRef.child(rankingDbUtils.PLAYERSCORES_DB_ID).get()
+
+                request.addOnSuccessListener {
+                    val playerScoresById = it.children
+
+                    playerScoresById.forEach { playerScore ->
+                        val username = playerScore.child(rankingDbUtils.USERNAME_DB_ID).value as String?
+                        val score = playerScore.child(rankingDbUtils.SCORE_DB_ID).value as Long?
+
+                        rankingUsersData.value?.add(RankingUserData(username, score?.toInt()))
+                    }
+                    subscribeUpdateData(rankingUsersData?.value as List<RankingUserData>)
+
+                    sortRankingData()
+                    rankingUsersData.value = rankingUsersData.value // Update
+                    isRankingDataReady.value = true
+                }
+
+                request.addOnFailureListener {
+                    // ERROR
+                    println( "DB error --------> ${it.message}")
+                    Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                }
+            }
+        })
     }
 
     @IgnoreExtraProperties
@@ -47,45 +84,6 @@ class RankingViewModel : ViewModel()
         //database.child(rankingDbUtils.RANKING_DB_ID).child(userId).setValue(rankingUsersData)
     }
 
-
-    public fun loadRanking(context : Context)
-    {
-        /*
-        val rankingPlayerScores = rankingRef.child(PLAYERSCORES_DB_ID)
-        rankingPlayerScores.child(currentUserId).child(USERNAME_DB_ID).setValue("Joanet")
-        rankingPlayerScores.child(currentUserId).child(SCORE_DB_ID).setValue(1000.0)
-        rankingPlayerScores.child(currentUserId+"q").child(USERNAME_DB_ID).setValue("Pepe")
-        rankingPlayerScores.child(currentUserId+"q").child(SCORE_DB_ID).setValue(400.0)
-        */
-
-        isRankingDataReady.value = false
-
-        val request = rankingRef.child(rankingDbUtils.PLAYERSCORES_DB_ID).get()
-
-        request.addOnSuccessListener {
-            val playerScoresById = it.children
-
-            playerScoresById.forEach { playerScore ->
-                val username = playerScore.child(rankingDbUtils.USERNAME_DB_ID).value as String?
-                val score = playerScore.child(rankingDbUtils.SCORE_DB_ID).value as Long?
-
-                rankingUsersData.value?.add(RankingUserData(username, score?.toInt()))
-            }
-            subscribeUpdateData(rankingUsersData?.value as List<RankingUserData>)
-
-            sortRankingData()
-            rankingUsersData.value = rankingUsersData.value // Update
-            isRankingDataReady.value = true
-        }
-
-        request.addOnFailureListener {
-            // ERROR
-            println( "DB error --------> ${it.message}")
-            Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
-        }
-
-
-    }
 
     private fun subscribeUpdateData(rankingList: List<RankingUserData>) {
         rankingList.forEach {
