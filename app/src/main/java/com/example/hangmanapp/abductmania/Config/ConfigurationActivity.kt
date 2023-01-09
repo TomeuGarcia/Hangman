@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import com.example.hangmanapp.abductmania.MainMenu.MainMenuActivity
+import com.example.hangmanapp.abductmania.MainMenu.MainMenuViewModel
 import com.example.hangmanapp.databinding.ActivityConfigurationBinding
 
 
@@ -47,10 +48,10 @@ class ConfigurationActivity : AppCompatActivity()
 
             if (ConfigurationViewModel.isSoundOn.value == true)
             {
-                MainMenuActivity.buttonSfxMP?.start()
+                MainMenuViewModel.buttonSfxMP?.start()
             }
             else
-                MainMenuActivity.buttonSfxMP?.pause()
+                MainMenuViewModel.buttonSfxMP?.pause()
         }
 
         ConfigurationViewModel.isSoundOn.observe(this) {
@@ -61,10 +62,10 @@ class ConfigurationActivity : AppCompatActivity()
 
             if (ConfigurationViewModel.isSoundOn.value == true)
             {
-                MainMenuActivity.buttonSfxMP?.start()
+                MainMenuViewModel.buttonSfxMP?.start()
             }
             else
-                MainMenuActivity.buttonSfxMP?.pause()
+                MainMenuViewModel.buttonSfxMP?.pause()
         }
 
 
@@ -75,10 +76,10 @@ class ConfigurationActivity : AppCompatActivity()
 
             if (ConfigurationViewModel.isSoundOn.value == true)
             {
-                MainMenuActivity.buttonSfxMP?.start()
+                MainMenuViewModel.buttonSfxMP?.start()
             }
             else
-                MainMenuActivity.buttonSfxMP?.pause()
+                MainMenuViewModel.buttonSfxMP?.pause()
         }
 
         binding.languageButton.setOnClickListener {
@@ -87,10 +88,10 @@ class ConfigurationActivity : AppCompatActivity()
 
             if (ConfigurationViewModel.isSoundOn.value == true)
             {
-                MainMenuActivity.buttonSfxMP?.start()
+                MainMenuViewModel.buttonSfxMP?.start()
             }
             else
-                MainMenuActivity.buttonSfxMP?.pause()
+                MainMenuViewModel.buttonSfxMP?.pause()
         }
 
         binding.notificationsButton.setOnClickListener {
@@ -99,34 +100,34 @@ class ConfigurationActivity : AppCompatActivity()
 
             if (ConfigurationViewModel.isSoundOn.value == true)
             {
-                MainMenuActivity.buttonSfxMP?.start()
+                MainMenuViewModel.buttonSfxMP?.start()
             }
             else
-                MainMenuActivity.buttonSfxMP?.pause()
+                MainMenuViewModel.buttonSfxMP?.pause()
         }
 
         binding.musicButton.setOnClickListener {
             // Turn On/Off Music
-            configurationViewModel.toggleMusic(this)
+            configurationViewModel.toggleMusic()
 
             if (ConfigurationViewModel.isSoundOn.value == true)
             {
-                MainMenuActivity.buttonSfxMP?.start()
+                MainMenuViewModel.buttonSfxMP?.start()
             }
             else
-                MainMenuActivity.buttonSfxMP?.pause()
+                MainMenuViewModel.buttonSfxMP?.pause()
         }
 
         binding.soundButton.setOnClickListener {
             // Turn On/Off Sound
-            configurationViewModel.toggleSound(this)
+            configurationViewModel.toggleSound()
 
             if (ConfigurationViewModel.isSoundOn.value == true)
             {
-                MainMenuActivity.buttonSfxMP?.start()
+                MainMenuViewModel.buttonSfxMP?.start()
             }
             else
-                MainMenuActivity.buttonSfxMP?.pause()
+                MainMenuViewModel.buttonSfxMP?.pause()
 
         }
     }
@@ -144,6 +145,6 @@ class ConfigurationActivity : AppCompatActivity()
     override fun onResume() {
         super.onResume()
 
-        MainMenuActivity.menuMusicMP?.start()
+        MainMenuViewModel.menuMusicMP?.start()
     }
 }

@@ -9,7 +9,9 @@ import com.example.hangmanapp.R
 import com.example.hangmanapp.abductmania.DatabaseUtils.DatabaseUtils
 import com.example.hangmanapp.abductmania.DatabaseUtils.SharedPrefsUtils
 import com.example.hangmanapp.abductmania.DatabaseUtils.User
-import com.example.hangmanapp.abductmania.MainMenu.MainMenuActivity
+import com.example.hangmanapp.abductmania.Game.HangmanGameViewModel
+import com.example.hangmanapp.abductmania.MainMenu.MainMenuViewModel
+import com.example.hangmanapp.abductmania.Notifications.NotificationCreator
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -18,7 +20,6 @@ class ConfigurationViewModel : ViewModel()
     private val LANGUAGE = "language"
     private val MUSIC = "music"
     private val SOUND = "sound"
-    private val NOTIFICATIONS = "notifications"
 
 
 
@@ -33,11 +34,17 @@ class ConfigurationViewModel : ViewModel()
     private var users = arrayListOf<User>()
     private lateinit var usersCollection : CollectionReference
 
+    private val notificationCreator : NotificationCreator = NotificationCreator()
+
+    private lateinit var activityContext : Context
+
 
     companion object
     {
         var isMusicOn = MutableLiveData<Boolean>()
         var isSoundOn = MutableLiveData<Boolean>()
+
+        public val NOTIFICATIONS = "notifications"
     }
 
     init
@@ -53,6 +60,8 @@ class ConfigurationViewModel : ViewModel()
     {
         firestore = FirebaseFirestore.getInstance()
         usersCollection = firestore.collection(DatabaseUtils.USERS_COLLECTION)
+
+        activityContext = context
 
         // Shared prefs
         val shared = PreferenceManager.getDefaultSharedPreferences(context)
@@ -143,36 +152,67 @@ class ConfigurationViewModel : ViewModel()
     public fun toggleNotifications()
     {
         areNotificationsOn.value = areNotificationsOn.value?.not() ?: false
+
+        if (areNotificationsOn.value == true)
+        {
+            notificationCreator.createNotificationChannel(activityContext)
+            notificationCreator.createNotificationAlarm(activityContext)
+        }
+        else
+        {
+            notificationCreator.stopNotificationAlarm(activityContext)
+        }
     }
 
-    public fun toggleMusic(context : Context)
+    public fun toggleMusic()
     {
         isMusicOn.value = isMusicOn.value?.not() ?: false
 
         if (isMusicOn.value == true)
         {
-            MainMenuActivity.menuMusicMP?.setVolume(1.0f,1.0f)
-            MainMenuActivity.gameMusicMP?.setVolume(1.0f,1.0f)
+            MainMenuViewModel.menuMusicMP?.setVolume(1.0f,1.0f)
+            MainMenuViewModel.gameMusicMP?.setVolume(1.0f,1.0f)
         }
         else
         {
-            MainMenuActivity.menuMusicMP?.setVolume(0.0f, 0.0f)
-            MainMenuActivity.gameMusicMP?.setVolume(0.0f, 0.0f)
+            MainMenuViewModel.menuMusicMP?.setVolume(0.0f, 0.0f)
+            MainMenuViewModel.gameMusicMP?.setVolume(0.0f, 0.0f)
         }
     }
 
-    public fun toggleSound(context: Context)
+    public fun toggleSound()
     {
         isSoundOn.value = isSoundOn.value?.not() ?: false
 
         if (isSoundOn.value == true)
         {
-            MainMenuActivity.buttonSfxMP?.setVolume(1.0f,1.0f)
+            MainMenuViewModel.buttonSfxMP?.setVolume(1.0f,1.0f)
+            HangmanGameViewModel.victorySfxMP?.setVolume(1.0f,1.0f)
+            HangmanGameViewModel.abductorSfxMP?.setVolume(1.0f,1.0f)
+            HangmanGameViewModel.appearSfxMP?.setVolume(1.0f,1.0f)
+            HangmanGameViewModel.gameOverSfxMP?.setVolume(1.0f,1.0f)
+            HangmanGameViewModel.buildingSfxMP?.setVolume(1.0f,1.0f)
+            HangmanGameViewModel.correctLetterSfxMP?.setVolume(1.0f,1.0f)
         }
         else
         {
-            MainMenuActivity.buttonSfxMP?.setVolume(0.0f, 0.0f)
+            MainMenuViewModel.buttonSfxMP?.setVolume(0.0f, 0.0f)
+            HangmanGameViewModel.victorySfxMP?.setVolume(0.0f,0.0f)
+            HangmanGameViewModel.abductorSfxMP?.setVolume(0.0f,0.0f)
+            HangmanGameViewModel.appearSfxMP?.setVolume(0.0f,0.0f)
+            HangmanGameViewModel.gameOverSfxMP?.setVolume(0.0f,0.0f)
+            HangmanGameViewModel.buildingSfxMP?.setVolume(0.0f,0.0f)
+            HangmanGameViewModel.correctLetterSfxMP?.setVolume(0.0f,0.0f)
         }
+    }
+
+    public fun reloadAudios(context : Context)
+    {
+        loadData(context)
+        toggleMusic()
+        toggleMusic()
+        toggleSound()
+        toggleSound()
     }
 
 }

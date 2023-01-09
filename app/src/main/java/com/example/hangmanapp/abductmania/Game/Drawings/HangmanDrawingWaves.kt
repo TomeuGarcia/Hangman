@@ -2,6 +2,7 @@ package com.example.hangmanapp.abductmania.Game.Drawings
 
 import android.view.View
 import android.widget.ImageView
+import com.example.hangmanapp.abductmania.Game.HangmanGameViewModel
 
 class HangmanDrawingWaves(image : ImageView, duration : Long, yDisplacement : Float)
     : HangmanFloatingDrawing(image, duration, yDisplacement)
@@ -17,5 +18,7 @@ class HangmanDrawingWaves(image : ImageView, duration : Long, yDisplacement : Fl
             .withEndAction {
                 startFloatingUp()
             }
+        HangmanGameViewModel.abductorSfxMP?.seekTo(0)
+        HangmanGameViewModel.abductorSfxMP?.start()
     }
 }

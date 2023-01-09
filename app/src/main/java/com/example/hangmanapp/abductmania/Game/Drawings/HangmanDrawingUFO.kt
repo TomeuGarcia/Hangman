@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator
 import android.view.View
 import android.widget.ImageView
 import androidx.core.animation.doOnEnd
+import com.example.hangmanapp.abductmania.Game.HangmanGameViewModel
 
 class HangmanDrawingUFO(image : ImageView, duration : Long, yDisplacement : Float)
     : HangmanFloatingDrawing(image, duration, yDisplacement)
@@ -19,6 +20,9 @@ class HangmanDrawingUFO(image : ImageView, duration : Long, yDisplacement : Floa
             .withEndAction{
             startFloatingUp()
         }
+        HangmanGameViewModel.appearSfxMP?.seekTo(0)
+        HangmanGameViewModel.appearSfxMP?.start()
+
     }
 
 

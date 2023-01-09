@@ -2,12 +2,14 @@ package com.example.hangmanapp.abductmania.Game
 
 
 import android.content.Context
+import android.media.MediaPlayer
 import android.os.CountDownTimer
 import android.preference.PreferenceManager
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.hangmanapp.R
 import com.example.hangmanapp.abductmania.DatabaseUtils.SharedPrefsUtils
 import com.example.hangmanapp.abductmania.Config.ConfigurationViewModel
 import com.example.hangmanapp.abductmania.Game.Api.*
@@ -18,10 +20,12 @@ import com.example.hangmanapp.abductmania.Game.Drawings.HangmanDrawingWaves
 import com.example.hangmanapp.abductmania.Game.Keyboard.GameKeyboardMap
 import com.example.hangmanapp.abductmania.Ranking.RankingDatabaseUtils
 import com.example.hangmanapp.abductmania.MainMenu.MainMenuActivity
+import com.example.hangmanapp.abductmania.MainMenu.MainMenuViewModel
 import com.example.hangmanapp.databinding.ActivityHangmanGameBinding
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.database.ktx.database
 import kotlin.math.max
@@ -72,15 +76,26 @@ class HangmanGameViewModel()
     private val LEVEL_START = "level_start"
     private val firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
 
+    companion object {
+        var victorySfxMP : MediaPlayer? = null
+        var gameOverSfxMP : MediaPlayer? = null
+        var correctLetterSfxMP : MediaPlayer? = null
+        var abductorSfxMP : MediaPlayer? = null
+        var appearSfxMP : MediaPlayer? = null
+        var buildingSfxMP : MediaPlayer? = null
+    }
 
     public fun createGame(context: Context, binding: ActivityHangmanGameBinding)
     {
-        firebaseAnalytics.logEvent(
+        /*firebaseAnalytics.logEvent(
             LEVEL_START,
             bundleOf(
                 LEVEL_START_PARAM to true
             )
-        )
+        )*/
+        firebaseAnalytics.logEvent(LEVEL_START) {
+            param(LEVEL_START_PARAM, "true")
+        }
 
         activityContext = context
 
@@ -191,14 +206,6 @@ class HangmanGameViewModel()
     {
         gameKeyboardMap.disableRemainingLetterButtons()
         hangmanApiCommunication.guessLetter(gameToken, letter)
-
-        if (ConfigurationViewModel.isSoundOn.value == true)
-        {
-            MainMenuActivity.buttonSfxMP?.start()
-        }
-        else
-            MainMenuActivity.buttonSfxMP?.pause()
-
     }
     private fun onGuessLetterResponse(hangmanLetterGuessResponse : HangmanLetterGuessResponse,
                                       letter : Char)
@@ -228,17 +235,22 @@ class HangmanGameViewModel()
         gameKeyboardMap.setLetterCorrect(letter)
         score += CORRECT_LETTER_POINTS
 
+        correctLetterSfxMP?.seekTo(0)
+        correctLetterSfxMP?.start()
+
+
         if (hasGuessedAllLetters())
             doVictory()
         else
             gameKeyboardMap.reenableRemainingLetterButtons()
-
     }
 
     private fun onGuessedLetterIncorrectly(letter : Char)
     {
         gameKeyboardMap.setLetterWrong(letter)
         score -= WRONG_LETTER_POINTS
+
+        MainMenuViewModel.buttonSfxMP?.start()
 
         hangmanDrawer.drawPart(wrongGuessesCount)
 
@@ -360,12 +372,15 @@ class HangmanGameViewModel()
 
     public fun analyticsLogAd(ad : RewardedAd?)
     {
-        firebaseAnalytics.logEvent(
+        /*firebaseAnalytics.logEvent(
             SHOW_AD,
             bundleOf(
                 LOADED_AD_PARAM to (ad != null)
             )
-        )
+        )*/
+        firebaseAnalytics.logEvent(SHOW_AD) {
+            param(LOADED_AD_PARAM, bundleOf("Did ad load? " to (ad != null)))
+        }
     }
 
     private fun addUserScoreToRanking()

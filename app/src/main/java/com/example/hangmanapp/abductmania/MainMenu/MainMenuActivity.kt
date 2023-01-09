@@ -5,6 +5,7 @@ import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import com.example.hangmanapp.R
 import com.example.hangmanapp.abductmania.Config.ConfigurationActivity
 import com.example.hangmanapp.abductmania.Config.ConfigurationViewModel
@@ -12,24 +13,14 @@ import com.example.hangmanapp.abductmania.Game.HangmanGameActivity
 import com.example.hangmanapp.abductmania.Ranking.RankingActivity
 import com.example.hangmanapp.databinding.ActivityMainMenuBinding
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.messaging.FirebaseMessaging
 
 class MainMenuActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainMenuBinding
-    private lateinit var firebaseAuth: FirebaseAuth
+    private val mainMenuViewModel : MainMenuViewModel by viewModels()
+    private val configurationViewModel : ConfigurationViewModel by viewModels()
 
-
-
-    companion object {
-        const val CHANNEL_ID = "NOTIFICATIONS_CHANNEL_CONTACTS"
-        var menuMusicMP : MediaPlayer? = null
-        var gameMusicMP : MediaPlayer? = null
-        var buttonSfxMP : MediaPlayer? = null
-
-        var goingToAnotherMenu : Boolean = false
-    }
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -39,80 +30,73 @@ class MainMenuActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportActionBar?.hide()
 
-        firebaseAuth = FirebaseAuth.getInstance()
-
-        menuMusicMP = MediaPlayer.create(this, R.raw.menus_song)
-        buttonSfxMP = MediaPlayer.create(this, R.raw.button_click)
-
-        menuMusicMP?.start()
+        mainMenuViewModel.init(this, configurationViewModel)
 
         binding.mainMenuPlay.setOnClickListener{
             disableButtons()
 
             val intent = Intent(this, HangmanGameActivity::class.java)
             startActivity(intent)
-            buttonSfxMP?.start()
+            MainMenuViewModel.buttonSfxMP?.start()
 
-            if (ConfigurationViewModel.isSoundOn.value == true)
-            {
-                menuMusicMP?.stop()
-            }
-            else
-                menuMusicMP?.pause()
-
+            MainMenuViewModel.menuMusicMP?.pause()
         }
 
         binding.mainMenuSettings.setOnClickListener{
             disableButtons()
 
-            goingToAnotherMenu = true
+            MainMenuViewModel.goingToAnotherMenu = true
 
             val intent = Intent(this, ConfigurationActivity::class.java)
             startActivity(intent)
 
             if (ConfigurationViewModel.isMusicOn.value == true)
             {
-                menuMusicMP?.start()
+                MainMenuViewModel.menuMusicMP?.start()
             }
             else
             {
-                menuMusicMP?.pause()
+                MainMenuViewModel.menuMusicMP?.pause()
             }
         }
         binding.mainMenuLeaderboard.setOnClickListener{
             disableButtons()
 
-            goingToAnotherMenu = true
+            MainMenuViewModel.goingToAnotherMenu = true
 
             val intent = Intent(this, RankingActivity::class.java)
             startActivity(intent)
 
             if (ConfigurationViewModel.isSoundOn.value == true)
             {
-                buttonSfxMP?.start()
+                MainMenuViewModel.buttonSfxMP?.start()
             }
             else
-                buttonSfxMP?.pause()
+            {
+                MainMenuViewModel.buttonSfxMP?.pause()
+            }
 
 
             if (ConfigurationViewModel.isMusicOn.value == true)
             {
-                menuMusicMP?.start()
+                MainMenuViewModel.menuMusicMP?.start()
             }
             else
-                menuMusicMP?.pause()
+            {
+                MainMenuViewModel.menuMusicMP?.pause()
+            }
         }
 
         binding.mainMenuExit.setOnClickListener{
             disableButtons()
 
-            buttonSfxMP?.start()
+            MainMenuViewModel.buttonSfxMP?.start()
 
-            firebaseAuth.signOut()
+            mainMenuViewModel.signOut()
             finish()
         }
 
-        fireBaseNotification()
+        mainMenuViewModel.fireBaseNotification(this)
     }
 
     override fun onResume() {
@@ -120,17 +104,17 @@ class MainMenuActivity : AppCompatActivity() {
 
         enableButtons()
 
-        menuMusicMP?.start()
+        MainMenuViewModel.menuMusicMP?.start()
     }
 
     override fun onPause() {
         super.onPause()
 
-        if (!goingToAnotherMenu)
+        if (!MainMenuViewModel.goingToAnotherMenu)
         {
-            menuMusicMP?.pause()
+            MainMenuViewModel.menuMusicMP?.pause()
         }
-        goingToAnotherMenu = false
+        MainMenuViewModel.goingToAnotherMenu = false
     }
 
     private fun enableButtons()
@@ -147,23 +131,6 @@ class MainMenuActivity : AppCompatActivity() {
         binding.mainMenuSettings.isEnabled = false
         binding.mainMenuLeaderboard.isEnabled = false
         binding.mainMenuExit.isEnabled = false
-    }
-
-    private fun fireBaseNotification()
-    {
-        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                Toast.makeText(this,"Fetching FCM registration token failed", Toast.LENGTH_SHORT).show()
-                return@OnCompleteListener
-            }
-
-            // Get new FCM registration token
-            val token = task.result
-            println(token)
-            // Log and toast
-            //val msg = "Token Recived!"
-            //Toast.makeText(this,msg, Toast.LENGTH_SHORT).show()
-        })
     }
 
 }
