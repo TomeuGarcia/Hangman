@@ -38,7 +38,7 @@ class RankingActivity : AppCompatActivity() {
             if (it) updateRanking(rankingViewModel.getArrayRankingData())
         }
 
-        rankingViewModel.loadRanking(this)
+        rankingViewModel.startRankingListening(this)
     }
 
     private fun updateRanking(rankingUsersData : List<RankingViewModel.RankingUserData>)
