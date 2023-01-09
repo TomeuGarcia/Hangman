@@ -4,6 +4,7 @@ import android.content.Intent
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import com.example.hangmanapp.R
@@ -30,16 +31,21 @@ class MainMenuActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportActionBar?.hide()
 
+        binding.mainMenuProgressBar.visibility = View.INVISIBLE
+
+
+        mainMenuViewModel.canPlayGame.observe(this) {
+            if (it) startPlayGame()
+        }
+        mainMenuViewModel.noApiCommunication.observe(this) {
+            if (it) logNoApiCommunication()
+        }
         mainMenuViewModel.init(this, configurationViewModel)
 
         binding.mainMenuPlay.setOnClickListener{
             disableButtons()
-
-            val intent = Intent(this, HangmanGameActivity::class.java)
-            startActivity(intent)
-            MainMenuViewModel.buttonSfxMP?.start()
-
-            MainMenuViewModel.menuMusicMP?.pause()
+            mainMenuViewModel.testApiCommunication()
+            binding.mainMenuProgressBar.visibility = View.VISIBLE
         }
 
         binding.mainMenuSettings.setOnClickListener{
@@ -105,6 +111,7 @@ class MainMenuActivity : AppCompatActivity() {
         enableButtons()
 
         MainMenuViewModel.menuMusicMP?.start()
+        binding.mainMenuProgressBar.visibility = View.INVISIBLE
     }
 
     override fun onPause() {
@@ -131,6 +138,23 @@ class MainMenuActivity : AppCompatActivity() {
         binding.mainMenuSettings.isEnabled = false
         binding.mainMenuLeaderboard.isEnabled = false
         binding.mainMenuExit.isEnabled = false
+    }
+
+    private fun startPlayGame()
+    {
+        val intent = Intent(this, HangmanGameActivity::class.java)
+        startActivity(intent)
+
+        MainMenuViewModel.buttonSfxMP?.start()
+        MainMenuViewModel.menuMusicMP?.pause()
+
+        binding.mainMenuProgressBar.visibility = View.INVISIBLE
+    }
+    private fun logNoApiCommunication()
+    {
+        Toast.makeText(this, "No API communication...", Toast.LENGTH_LONG).show()
+        enableButtons()
+        binding.mainMenuProgressBar.visibility = View.INVISIBLE
     }
 
 }

@@ -5,9 +5,12 @@ import android.media.MediaPlayer
 import android.preference.PreferenceManager
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.hangmanapp.R
 import com.example.hangmanapp.abductmania.Config.ConfigurationViewModel
+import com.example.hangmanapp.abductmania.Game.Api.HangmanApiCommunication
+import com.example.hangmanapp.abductmania.Game.Api.HangmanNewGame
 import com.example.hangmanapp.abductmania.Game.HangmanGameViewModel
 import com.example.hangmanapp.abductmania.Notifications.NotificationCreator
 import com.example.hangmanapp.abductmania.Notifications.NotificationReceiver
@@ -19,6 +22,11 @@ class MainMenuViewModel : ViewModel()
 {
     private lateinit var firebaseAuth: FirebaseAuth
     private val notificationCreator : NotificationCreator = NotificationCreator()
+
+    private val hangmanApiCommunication = HangmanApiCommunication()
+
+    public val canPlayGame = MutableLiveData<Boolean>()
+    public val noApiCommunication = MutableLiveData<Boolean>()
 
 
     companion object {
@@ -38,6 +46,12 @@ class MainMenuViewModel : ViewModel()
         initNotifications(context)
 
         menuMusicMP?.start()
+
+        hangmanApiCommunication.loadData(context)
+        hangmanApiCommunication.setCreateNewHangmanGameCallbacks(this::onCreateNewHangmanGameResponse,
+                                                                 this::onCreateNewHangmanGameFailure)
+        canPlayGame.value = false
+        noApiCommunication.value = false
     }
 
     private fun initAudios(context : Context, configurationViewModel : ConfigurationViewModel)
@@ -97,6 +111,22 @@ class MainMenuViewModel : ViewModel()
             //val msg = "Token Recived!"
             //Toast.makeText(this,msg, Toast.LENGTH_SHORT).show()
         })
+    }
+
+    public fun testApiCommunication()
+    {
+        canPlayGame.value = false
+        noApiCommunication.value = false
+        hangmanApiCommunication.createNewHangmanGame()
+    }
+    private fun onCreateNewHangmanGameResponse(hangmanNewGame : HangmanNewGame)
+    {
+        canPlayGame.value = true
+        gameMusicMP?.seekTo(0)
+    }
+    private fun onCreateNewHangmanGameFailure()
+    {
+        noApiCommunication.value = true
     }
 
 }
