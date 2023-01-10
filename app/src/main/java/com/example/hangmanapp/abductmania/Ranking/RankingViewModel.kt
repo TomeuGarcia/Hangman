@@ -26,6 +26,7 @@ class RankingViewModel : ViewModel()
 
     public val rankingUsersData = MutableLiveData<ArrayList<RankingUserData>>()
     public val isRankingDataReady = MutableLiveData<Boolean>()
+    public val gettingNewData = MutableLiveData<Boolean>()
 
 
     public fun startRankingListening(context : Context)
@@ -35,6 +36,8 @@ class RankingViewModel : ViewModel()
 
         val request = rankingRef.child(rankingDbUtils.PLAYERSCORES_DB_ID).get()
 
+        gettingNewData.value = false
+
         rankingRef.addValueEventListener( object : ValueEventListener{
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
@@ -43,6 +46,9 @@ class RankingViewModel : ViewModel()
             override fun onDataChange(snapshot: DataSnapshot)
             {
                 isRankingDataReady.value = false
+
+                rankingUsersData.value?.clear()
+                gettingNewData.value = true
 
                 val request = rankingRef.child(rankingDbUtils.PLAYERSCORES_DB_ID).get()
 
@@ -55,11 +61,14 @@ class RankingViewModel : ViewModel()
 
                         rankingUsersData.value?.add(RankingUserData(username, score?.toInt()))
                     }
+
                     subscribeUpdateData(rankingUsersData?.value as List<RankingUserData>)
 
                     sortRankingData()
                     rankingUsersData.value = rankingUsersData.value // Update
                     isRankingDataReady.value = true
+
+                    gettingNewData.value = false
                 }
 
                 request.addOnFailureListener {
