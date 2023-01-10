@@ -53,8 +53,6 @@ class RankingActivity : AppCompatActivity() {
             rankingImages.add(RankingItem(e.username ?: "", e.score ?: 0, index+1))
         }
 
-        Toast.makeText(this, "Ranking Updated", Toast.LENGTH_SHORT).show()
-
         adapter.submitList(rankingImages)
     }
 
