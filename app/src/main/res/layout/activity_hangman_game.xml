@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".abductmania.HangmanGameActivity">
+    tools:context=".abductmania.Game.HangmanGameActivity">
 
     <ImageView
         android:id="@+id/backgroundImage"
@@ -805,6 +805,22 @@
         app:layout_constraintStart_toStartOf="@+id/zButton"
         app:layout_constraintTop_toTopOf="@+id/zButton"
         app:srcCompat="@drawable/abductamania_wrong" />
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="24dp"
+        app:adSize="SMART_BANNER"
+        app:adUnitId="ca-app-pub-3940256099942544/6300978111"
+        app:layout_constraintBottom_toTopOf="@+id/dButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/guesswordText" />
 
     <FrameLayout
         android:id="@+id/fragmentFrameLayout"

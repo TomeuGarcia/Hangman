@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".abductmania.ConfigurationActivity">
+    tools:context=".abductmania.Config.ConfigurationActivity">
 
     <ImageView
         android:id="@+id/backgroundImageView"
@@ -49,16 +49,33 @@
         style="?attr/materialButtonOutlinedStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Language: English"
+        android:layout_marginTop="8dp"
         android:fontFamily="@font/simpy_rounded"
+        android:text="Language: English"
         android:textColor="@color/green_soft"
         app:iconTint="@color/green_strong"
-        app:layout_constraintBottom_toTopOf="@+id/soundButton"
         app:layout_constraintEnd_toEndOf="@+id/settingsTextView"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.507"
         app:layout_constraintStart_toStartOf="@+id/settingsTextView"
         app:layout_constraintTop_toBottomOf="@+id/settingsTextView"
-        app:layout_constraintVertical_bias="0.100000024"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:rippleColor="@color/green_strong"
+        app:strokeColor="@color/green_strong" />
+
+    <Button
+        android:id="@+id/notificationsButton"
+        style="?attr/materialButtonOutlinedStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/simpy_rounded"
+        android:text="Notifications: ON"
+        android:textColor="@color/green_soft"
+        app:iconTint="@color/green_strong"
+        app:layout_constraintEnd_toEndOf="@+id/settingsTextView"
+        app:layout_constraintHorizontal_bias="0.507"
+        app:layout_constraintStart_toStartOf="@+id/settingsTextView"
+        app:layout_constraintTop_toBottomOf="@+id/languageButton"
         app:layout_constraintVertical_chainStyle="packed"
         app:rippleColor="@color/green_strong"
         app:strokeColor="@color/green_strong" />
@@ -68,15 +85,15 @@
         style="?attr/materialButtonOutlinedStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sound: ON"
+        android:layout_marginTop="8dp"
         android:fontFamily="@font/simpy_rounded"
+        android:text="Sound: ON"
         android:textColor="@color/green_soft"
         app:iconTint="@color/green_strong"
-        app:layout_constraintBottom_toTopOf="@+id/musicButton"
         app:layout_constraintEnd_toEndOf="@+id/languageButton"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/languageButton"
-        app:layout_constraintTop_toBottomOf="@+id/languageButton"
+        app:layout_constraintTop_toBottomOf="@+id/notificationsButton"
         app:rippleColor="@color/green_strong"
         app:strokeColor="@color/green_strong" />
 
@@ -85,8 +102,9 @@
         style="?attr/materialButtonOutlinedStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Music: ON"
+        android:layout_marginTop="8dp"
         android:fontFamily="@font/simpy_rounded"
+        android:text="Music: ON"
         android:textColor="@color/green_soft"
         app:iconTint="@color/green_strong"
         app:layout_constraintBottom_toBottomOf="@+id/backgroundImageView"
@@ -94,6 +112,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/soundButton"
         app:layout_constraintTop_toBottomOf="@+id/soundButton"
+        app:layout_constraintVertical_bias="0.0"
         app:rippleColor="@color/green_strong"
         app:strokeColor="@color/green_strong" />
 
