@@ -9,7 +9,7 @@ import com.example.hangmanapp.databinding.ItemRankingBinding
 class RankingRecyclerViewAdapter
     : RecyclerView.Adapter<RankingRecyclerViewAdapter.RankingViewHolder>()
 {
-    private var rankingImagesList : List<RankingItem>? = null
+    private var rankingImagesList : MutableList<RankingItem>? = null
 
     inner class RankingViewHolder(binding: ItemRankingBinding)
         : RecyclerView.ViewHolder(binding.root)
@@ -44,11 +44,19 @@ class RankingRecyclerViewAdapter
         return rankingImagesList?.size ?: 0
     }
 
-    @SuppressLint("NotifyDataSetChanged")
+    fun clearList()
+    {
+        rankingImagesList?.clear()
+        notifyDataSetChanged()
+        //val size = rankingImagesList?.size ?: 0
+        //notifyItemRangeRemoved(0, size)
+    }
+
     fun submitList(newList : List<RankingItem>)
     {
-        rankingImagesList = newList
+        rankingImagesList = newList as MutableList<RankingItem>
         notifyDataSetChanged()
     }
+
 
 }

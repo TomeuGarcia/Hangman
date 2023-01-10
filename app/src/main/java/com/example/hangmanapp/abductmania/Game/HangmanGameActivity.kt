@@ -79,6 +79,7 @@ class HangmanGameActivity : AppCompatActivity()
         }
         hangmanGameViewModel.createGame(this, binding)
 
+        MainMenuViewModel.gameMusicMP?.seekTo(0)
     }
 
     override fun onResume()

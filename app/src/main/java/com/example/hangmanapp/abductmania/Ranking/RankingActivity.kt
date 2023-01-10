@@ -2,6 +2,7 @@ package com.example.hangmanapp.abductmania.Ranking
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import com.example.hangmanapp.abductmania.MainMenu.MainMenuActivity
 import com.example.hangmanapp.abductmania.MainMenu.MainMenuViewModel
@@ -37,6 +38,9 @@ class RankingActivity : AppCompatActivity() {
         rankingViewModel.isRankingDataReady.observe(this) {
             if (it) updateRanking(rankingViewModel.getArrayRankingData())
         }
+        rankingViewModel.gettingNewData.observe(this) {
+            if (it) adapter.clearList()
+        }
 
         rankingViewModel.startRankingListening(this)
     }
@@ -48,6 +52,8 @@ class RankingActivity : AppCompatActivity() {
         rankingUsersData.forEachIndexed { index, e ->
             rankingImages.add(RankingItem(e.username ?: "", e.score ?: 0, index+1))
         }
+
+        Toast.makeText(this, "Ranking Updated", Toast.LENGTH_SHORT).show()
 
         adapter.submitList(rankingImages)
     }
